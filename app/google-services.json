@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1018135325914",
+    "project_id": "giftme-d07a0",
+    "storage_bucket": "giftme-d07a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018135325914:android:dd53c340261881c1ca49e3",
+        "android_client_info": {
+          "package_name": "com.example.giftme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018135325914-rjio177kep4ijf7ujpqapdce8j15us79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDodWQuqjEK2RszAvpqXo0euw8ulqRkAIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018135325914-rjio177kep4ijf7ujpqapdce8j15us79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
