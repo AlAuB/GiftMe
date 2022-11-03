@@ -24,14 +24,34 @@
             android:textStyle="bold"
             android:textColor="@color/black" />
 
-        <TextView
-            android:layout_weight="0.005"
-            android:id="@+id/collectionCount"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/_0_collection"
-            android:textSize="18sp"
-            android:layout_marginStart="15dp" />
+            android:layout_marginStart="10dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_weight="0.1"
+                android:id="@+id/collectionCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textColor="#FF5722"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/collections"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.9"
+                android:textSize="18sp" />
+
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycleView"

@@ -47,8 +47,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Toast.makeText(context, "This function is NOT implemented", Toast.LENGTH_SHORT).show();
     }
 
-    public Cursor readAllData() {
-        String query = "SELECT * FROM " + TABLE_NAME;
+    public Cursor readCollectionTableAllData(String tableName) {
+        String query = "SELECT * FROM " + tableName;
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = null;
         if (sqLiteDatabase != null) {
@@ -69,14 +69,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void deleteData(String row_id) {
+    public void deleteData(String rowId) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        long status = sqLiteDatabase.delete(TABLE_NAME, "id=?", new String[]{row_id});
+        long status = sqLiteDatabase.delete(TABLE_NAME, "id=?", new String[]{rowId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void deleteTable(String tableName) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL("DROP TABLE " + tableName);
     }
 
     public void deleteAll() {

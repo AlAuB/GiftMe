@@ -12,4 +12,5 @@
     <string name="action_button">Action Button</string>
     <string name="enter_the_name">Enter the name</string>
     <string name="submit">SUBMIT</string>
+    <string name="collections">collections</string>
 </resources>

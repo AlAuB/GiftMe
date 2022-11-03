@@ -1,6 +1,5 @@
 package com.example.giftme;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -32,6 +32,8 @@ public class WishlistMyCollectionData extends Fragment {
     RecyclerView recyclerView;
     FloatingActionButton floatingActionButton;
     MyWishlistCollectionRecycleAdapter myWishlistCollectionRecycleAdapter;
+
+    private static final String COLLECTION_TABLE_NAME = "COLLECTIONS";
 
     ArrayList<String> ids;
     ArrayList<String> collections;
@@ -86,6 +88,7 @@ public class WishlistMyCollectionData extends Fragment {
         collections = new ArrayList<>();
         dataBaseHelper = new DataBaseHelper(this.getContext());
         getAllCollection();
+        collectionCount.setText(String.valueOf(collections.size()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setHasFixedSize(true);
         myWishlistCollectionRecycleAdapter
@@ -96,10 +99,10 @@ public class WishlistMyCollectionData extends Fragment {
     }
 
     /**
-     * Get all rows from database
+     * Get all rows from database for Collection Table
      */
     private void getAllCollection() {
-        Cursor cursor = dataBaseHelper.readAllData();
+        Cursor cursor = dataBaseHelper.readCollectionTableAllData(COLLECTION_TABLE_NAME);
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
                 ids.add(cursor.getString(0));
@@ -111,7 +114,6 @@ public class WishlistMyCollectionData extends Fragment {
     /**
      * Private function that pop up confirm dialog that wait user input
      */
-    @SuppressLint("NotifyDataSetChanged")
     private void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
         builder.setTitle("Create New Collection");
@@ -119,13 +121,22 @@ public class WishlistMyCollectionData extends Fragment {
         EditText input = view.findViewById(R.id.input);
         builder.setView(view);
         builder.setPositiveButton("OK", (dialogInterface, i) -> {
-            DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
-            dataBaseHelper.addNewCollection(input.getText().toString().trim());
-            //Notify insertion change to RecycleView Adapter
-            ids.clear();
-            collections.clear();
-            getAllCollection();
-            myWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
+            String insert = input.getText().toString().trim();
+            if (collections.contains(insert)) {
+                Toast.makeText(context, "Duplicate collection name", Toast.LENGTH_LONG).show();
+            } else {
+                //Add collection name to Collection Table
+                dataBaseHelper.addNewCollection(insert);
+                //Create collection-name Table in database
+
+                //Notify insertion change to RecycleView Adapter
+                ids.clear();
+                collections.clear();
+                getAllCollection();
+                myWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
+                //Update collection count
+                collectionCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
+            }
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
             dialogInterface.cancel();
