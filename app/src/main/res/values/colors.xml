@@ -7,12 +7,16 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <!--FOR THIS APP-->
     <color name="lightblue">#7FC8F8</color>
     <color name="pink">#FF6392</color>
+    <color name="light">#E7DDD2</color>
+    <color name="gray">#DFDFDF</color>
 
     <!--FOR LAYOUT PURPOSES-->
     <color name="layout_blue">#8EC5C8</color>
     <color name="layout_pink">#E9B9B5</color>
     <color name="layout_gold">#EDD3B0</color>
+
 </resources>
