@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingFragment"
     android:orientation="vertical"
     android:padding="8dp">
 
@@ -21,4 +20,5 @@
         android:textSize="20sp"
         android:textStyle="italic"
         android:textColor="@color/pink"/>
+
 </LinearLayout>
