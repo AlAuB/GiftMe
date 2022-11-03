@@ -1,5 +1,6 @@
 package com.example.giftme;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class WishlistMyCollectionData extends Fragment {
 
     View view;
+    Activity activity;
     Context context;
     TextView collectionCount;
     RecyclerView recyclerView;
@@ -86,13 +88,14 @@ public class WishlistMyCollectionData extends Fragment {
         floatingActionButton = view.findViewById(R.id.action);
         ids = new ArrayList<>();
         collections = new ArrayList<>();
+        activity = (MainActivity) getActivity();
         dataBaseHelper = new DataBaseHelper(this.getContext());
         getAllCollection();
         collectionCount.setText(String.valueOf(collections.size()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setHasFixedSize(true);
         myWishlistCollectionRecycleAdapter
-                = new MyWishlistCollectionRecycleAdapter(this.getContext(), ids, collections);
+                = new MyWishlistCollectionRecycleAdapter(activity, this.getContext(), ids, collections);
         recyclerView.setAdapter(myWishlistCollectionRecycleAdapter);
         floatingActionButton.setOnClickListener(view -> confirmDialog());
         return view;
