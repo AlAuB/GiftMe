@@ -47,6 +47,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Toast.makeText(context, "This function is NOT implemented", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Read all the data from a specific table
+     *
+     * @param tableName The table's name you want to read data from
+     * @return Cursor
+     */
     public Cursor readCollectionTableAllData(String tableName) {
         String query = "SELECT * FROM " + tableName;
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -57,6 +63,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    /**
+     * Add new collection in the Collection table
+     *
+     * @param name collection name
+     */
     public void addNewCollection(String name) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -69,9 +80,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void deleteData(String rowId) {
+    /**
+     * Delete specific data in specific table
+     *
+     * @param rowId id for that item in that table
+     */
+    public void deleteData(String rowId, String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        long status = sqLiteDatabase.delete(TABLE_NAME, "id=?", new String[]{rowId});
+        long status = sqLiteDatabase.delete(tableName, "id=?", new String[]{rowId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
         } else {
@@ -79,13 +95,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Delete a whole table
+     *
+     * @param tableName The table's name which you want to delete
+     */
     public void deleteTable(String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.execSQL("DROP TABLE " + tableName);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + tableName);
     }
 
-    public void deleteAll() {
+    /**
+     * Delete all data in that Table
+     */
+    public void deleteAll(String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.execSQL("DELETE FROM " + TABLE_NAME);
+        sqLiteDatabase.execSQL("DELETE FROM " + tableName);
     }
 }
