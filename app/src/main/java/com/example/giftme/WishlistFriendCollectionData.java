@@ -1,11 +1,19 @@
 package com.example.giftme;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,12 +22,21 @@ import androidx.fragment.app.Fragment;
  */
 public class WishlistFriendCollectionData extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    View view1;
+    Context context1;
+    TextView collectionCount1;
+    RecyclerView recyclerView1;
+    FloatingActionButton floatingActionButton1;
+    FrWishlistCollectionRecycleAdapter FrWishlistCollectionRecycleAdapter;
+
+    private static final String COLLECTION_TABLE_NAME = "COLLECTIONS";
+
+    ArrayList<String> ids;
+    ArrayList<String> collections;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -58,6 +75,18 @@ public class WishlistFriendCollectionData extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_wishlist_friend_collection_data, container, false);
+        view1 = inflater.inflate(R.layout.fragment_wishlist_friend_collection_data, container, false);
+        context1 = this.getContext();
+        collectionCount1 = view1.findViewById(R.id.collectionCount1);
+        recyclerView1 = view1.findViewById(R.id.recycleView1);
+        floatingActionButton1 = view1.findViewById(R.id.action1);
+        ids = new ArrayList<>();
+        collections = new ArrayList<>();
+        recyclerView1.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerView1.setHasFixedSize(true);
+        FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getContext(), ids, collections);
+        recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
+
+        return view1;
     }
 }

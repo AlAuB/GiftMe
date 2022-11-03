@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class MyWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<MyWishlistCollectionRecycleAdapter.MyViewHolder> {
+public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrWishlistCollectionRecycleAdapter.MyViewHolder> {
 
     Context context;
     ArrayList<String> collections;
     ArrayList<String> ids;
 
-    public MyWishlistCollectionRecycleAdapter(Context context, ArrayList<String> ids, ArrayList<String> collections) {
+    public FrWishlistCollectionRecycleAdapter(Context context, ArrayList<String> ids, ArrayList<String> collections) {
         this.context = context;
         this.ids = ids;
         this.collections = collections;
@@ -25,14 +25,14 @@ public class MyWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<MyW
 
     @NonNull
     @Override
-    public MyWishlistCollectionRecycleAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FrWishlistCollectionRecycleAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.my_collection_row, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyWishlistCollectionRecycleAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FrWishlistCollectionRecycleAdapter.MyViewHolder holder, int position) {
         String name = collections.get(position);
         holder.textView.setText(name);
     }
