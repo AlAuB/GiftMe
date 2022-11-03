@@ -5,9 +5,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -18,6 +33,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "COLLECTIONS";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "NAME";
+    private static final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+    private static final String TAG = "DataBaseHelper debug::";
+    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
+            {
+                "lesleychen456@gmail.com",
+                "lyujin@bu.edu",
+                "sj0726@bu.edu",
+                "tg757898305@gmail.com",
+                "tchen556@gmail.com",
+                "wycalex@bu.edu"
+            };
+    private static final int random = new Random().nextInt(uniqueId.length);
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -67,6 +94,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
         }
+
+        // for now, get random unique id from the array above and check if the document's been created in firestore
+        Map<String, Object> wishlist = new HashMap<>();
+        wishlist.put("name", name);
+        wishlist.put("numOfItems", 0);
+        wishlist.put("avgPrice", 0);
+        DocumentReference docIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        docIdRef.collection("wishlists").document(name).set(wishlist, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
     }
 
     public void deleteData(String rowId) {

@@ -87,6 +87,7 @@ public class WishlistMyCollectionData extends Fragment {
         ids = new ArrayList<>();
         collections = new ArrayList<>();
         dataBaseHelper = new DataBaseHelper(this.getContext());
+//        dataBaseHelper.deleteAll();
         getAllCollection();
         collectionCount.setText(String.valueOf(collections.size()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
