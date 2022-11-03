@@ -1,14 +1,12 @@
 package com.example.giftme;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -16,31 +14,54 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseFirestore firestore;
+    FirebaseFirestore fireStore;
+    BottomNavigationView bottomNavigationView;
+    WishlistFragment wishlistFragment;
+    NotificationFragment notificationFragment;
+    SettingFragment settingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firestore = FirebaseFirestore.getInstance();
+        fireStore = FirebaseFirestore.getInstance();
+        bottomNavigationView = findViewById(R.id.bottom_nav);
+        wishlistFragment = new WishlistFragment();
+        notificationFragment = new NotificationFragment();
+        settingFragment = new SettingFragment();
 
-        Map<String,Object> user = new HashMap<>();
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.frag_view, wishlistFragment, "wishlist").
+                setReorderingAllowed(true).commit();
+
+        bottomNavigationView.setSelectedItemId(R.id.wishlist);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment fragment;
+            int id = item.getItemId();
+            if (id == R.id.wishlist) {
+                fragment = wishlistFragment;
+            } else if (id == R.id.notification) {
+                fragment = notificationFragment;
+            } else {
+                fragment = settingFragment;
+            }
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.frag_view, fragment).
+                    setReorderingAllowed(true).commit();
+            return true;
+        });
+
+        Map<String, Object> user = new HashMap<>();
         user.put("firstName", "Ron");
         user.put("lastName", "Czik");
         user.put("role", "Professor");
         user.put("rating", "-infinity");
 
-        firestore.collection("users").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_LONG).show();
-            }
-        });
+        fireStore.collection("users").add(user)
+                .addOnSuccessListener(documentReference ->
+                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_LONG).show());
     }
 }
