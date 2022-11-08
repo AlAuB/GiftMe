@@ -88,9 +88,8 @@ public class WishlistMyCollectionData extends Fragment {
         floatingActionButton = view.findViewById(R.id.action);
         ids = new ArrayList<>();
         collections = new ArrayList<>();
-        activity = (MainActivity) getActivity();
+        activity = getActivity();
         dataBaseHelper = new DataBaseHelper(this.getContext());
-//        dataBaseHelper.deleteAll();
         getAllCollection();
         collectionCount.setText(String.valueOf(collections.size()));
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -142,9 +141,7 @@ public class WishlistMyCollectionData extends Fragment {
                 collectionCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
             }
         });
-        builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
-            dialogInterface.cancel();
-        });
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();
     }
 }

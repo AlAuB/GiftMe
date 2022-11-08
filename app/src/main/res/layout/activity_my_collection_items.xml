@@ -4,67 +4,79 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WishlistMyCollectionData">
+    tools:context=".MyCollectionItems">
 
     <LinearLayout
-        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="1">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
-            android:layout_weight="0.005"
-            android:text="@string/my_collection"
-            android:textColor="@color/black"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:background="@null"
+                android:contentDescription="@string/share"
+                app:srcCompat="@drawable/ic_share" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:layout_marginStart="15dp"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/collectionCount"
-                android:layout_width="0dp"
+                android:id="@+id/num_items"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.1"
-                android:gravity="center_horizontal"
-                android:text=""
-                android:textColor="#FF5722"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:text="0"
+                android:textColor="#F44336"
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="0.9"
-                android:text="@string/collections"
+                android:layout_marginStart="5dp"
+                android:text="@string/items"
                 android:textSize="18sp" />
 
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycleView"
+            android:id="@+id/recycle_items"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_weight="0.99" />
+            android:layout_marginEnd="15dp"/>
 
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/action"
+        android:id="@+id/add_new_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
@@ -77,6 +89,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/ic_add" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -72,7 +72,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public void createNewTable(String table_name) {
         Toast.makeText(context, "This function is NOT implemented", Toast.LENGTH_SHORT).show();
-        String create_table = "";
     }
 
     /**

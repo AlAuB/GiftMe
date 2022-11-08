@@ -14,4 +14,6 @@
     <string name="enter_the_name">Enter the name</string>
     <string name="submit">SUBMIT</string>
     <string name="collections">collections</string>
+    <string name="items">Items</string>
+    <string name="share">share</string>
 </resources>

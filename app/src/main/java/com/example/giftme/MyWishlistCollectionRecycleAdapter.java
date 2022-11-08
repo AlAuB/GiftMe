@@ -2,13 +2,17 @@ package com.example.giftme;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -19,12 +23,14 @@ public class MyWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<MyW
     Context context;
     ArrayList<String> collections;
     ArrayList<String> ids;
+    DataBaseHelper dataBaseHelper;
 
     public MyWishlistCollectionRecycleAdapter(Activity activity, Context context, ArrayList<String> ids, ArrayList<String> collections) {
         this.activity = activity;
         this.context = context;
         this.ids = ids;
         this.collections = collections;
+        dataBaseHelper = new DataBaseHelper(context);
     }
 
     @NonNull
@@ -37,8 +43,49 @@ public class MyWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<MyW
 
     @Override
     public void onBindViewHolder(@NonNull MyWishlistCollectionRecycleAdapter.MyViewHolder holder, int position) {
-        String name = collections.get(position);
+        int index = holder.getAdapterPosition();
+        String name = collections.get(index);
         holder.textView.setText(name);
+        holder.linearLayout.setOnClickListener(view -> {
+            int index1 = holder.getAdapterPosition();
+            Toast.makeText(activity, "The position is: " + index1, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, MyCollectionItems.class);
+            intent.putExtra("name", collections.get(index1));
+            activity.startActivity(intent);
+        });
+        holder.linearLayout.setOnLongClickListener(view -> {
+            int index2 = holder.getAdapterPosition();
+            confirmDialogForDeleteCollection(index2);
+            return true;
+        });
+    }
+
+    private void confirmDialogForDeleteCollection(int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Delete " + collections.get(position) + " ?");
+        builder.setMessage("Items in this collection will also be deleted!");
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+            System.out.println("Position: " + position);
+            dataBaseHelper.deleteData(ids.get(position), "COLLECTIONS");
+            TextView textView = activity.findViewById(R.id.collectionCount);
+            ids.clear();
+            collections.clear();
+            getAllCollection();
+            textView.setText(String.valueOf(getItemCount()));
+            notifyItemRemoved(position);
+        });
+        builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+        builder.create().show();
+    }
+
+    private void getAllCollection() {
+        Cursor cursor = dataBaseHelper.readCollectionTableAllData("COLLECTIONS");
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                ids.add(cursor.getString(0));
+                collections.add(cursor.getString(1));
+            }
+        }
     }
 
     @Override
