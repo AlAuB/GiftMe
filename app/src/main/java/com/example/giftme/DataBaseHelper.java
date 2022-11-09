@@ -33,6 +33,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "COLLECTIONS";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "NAME";
+    private static final String FIRESTORE_ID = "firestore_id";
     private static final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
     private static final String TAG = "DataBaseHelper debug::";
     private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
@@ -53,8 +54,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String create_table = "CREATE TABLE " + TABLE_NAME + " ( " + COLUMN_ID +
-                " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_NAME + " TEXT " + " ) ";
+        String create_table = "CREATE TABLE " + TABLE_NAME + " ( " +
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_NAME + " TEXT, " +
+                FIRESTORE_ID + " TEXT " +" ) ";
         sqLiteDatabase.execSQL(create_table);
     }
 
@@ -98,25 +101,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void addNewCollection(String name) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, name);
-        long status = database.insert(TABLE_NAME, null, values);
-        if (status == -1) {
-            Toast.makeText(context, "Insert failed", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
-        }
 
+        // add to firestore first to make sure the collection is created
         // for now, get random unique id from the array above and check if the document's been created in firestore
         Map<String, Object> wishlist = new HashMap<>();
+        Map<String, Object> wishlistItems = new HashMap<>();
+        Map<String, Object> exampleItem = new HashMap<>();
+        exampleItem.put("itemName", "Nike Free Run 5.0");
+        exampleItem.put("itemPrice", 100);
+        exampleItem.put("priceCurrency", "USD");
+        exampleItem.put("itemImage", "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,b_rgb:f5f5f5/ee281381-035f-4ade-a527-edee55c915cb/free-run-5-mens-road-running-shoes-Xp40hf.png");
+        exampleItem.put("itemSize", "9");
+        exampleItem.put("rating", "4.5");
+        wishlistItems.put("exampleItem", exampleItem);
         wishlist.put("name", name);
-        wishlist.put("numOfItems", 0);
-        wishlist.put("avgPrice", 0);
-        DocumentReference docIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
-        docIdRef.collection("wishlists").document(name).set(wishlist, SetOptions.merge())
+        wishlist.put("items", wishlistItems);
+        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
+        wishlistDocIdRef.set(wishlist)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ")");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -125,6 +131,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
+
+        values.put(COLUMN_NAME, name);
+        values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
+        long status = database.insert(TABLE_NAME, null, values);
+        if (status == -1) {
+            Toast.makeText(context, "Insert failed", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public String getData(String rowId, String tableName) {
+        // still using rowId to fetch data.. should be changed to either id or firestore_id
+        String query = "SELECT * FROM " + tableName + " WHERE " + COLUMN_ID + " = " + rowId;
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = null;
+        if (sqLiteDatabase != null) {
+            cursor = sqLiteDatabase.rawQuery(query, null);
+            if (cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(FIRESTORE_ID);
+                return cursor.getString(nameIndex);
+            }
+        }
+        return "FAILED";
     }
 
     /**
@@ -134,11 +164,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public void deleteData(String rowId, String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        long status = sqLiteDatabase.delete(tableName, "id=?", new String[]{rowId});
+        String firestoreId = getData(rowId, tableName);
+        Log.d(TAG, "deleteData: " + firestoreId);
+        long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+            // after successful delete in local db, delete in firestore as well
+            fireStore.collection("usersTest").document(uniqueId[random]).collection("wishlists").document(firestoreId).delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error deleting document", e);
+                        }
+                    });
         }
     }
 
