@@ -69,12 +69,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * Create a new Table when add a new collection.
-     * The Table will always have: Name, Price, Hearts, Date, Image
+     * The Table will always have: Name, Price, Hearts, Description, Image
      *
      * @param table_name Name for that Collection
      */
     public void createNewTable(String table_name) {
         Toast.makeText(context, "This function is NOT implemented", Toast.LENGTH_SHORT).show();
+//        SQLiteDatabase database = this.getWritableDatabase();
+//        String create_table = "CREATE TABLE " + table_name + " ( " +
+//                "ITEM_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//                "ITEM_NAME" + " TEXT, " +
+//                "ITEM_HEARTS" + "INTEGER" +
+//                "ITEM_PRICE" + "INTEGER" +
+//                "ITEM_DESCRIPTION" + "STRING" +
+//                "ITEM_IMAGE" + "INTEGER" +
+//                FIRESTORE_ID + " TEXT " +" ) ";
+//        database.execSQL(create_table);
+
     }
 
     /**
