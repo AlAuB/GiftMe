@@ -76,7 +76,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void createNewTable(String table_name) {
         Toast.makeText(context, "This function is NOT implemented", Toast.LENGTH_SHORT).show();
         SQLiteDatabase database = this.getWritableDatabase();
-        String create_table = "CREATE TABLE " + table_name + " ( " +
+        String create_table = "CREATE TABLE " + "'" + table_name + "'" + " ( " +
                 "ITEM_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "ITEM_NAME" + " TEXT, " +
                 "ITEM_HEARTS" + " INTEGER, " +
