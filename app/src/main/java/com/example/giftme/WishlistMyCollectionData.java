@@ -131,7 +131,7 @@ public class WishlistMyCollectionData extends Fragment {
                 //Add collection name to Collection Table
                 dataBaseHelper.addNewCollection(insert);
                 //Create collection-name Table in database
-
+                dataBaseHelper.createNewTable(insert);
                 //Notify insertion change to RecycleView Adapter
                 ids.clear();
                 collections.clear();

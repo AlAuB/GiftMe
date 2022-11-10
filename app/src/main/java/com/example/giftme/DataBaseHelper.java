@@ -8,11 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -34,12 +31,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DataBaseHelper debug::";
     private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
             {
-                    "lesleychen456@gmail.com",
-                    "lyujin@bu.edu",
-                    "sj0726@bu.edu",
-                    "tg757898305@gmail.com",
-                    "tchen556@gmail.com",
-                    "wycalex@bu.edu"
+                "lesleychen456@gmail.com",
+                "lyujin@bu.edu",
+                "sj0726@bu.edu",
+                "tg757898305@gmail.com",
+                "tchen556@gmail.com",
+                "wycalex@bu.edu"
             };
     private static final int random = new Random().nextInt(uniqueId.length);
 
@@ -53,7 +50,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String create_table = "CREATE TABLE " + TABLE_NAME + " ( " +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_NAME + " TEXT, " +
-                FIRESTORE_ID + " TEXT " + " ) ";
+                FIRESTORE_ID + " TEXT " +" ) ";
         sqLiteDatabase.execSQL(create_table);
     }
 
@@ -65,13 +62,50 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * Create a new Table when add a new collection.
-     * The Table will always have: Name, Price, Hearts, Date, Image
+     * The Table will always have: Name, Price, Hearts, Description, Image
      *
      * @param table_name Name for that Collection
      */
     public void createNewTable(String table_name) {
-        Toast.makeText(context, "This function is NOT implemented", Toast.LENGTH_SHORT).show();
+        SQLiteDatabase database = this.getWritableDatabase();
+        String create_table = "CREATE TABLE " + "'" + table_name + "'" + " ( " +
+                "ITEM_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "ITEM_NAME" + " TEXT, " +
+                "ITEM_HEARTS" + " INTEGER, " +
+                "ITEM_PRICE" + " INTEGER, " +
+                "ITEM_DESCRIPTION" + " TEXT, " +
+                "ITEM_IMAGE" + " INTEGER, " +
+                FIRESTORE_ID + " TEXT " +" ) ";
+        database.execSQL(create_table);
     }
+
+    /**
+     * insert (new) item to [Collection] table
+     * **/
+
+    public void insertItemIntoCollection(String collection, String itemName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sqlInsert = "insert into " + collection;
+        sqlInsert += " values( null, ' " + itemName + " ', null, null, null, null, null  )";
+        db.execSQL(sqlInsert);
+        db.close();
+    }
+
+//    public void updateById(int id, String tableName, String itemName, int hearts, int price, String description, int image) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//
+//        String sqlUpdate = "update " + tableName;
+//        sqlUpdate += " set " + "ITEM_NAME" + " = '" + itemName + "', ";
+//        sqlUpdate +=  "ITEM_HEARTS" + " = '" + hearts + "', ";
+//        sqlUpdate +=  "ITEM_PRICE" + " = '" + price + "' ";
+//        sqlUpdate +=  "ITEM_DESCRIPTION" + " = '" + description + "' ";
+//        sqlUpdate +=  "ITEM_IMAGE" + " = '" + image + "' ";
+//        sqlUpdate += " where " + ID + " = " + id;
+//
+//        db.execSQL(sqlUpdate);
+//        db.close();
+//    }
+
 
     /**
      * Read all the data from a specific table
