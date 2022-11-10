@@ -19,12 +19,17 @@ public class AddNewItemManually extends AppCompatActivity {
     EditText name;
     ImageView imageView;
     Button cancel, save;
+    String collectionName;
     ActivityResultLauncher<Intent> activityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_item_manually);
+
+        if (getIntent().hasExtra("collection_name")) {
+            collectionName = getIntent().getStringExtra("collection_name");
+        }
 
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -55,6 +60,7 @@ public class AddNewItemManually extends AppCompatActivity {
 
         cancel.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), MyCollectionItems.class);
+            intent.putExtra("name", collectionName);
             startActivity(intent);
         });
     }

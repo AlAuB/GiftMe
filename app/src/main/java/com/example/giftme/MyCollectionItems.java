@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,7 +22,6 @@ public class MyCollectionItems extends AppCompatActivity {
     FloatingActionButton addNewItem;
     ArrayList<String> name, price, imagePath, date;
     ArrayList<Integer> favorite;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,20 @@ public class MyCollectionItems extends AppCompatActivity {
 
         addNewItem.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), AddNewItemManually.class);
+            intent.putExtra("collection_name", itemName.getText().toString());
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("collection_name", itemName.getText().toString());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        itemName.setText(savedInstanceState.getString("collection_name"));
     }
 }
