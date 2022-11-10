@@ -9,53 +9,55 @@
     android:padding="8dp">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Settings"
         android:textSize="30sp"
-        android:background="@color/layout_pink"/>
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
 
     <!--TOP PART: PFP AND LOGIN/LOGOUT/DELETE BUTTONS-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/layout_gold"
+        android:background="#FFFFFF"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:padding="20dp">
+            android:layout_weight="1.5"
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <ImageView
                 android:id="@+id/profile_pic"
-                android:layout_width="134dp"
-                android:layout_height="145dp"
-                app:srcCompat="@drawable/ic_baseline_mood_24"
-                android:background="@color/layout_blue"/>
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/anony_user"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center_vertical"
-                android:text="GUEST" />
-        </LinearLayout>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="GUEST"
+                android:textSize="20dp"/>
 
-        <!--BUTTONS-->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="10dp">
-
+            <!--BUTTONS-->
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
                 android:text="LOGOUT" />
+
         </LinearLayout>
+
         <!--BUTTONS END-->
     </LinearLayout>
 
@@ -65,11 +67,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User"
-        style="@style/heading"/>
+        android:textSize="20dp"
+        android:padding="5dp"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Profile"
+        android:textSize="18dp"
+        android:padding="5dp"
         style="@style/settings_topics"/>
 
     <RelativeLayout
@@ -80,15 +87,15 @@
             style="@style/settings_topics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:padding="5dp"
             android:text="Notifications" />
 
-        <ImageView
-            android:id="@+id/toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Switch
+            android:id="@+id/switch1"
             android:layout_alignParentRight="true"
-            android:paddingRight="10dp"
-            app:srcCompat="@drawable/ic_baseline_toggle_on_24"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 
@@ -99,11 +106,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Customization"
-        style="@style/heading"/>
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Theme Store"
+        android:padding="5dp"
+        android:textSize="18dp"
         style="@style/settings_topics"/>
     <!--CUSTOMIZATION END-->
 
@@ -112,16 +124,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="About"
-        style="@style/heading"/>
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Privacy Policy"
+        android:textSize="18dp"
+        android:padding="5dp"
         style="@style/settings_topics"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Terms of Use"
+        android:textSize="18dp"
+        android:padding="5dp"
         style="@style/settings_topics"/>
 
     <!--ABOUT END-->
@@ -131,16 +150,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Support"
-        style="@style/heading"/>
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="FAQs"
+        android:textSize="18dp"
+        android:padding="5dp"
         style="@style/settings_topics"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Help and Support"
+        android:textSize="18dp"
+        android:padding="5dp"
         style="@style/settings_topics"/>
     <!--SUPPORT END-->
 

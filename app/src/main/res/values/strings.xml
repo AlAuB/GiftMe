@@ -21,4 +21,5 @@
     <string name="image_for_current_item">Image for current item</string>
     <string name="cancel">Cancel</string>
     <string name="save">save</string>
+    <string name="messg">New Messages</string>
 </resources>

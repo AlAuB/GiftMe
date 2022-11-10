@@ -8,17 +8,42 @@
     android:padding="8dp">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Notifications"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/notification"
+        android:textColor="@color/black"
         android:textSize="30sp"
-        android:textColor="@color/lightblue"/>
-    <TextView
-        android:layout_width="wrap_content"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="You have 0 unread messages"
-        android:textSize="20sp"
-        android:textStyle="italic"
-        android:textColor="@color/pink"/>
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/messg_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.1"
+            android:gravity="center_horizontal"
+            android:text="0"
+            android:textColor="#FF5722"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.9"
+            android:text="@string/messg"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 
 </LinearLayout>
