@@ -75,18 +75,46 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public void createNewTable(String table_name) {
         Toast.makeText(context, "This function is NOT implemented", Toast.LENGTH_SHORT).show();
-//        SQLiteDatabase database = this.getWritableDatabase();
-//        String create_table = "CREATE TABLE " + table_name + " ( " +
-//                "ITEM_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-//                "ITEM_NAME" + " TEXT, " +
-//                "ITEM_HEARTS" + "INTEGER" +
-//                "ITEM_PRICE" + "INTEGER" +
-//                "ITEM_DESCRIPTION" + "STRING" +
-//                "ITEM_IMAGE" + "INTEGER" +
-//                FIRESTORE_ID + " TEXT " +" ) ";
-//        database.execSQL(create_table);
+        SQLiteDatabase database = this.getWritableDatabase();
+        String create_table = "CREATE TABLE " + table_name + " ( " +
+                "ITEM_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "ITEM_NAME" + " TEXT, " +
+                "ITEM_HEARTS" + " INTEGER, " +
+                "ITEM_PRICE" + " INTEGER, " +
+                "ITEM_DESCRIPTION" + " TEXT, " +
+                "ITEM_IMAGE" + " INTEGER " +" ) ";
 
+        Log.d("createtable", create_table);
+        database.execSQL(create_table);
     }
+
+    /**
+     * insert (new) item to [Collection] table
+     * **/
+
+    public void insertItemIntoCollection(String collection, String itemName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sqlInsert = "insert into " + collection;
+        sqlInsert += " values( null, ' " + itemName + " ', null, null, null, null  )";
+        db.execSQL(sqlInsert);
+        db.close();
+    }
+
+//    public void updateById(int id, String tableName, String itemName, int hearts, int price, String description, int image) {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//
+//        String sqlUpdate = "update " + tableName;
+//        sqlUpdate += " set " + "ITEM_NAME" + " = '" + itemName + "', ";
+//        sqlUpdate +=  "ITEM_HEARTS" + " = '" + hearts + "', ";
+//        sqlUpdate +=  "ITEM_PRICE" + " = '" + price + "' ";
+//        sqlUpdate +=  "ITEM_DESCRIPTION" + " = '" + description + "' ";
+//        sqlUpdate +=  "ITEM_IMAGE" + " = '" + image + "' ";
+//        sqlUpdate += " where " + ID + " = " + id;
+//
+//        db.execSQL(sqlUpdate);
+//        db.close();
+//    }
+
 
     /**
      * Read all the data from a specific table
