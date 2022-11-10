@@ -16,4 +16,9 @@
     <string name="collections">collections</string>
     <string name="items">Items</string>
     <string name="share">share</string>
+    <string name="current_item_s_image">Current item\'s image</string>
+    <string name="picture">Picture:</string>
+    <string name="image_for_current_item">Image for current item</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">save</string>
 </resources>
