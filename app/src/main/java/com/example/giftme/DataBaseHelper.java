@@ -82,7 +82,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 "ITEM_HEARTS" + " INTEGER, " +
                 "ITEM_PRICE" + " INTEGER, " +
                 "ITEM_DESCRIPTION" + " TEXT, " +
-                "ITEM_IMAGE" + " INTEGER " +" ) ";
+                "ITEM_IMAGE" + " INTEGER, " +
+                FIRESTORE_ID + " TEXT " +" ) ";
 
         Log.d("createtable", create_table);
         database.execSQL(create_table);
@@ -95,7 +96,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void insertItemIntoCollection(String collection, String itemName){
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlInsert = "insert into " + collection;
-        sqlInsert += " values( null, ' " + itemName + " ', null, null, null, null  )";
+        sqlInsert += " values( null, ' " + itemName + " ', null, null, null, null, null  )";
         db.execSQL(sqlInsert);
         db.close();
     }
