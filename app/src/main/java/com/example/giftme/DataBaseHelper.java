@@ -61,10 +61,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Create a new Table when add a new collection.
-     * The Table will always have: Name, Price, Hearts, Description, Image
-     *
-     * @param table_name Name for that Collection
+     * Create a new Table when adding a new collection
+     * this table will contain the items user adds to the collection
      */
     public void createNewTable(String table_name) {
         SQLiteDatabase database = this.getWritableDatabase();
@@ -74,6 +72,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 "ITEM_HEARTS" + " INTEGER, " +
                 "ITEM_PRICE" + " INTEGER, " +
                 "ITEM_DESCRIPTION" + " TEXT, " +
+                "ITEM_DATE" + " TEXT, " +
                 "ITEM_IMAGE" + " INTEGER, " +
                 FIRESTORE_ID + " TEXT " +" ) ";
         database.execSQL(create_table);
@@ -83,10 +82,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * insert (new) item to [Collection] table
      * **/
 
-    public void insertItemIntoCollection(String collection, String itemName){
+    public void insertItemIntoCollection(String collection, Item item){
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlInsert = "insert into " + collection;
-        sqlInsert += " values( null, ' " + itemName + " ', null, null, null, null, null  )";
+        sqlInsert += " values( null, '" + item.getName()
+                + "', '" + item.getHearts()
+                + "', '" + item.getPrice()
+                + "', '" + item.getDescription()
+                + "', '" + item.getDate()
+                + "', '" + item.getImg()
+                + "', '" +  item.getTableID() + "' )";
         db.execSQL(sqlInsert);
         db.close();
     }
