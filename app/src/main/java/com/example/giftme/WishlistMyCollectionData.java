@@ -125,8 +125,8 @@ public class WishlistMyCollectionData extends Fragment {
         builder.setView(view);
         builder.setPositiveButton("OK", (dialogInterface, i) -> {
             String insert = input.getText().toString().trim();
-            if (collections.contains(insert)) {
-                Toast.makeText(context, "Duplicate collection name", Toast.LENGTH_LONG).show();
+            if (collections.contains(insert) || insert.length() == 0) {
+                Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
             } else {
                 //Add collection name to Collection Table
                 dataBaseHelper.addNewCollection(insert);

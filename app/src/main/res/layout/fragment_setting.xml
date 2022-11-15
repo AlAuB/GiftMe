@@ -46,7 +46,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:text="GUEST"
-                android:textSize="20dp"/>
+                android:textSize="20sp"/>
 
             <!--BUTTONS-->
             <Button
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:text="LOGOUT" />
+                android:text="LOG-IN" />
 
         </LinearLayout>
 
@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="User"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:padding="5dp"
         android:textColor="@color/black"
         android:textStyle="bold" />
@@ -75,29 +75,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Profile"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:padding="5dp"
         style="@style/settings_topics"/>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <TextView
             style="@style/settings_topics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:padding="5dp"
-            android:text="Notifications" />
+            android:text="Notifications"
+            android:layout_weight="0.95"/>
 
         <Switch
             android:id="@+id/switch1"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05"
+            android:layout_gravity="center_vertical"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <!--USER END-->
 
@@ -106,7 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Customization"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="5dp"/>
@@ -115,7 +119,7 @@
         android:layout_height="wrap_content"
         android:text="Theme Store"
         android:padding="5dp"
-        android:textSize="18dp"
+        android:textSize="18sp"
         style="@style/settings_topics"/>
     <!--CUSTOMIZATION END-->
 
@@ -124,7 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="About"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="5dp"/>
@@ -132,14 +136,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Privacy Policy"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:padding="5dp"
         style="@style/settings_topics"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Terms of Use"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:padding="5dp"
         style="@style/settings_topics"/>
 
@@ -150,7 +154,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Support"
-        android:textSize="20dp"
+        android:textSize="20sp"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:padding="5dp"/>
@@ -158,14 +162,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="FAQs"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:padding="5dp"
         style="@style/settings_topics"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Help and Support"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:padding="5dp"
         style="@style/settings_topics"/>
     <!--SUPPORT END-->

@@ -65,8 +65,8 @@ public class MyWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<MyW
         builder.setTitle("Delete " + collections.get(position) + " ?");
         builder.setMessage("Items in this collection will also be deleted!");
         builder.setPositiveButton("Yes", (dialogInterface, i) -> {
-            System.out.println("Position: " + position);
             dataBaseHelper.deleteData(ids.get(position), "COLLECTIONS");
+            dataBaseHelper.deleteTable(collections.get(position));
             TextView textView = activity.findViewById(R.id.collectionCount);
             ids.clear();
             collections.clear();
