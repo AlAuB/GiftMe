@@ -31,12 +31,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DataBaseHelper debug::";
     private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
             {
-                "lesleychen456@gmail.com",
-                "lyujin@bu.edu",
-                "sj0726@bu.edu",
-                "tg757898305@gmail.com",
-                "tchen556@gmail.com",
-                "wycalex@bu.edu"
+                    "lesleychen456@gmail.com",
+                    "lyujin@bu.edu",
+                    "sj0726@bu.edu",
+                    "tg757898305@gmail.com",
+                    "tchen556@gmail.com",
+                    "wycalex@bu.edu"
             };
     private static final int random = new Random().nextInt(uniqueId.length);
 
@@ -50,7 +50,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String create_table = "CREATE TABLE " + TABLE_NAME + " ( " +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_NAME + " TEXT, " +
-                FIRESTORE_ID + " TEXT " +" ) ";
+                FIRESTORE_ID + " TEXT " + " ) ";
         sqLiteDatabase.execSQL(create_table);
     }
 
@@ -75,15 +75,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 "ITEM_PRICE" + " INTEGER, " +
                 "ITEM_DESCRIPTION" + " TEXT, " +
                 "ITEM_IMAGE" + " INTEGER, " +
-                FIRESTORE_ID + " TEXT " +" ) ";
+                FIRESTORE_ID + " TEXT " + " ) ";
         database.execSQL(create_table);
     }
 
     /**
      * insert (new) item to [Collection] table
-     * **/
-
-    public void insertItemIntoCollection(String collection, String itemName){
+     **/
+    public void insertItemIntoCollection(String collection, String itemName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlInsert = "insert into " + "'" + collection + "'";
         sqlInsert += " values( null, ' " + itemName + " ', null, null, null, null, null  )";

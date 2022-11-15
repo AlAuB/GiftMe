@@ -1,6 +1,7 @@
 package com.example.giftme;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,6 +15,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+
 public class AddNewItemManually extends AppCompatActivity {
 
     EditText name;
@@ -21,6 +24,7 @@ public class AddNewItemManually extends AppCompatActivity {
     Button cancel, save;
     String collectionName;
     ActivityResultLauncher<Intent> activityResultLauncher;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,12 @@ public class AddNewItemManually extends AppCompatActivity {
                     if (intent != null) {
                         Uri image = intent.getData();
                         imageView.setImageURI(image);
+                        try {
+                            // Could lead to OOM if image too large (10K * 10K)
+                            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), image);
+                        } catch (Exception e) {
+                            Toast.makeText(this, "Cannot convert Uri to bitmap", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         Toast.makeText(AddNewItemManually.this,
                                 "No image selected", Toast.LENGTH_SHORT).show();
@@ -54,7 +64,8 @@ public class AddNewItemManually extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Add data into database, save image in folder, and return to MyCollectionItems
+                //Add image path into database, save image in folder, and return to MyCollectionItems
+
             }
         });
 
