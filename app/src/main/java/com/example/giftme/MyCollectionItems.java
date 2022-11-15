@@ -23,18 +23,13 @@ import java.util.ArrayList;
 
 public class MyCollectionItems extends AppCompatActivity {
 
-    TextView itemCount, collectionName;
-    ImageButton share;
+    TextView itemCountTV, collectionNameTV;
+    ImageButton shareImgButton;
     RecyclerView recyclerView;
-    FloatingActionButton addNewItem;
-    ArrayList<String> name, price, imagePath, date;
-    ArrayList<Integer> favorite;
-
-    ArrayList<String> items;
-    ArrayList<String> ids;
+    FloatingActionButton addNewItemButton;
+    ArrayList<Item> items;
     DataBaseHelper dataBaseHelper;
     Context context;
-
     String collection_name;
 
     @Override
@@ -42,52 +37,53 @@ public class MyCollectionItems extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_collection_items);
 
-        collectionName = findViewById(R.id.collection_name);
-        itemCount = findViewById(R.id.num_items);
-        share = findViewById(R.id.share);
-        recyclerView = findViewById(R.id.recycle_items);
+        collectionNameTV = findViewById(R.id.collection_name);
+        itemCountTV = findViewById(R.id.num_items);
+        shareImgButton = findViewById(R.id.share);
+        recyclerView= findViewById(R.id.recycle_items);
 
-        addNewItem = findViewById(R.id.add_new_item);
-        addNewItem.setOnClickListener(view -> confirmDialog());
+        addNewItemButton = findViewById(R.id.add_new_item);
+        addNewItemButton.setOnClickListener(view -> confirmDialog());
         context = this;
 
-        items = new ArrayList<>();
-        //retrieve all items in collection
-        //items = getAllItems();
+        items = new ArrayList<Item>();
         dataBaseHelper = new DataBaseHelper(this);
 
         if (getIntent().hasExtra("collection_name")) {
             collection_name = getIntent().getStringExtra("collection_name");
-            collectionName.setText(collection_name);
+            collectionNameTV.setText(collection_name);
+
+            items = dataBaseHelper.selectAll(collection_name);
         }
 
-        name.add("Jordan Hydro XI Retro");
-        price.add("$65");
-        date.add("2022-11-6");
+//        name.add("Jordan Hydro XI Retro");
+//        price.add("$65");
+//        date.add("2022-11-6");
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
-        MyCollectionItemsAdapter myCollectionItemsAdapter =
-                new MyCollectionItemsAdapter(this, this, name, price, imagePath, favorite, date);
-        recyclerView.setAdapter(myCollectionItemsAdapter);
+        //Adapter
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        recyclerView.setHasFixedSize(true);
+//        MyCollectionItemsAdapter myCollectionItemsAdapter =
+//                new MyCollectionItemsAdapter(this, this, name, price, imagePath, favorite, date);
+//        recyclerView.setAdapter(myCollectionItemsAdapter);
 
-        addNewItem.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), AddNewItemManually.class);
-            intent.putExtra("collection_name", itemName.getText().toString());
-            startActivity(intent);
-        });
+//        addNewItemButton.setOnClickListener(view -> {
+//            Intent intent = new Intent(getApplicationContext(), AddNewItemManually.class);
+//            intent.putExtra("collection_name", collectionNameTV.getText().toString());
+//            startActivity(intent);
+//        });
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("collection_name", itemName.getText().toString());
+        outState.putString("collection_name", collectionNameTV.getText().toString());
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        itemName.setText(savedInstanceState.getString("collection_name"));
+        collectionNameTV.setText(savedInstanceState.getString("collection_name"));
     }
 
     private void confirmDialog() {
@@ -97,12 +93,17 @@ public class MyCollectionItems extends AppCompatActivity {
         EditText input = view.findViewById(R.id.input_item);
         builder.setView(view);
         builder.setPositiveButton("OK", (dialogInterface, i) -> {
-            String insert = input.getText().toString().trim();
-            if (items.contains(insert)) {
+            String itemName = input.getText().toString().trim();
+            Item item = new Item();
+            item.setName(itemName);
+
+            //if items.getNames contains item.getName
+            //maybe not an issue? what if I want two socks for my birthday
+            if (items.contains(item)) {
                 Toast.makeText(context, "Duplicate item name", Toast.LENGTH_LONG).show();
             } else {
                 //Add item to Collection
-                dataBaseHelper.insertItemIntoCollection(collection_name, insert);
+                dataBaseHelper.insertItemIntoCollection(collection_name, item);
                 Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show();
 //                //Notify insertion change to RecycleView Adapter
 //                ids.clear();

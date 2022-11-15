@@ -2,17 +2,22 @@ package com.example.giftme;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -74,7 +79,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 "ITEM_DESCRIPTION" + " TEXT, " +
                 "ITEM_DATE" + " TEXT, " +
                 "ITEM_IMAGE" + " INTEGER, " +
-                FIRESTORE_ID + " TEXT " +" ) ";
+                FIRESTORE_ID + " TEXT " +" ) "; //redundant???
         database.execSQL(create_table);
     }
 
@@ -113,8 +118,37 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     /**
-     * Read all the data from a specific table
+     * get all items from a collection table
      *
+     */
+    public ArrayList<Item> selectAll(String collectionName) {
+        String sqlQuery = "select * from " + collectionName;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(sqlQuery, null);
+
+        ArrayList<Item> items = new ArrayList<Item>();
+        while (cursor.moveToNext()) {
+            //Item(int newId, String newName, int newHearts, int newPrice,
+            // String newDescription, String newDate, int newImg,  int newTableID)
+            Item currentItem
+                    = new Item(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    Integer.parseInt(cursor.getString(2)),
+                    Integer.parseInt(cursor.getString(3)),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    Integer.parseInt(cursor.getString(6)),
+                    Integer.parseInt(cursor.getString(7))
+                    );
+            items.add(currentItem);
+        }
+        db.close();
+        return items;
+    }
+
+    /**
+     * Read all the data from a specific table
      * @param tableName The table's name you want to read data from
      * @return Cursor
      */
@@ -130,9 +164,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * Add new collection in the Collection table
-     *
      * @param name collection name
      */
+
     public void addNewCollection(String name) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -140,22 +174,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // add to firestore first to make sure the collection is created
         // for now, get random unique id from the array above and check if the document's been created in firestore
         Map<String, Object> wishlist = new HashMap<>();
-        Map<String, Object> wishlistItems = new HashMap<>();
-        Map<String, Object> exampleItem = new HashMap<>();
-        exampleItem.put("itemName", "Nike Free Run 5.0");
-        exampleItem.put("itemPrice", 100);
-        exampleItem.put("priceCurrency", "USD");
-        exampleItem.put("itemImage", "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,b_rgb:f5f5f5/ee281381-035f-4ade-a527-edee55c915cb/free-run-5-mens-road-running-shoes-Xp40hf.png");
-        exampleItem.put("itemSize", "9");
-        exampleItem.put("rating", "4.5");
-        wishlistItems.put("exampleItem", exampleItem);
-        wishlist.put("name", name);
-        wishlist.put("items", wishlistItems);
+
         DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
         wishlistDocIdRef.set(wishlist)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ")"))
-                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ")");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
 
         values.put(COLUMN_NAME, name);
         values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
@@ -167,6 +201,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //????
     public String getData(String rowId, String tableName) {
         // still using rowId to fetch data.. should be changed to either id or firestore_id
         String query = "SELECT * FROM " + tableName + " WHERE " + COLUMN_ID + " = " + rowId;
@@ -185,7 +220,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * Delete specific data in specific table
-     *
      * @param rowId id for that item in that table
      */
     public void deleteData(String rowId, String tableName) {
@@ -206,7 +240,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * Delete a whole table
-     *
      * @param tableName The table's name which you want to delete
      */
     public void deleteTable(String tableName) {

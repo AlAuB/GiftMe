@@ -54,6 +54,7 @@ public class AddNewItemManually extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 //Add data into database, save image in folder, and return to MyCollectionItems
             }
         });
