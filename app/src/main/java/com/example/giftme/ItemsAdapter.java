@@ -53,14 +53,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         holder.currentItem= myItems.get(position);
 
-
     }
 
-    public void update(ArrayList<Item> items){
-        myItems.clear();
-        myItems.addAll(items);
-        notifyDataSetChanged();
-    }
+//    public void update(ArrayList<Item> items){
+//        myItems.clear();
+//        myItems.addAll(items);
+//    }
     @Override
     public int getItemCount() {
         return myItems.size();
@@ -82,17 +80,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             editButton = (ImageButton) itemView.findViewById(R.id.edit_button);
             ratingBar = (RatingBar) itemView.findViewById(R.id.rating);
             linearLayout = itemView.findViewById(R.id.item_lv);
-
-//            view = itemView;
-//            view.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent intent = new Intent(Intent.ACTION_VIEW);
-//                    intent.setData(Uri.parse(webLink));
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    EpisodesAdapter.context.startActivity(intent);
-//                }
-//            });
 
         }
     }

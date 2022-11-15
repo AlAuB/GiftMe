@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -58,10 +59,10 @@ public class MyCollectionItems extends AppCompatActivity {
             collectionNameTV.setText(collection_name);
             items = dataBaseHelper.selectAll(collection_name);
         }
-
         itemAdapter = new ItemsAdapter(MyCollectionItems.this, this, items);
         recyclerView.setAdapter(itemAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(MyCollectionItems.this));
+        Log.d("items", items.toString());
     }
 
     @Override
@@ -97,14 +98,11 @@ public class MyCollectionItems extends AppCompatActivity {
                 Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show();
 
                 //Notify insertion change to RecycleView Adapter
+                items.clear();
                 items = dataBaseHelper.selectAll(collection_name);
-                itemAdapter.notifyDataSetChanged();
-//                itemAdapter.update(items);
-//                items.clear();
-//                items = dataBaseHelper.selectAll(collection_name);
-//                itemAdapter.notifyItemInserted(items.size() - 1);
-                Log.d("items size: ", String.valueOf(items.size()));
-                Log.d("item Books2" , items.get(items.size()-1).getName());
+                itemAdapter.notifyItemInserted(items.size() - 1);
+
+                Log.d("items", items.toString());
                 //Update collection count
 //                itemCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
             }
