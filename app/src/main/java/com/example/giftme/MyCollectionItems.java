@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -19,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MyCollectionItems extends AppCompatActivity {
@@ -31,6 +34,7 @@ public class MyCollectionItems extends AppCompatActivity {
     DataBaseHelper dataBaseHelper;
     Context context;
     String collection_name;
+    ItemsAdapter itemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,32 +50,18 @@ public class MyCollectionItems extends AppCompatActivity {
         addNewItemButton.setOnClickListener(view -> confirmDialog());
         context = this;
 
-        items = new ArrayList<Item>();
         dataBaseHelper = new DataBaseHelper(this);
+        items = new ArrayList<>();
 
         if (getIntent().hasExtra("collection_name")) {
             collection_name = getIntent().getStringExtra("collection_name");
             collectionNameTV.setText(collection_name);
-
             items = dataBaseHelper.selectAll(collection_name);
         }
 
-//        name.add("Jordan Hydro XI Retro");
-//        price.add("$65");
-//        date.add("2022-11-6");
-
-        //Adapter
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        recyclerView.setHasFixedSize(true);
-//        MyCollectionItemsAdapter myCollectionItemsAdapter =
-//                new MyCollectionItemsAdapter(this, this, name, price, imagePath, favorite, date);
-//        recyclerView.setAdapter(myCollectionItemsAdapter);
-
-//        addNewItemButton.setOnClickListener(view -> {
-//            Intent intent = new Intent(getApplicationContext(), AddNewItemManually.class);
-//            intent.putExtra("collection_name", collectionNameTV.getText().toString());
-//            startActivity(intent);
-//        });
+        itemAdapter = new ItemsAdapter(MyCollectionItems.this, this, items);
+        recyclerView.setAdapter(itemAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(MyCollectionItems.this));
     }
 
     @Override
@@ -105,13 +95,18 @@ public class MyCollectionItems extends AppCompatActivity {
                 //Add item to Collection
                 dataBaseHelper.insertItemIntoCollection(collection_name, item);
                 Toast.makeText(this, "Added!", Toast.LENGTH_SHORT).show();
-//                //Notify insertion change to RecycleView Adapter
-//                ids.clear();
+
+                //Notify insertion change to RecycleView Adapter
+                items = dataBaseHelper.selectAll(collection_name);
+                itemAdapter.notifyDataSetChanged();
+//                itemAdapter.update(items);
 //                items.clear();
-//                getAllCollection();
-//                myWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
-//                //Update collection count
-//                collectionCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
+//                items = dataBaseHelper.selectAll(collection_name);
+//                itemAdapter.notifyItemInserted(items.size() - 1);
+                Log.d("items size: ", String.valueOf(items.size()));
+                Log.d("item Books2" , items.get(items.size()-1).getName());
+                //Update collection count
+//                itemCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
             }
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
