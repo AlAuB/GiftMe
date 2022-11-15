@@ -89,7 +89,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void insertItemIntoCollection(String collection, Item item){
         SQLiteDatabase db = this.getWritableDatabase();
-        String sqlInsert = "insert into " + collection;
+        String sqlInsert = "insert into " + "'" + collection + "'";
         sqlInsert += " values( null, '" + item.getName()
                 + "', '" + item.getHearts()
                 + "', '" + item.getPrice()
@@ -98,7 +98,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "', '" + item.getImg()
                 + "', '" +  item.getTableID() + "' )";
         db.execSQL(sqlInsert);
-        db.close();
+//        db.close();
     }
 
 //    public void updateById(int id, String tableName, String itemName, int hearts, int price, String description, int image) {
@@ -122,7 +122,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      *
      */
     public ArrayList<Item> selectAll(String collectionName) {
-        String sqlQuery = "select * from " + collectionName;
+        String sqlQuery = "select * from " + "'" + collectionName + "'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sqlQuery, null);
@@ -143,7 +143,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     );
             items.add(currentItem);
         }
-        db.close();
+//        db.close();
         return items;
     }
 

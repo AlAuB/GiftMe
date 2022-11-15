@@ -59,22 +59,27 @@ public class MyCollectionItems extends AppCompatActivity {
             collectionNameTV.setText(collection_name);
             items = dataBaseHelper.selectAll(collection_name);
         }
-        itemAdapter = new ItemsAdapter(MyCollectionItems.this, this, items);
-        recyclerView.setAdapter(itemAdapter);
+
+        setItemAdapter(items);
+        recyclerView.setItemAnimator(null);
         recyclerView.setLayoutManager(new LinearLayoutManager(MyCollectionItems.this));
         Log.d("items", items.toString());
     }
 
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("collection_name", collectionNameTV.getText().toString());
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        collectionNameTV.setText(savedInstanceState.getString("collection_name"));
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        outState.putString("collection_name", collectionNameTV.getText().toString());
+//        super.onSaveInstanceState(outState);
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        collectionNameTV.setText(savedInstanceState.getString("collection_name"));
+//    }
+    public void setItemAdapter(ArrayList<Item> items){
+        itemAdapter = new ItemsAdapter(MyCollectionItems.this, this, items);
+        recyclerView.setAdapter(itemAdapter);
     }
 
     private void confirmDialog() {
@@ -100,8 +105,8 @@ public class MyCollectionItems extends AppCompatActivity {
                 //Notify insertion change to RecycleView Adapter
                 items.clear();
                 items = dataBaseHelper.selectAll(collection_name);
+                setItemAdapter(items);
                 itemAdapter.notifyItemInserted(items.size() - 1);
-
                 Log.d("items", items.toString());
                 //Update collection count
 //                itemCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));

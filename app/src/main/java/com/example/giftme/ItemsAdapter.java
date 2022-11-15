@@ -41,7 +41,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ItemsAdapter.ViewHolder holder, int position) {
         //populate
-        Item item = myItems.get(position);
+        int index = holder.getAdapterPosition();
+        Item item = myItems.get(index);
         //set views
         TextView itemName = holder.itemNameTV;
         itemName.setText(item.getName());
@@ -51,7 +52,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         ImageButton imgButton = holder.editButton;
 
-        holder.currentItem= myItems.get(position);
+        holder.currentItem= myItems.get(index);
 
     }
 
