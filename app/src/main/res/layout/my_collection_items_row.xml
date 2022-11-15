@@ -37,7 +37,8 @@
                     android:id="@+id/item_image"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    android:contentDescription="@string/current_item_s_image" />
+                    android:contentDescription="@string/current_item_s_image"
+                    app:srcCompat="@drawable/xmas_wallpaper_sample"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

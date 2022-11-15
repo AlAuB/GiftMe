@@ -85,7 +85,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void insertItemIntoCollection(String collection, String itemName){
         SQLiteDatabase db = this.getWritableDatabase();
-        String sqlInsert = "insert into " + collection;
+        String sqlInsert = "insert into " + "'" + collection + "'";
         sqlInsert += " values( null, ' " + itemName + " ', null, null, null, null, null  )";
         db.execSQL(sqlInsert);
         db.close();
@@ -114,7 +114,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * @return Cursor
      */
     public Cursor readCollectionTableAllData(String tableName) {
-        String query = "SELECT * FROM " + tableName;
+        String query = "SELECT * FROM " + "'" + tableName + "'";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor = null;
         if (sqLiteDatabase != null) {
@@ -164,7 +164,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public String getData(String rowId, String tableName) {
         // still using rowId to fetch data.. should be changed to either id or firestore_id
-        String query = "SELECT * FROM " + tableName + " WHERE " + COLUMN_ID + " = " + rowId;
+        String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + rowId;
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor;
         if (sqLiteDatabase != null) {
@@ -206,7 +206,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public void deleteTable(String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + tableName);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + "'" + tableName + "'");
     }
 
     /**
@@ -214,6 +214,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public void deleteAll(String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.execSQL("DELETE FROM " + tableName);
+        sqLiteDatabase.execSQL("DELETE FROM " + "'" + tableName + "'");
     }
 }
