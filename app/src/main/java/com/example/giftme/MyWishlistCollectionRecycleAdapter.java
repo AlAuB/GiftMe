@@ -48,7 +48,6 @@ public class MyWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<MyW
         holder.textView.setText(name);
         holder.linearLayout.setOnClickListener(view -> {
             int index1 = holder.getAdapterPosition();
-            Toast.makeText(activity, "The position is: " + index1, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(context, MyCollectionItems.class);
             intent.putExtra("collection_name", collections.get(index1));
             activity.startActivity(intent);

@@ -52,7 +52,7 @@
                 android:id="@+id/num_items"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:text=""
                 android:textColor="#F44336"
                 android:textSize="18sp" />
 
@@ -71,8 +71,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"/>
-
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

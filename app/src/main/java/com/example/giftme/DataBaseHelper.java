@@ -2,18 +2,14 @@ package com.example.giftme;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -86,7 +82,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     /**
      * insert (new) item to [Collection] table
      * **/
-
     public void insertItemIntoCollection(String collection, Item item){
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlInsert = "insert into " + "'" + collection + "'";
@@ -98,24 +93,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "', '" + item.getImg()
                 + "', '" +  item.getTableID() + "' )";
         db.execSQL(sqlInsert);
-//        db.close();
     }
-
-//    public void updateById(int id, String tableName, String itemName, int hearts, int price, String description, int image) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//
-//        String sqlUpdate = "update " + tableName;
-//        sqlUpdate += " set " + "ITEM_NAME" + " = '" + itemName + "', ";
-//        sqlUpdate +=  "ITEM_HEARTS" + " = '" + hearts + "', ";
-//        sqlUpdate +=  "ITEM_PRICE" + " = '" + price + "' ";
-//        sqlUpdate +=  "ITEM_DESCRIPTION" + " = '" + description + "' ";
-//        sqlUpdate +=  "ITEM_IMAGE" + " = '" + image + "' ";
-//        sqlUpdate += " where " + ID + " = " + id;
-//
-//        db.execSQL(sqlUpdate);
-//        db.close();
-//    }
-
 
     /**
      * get all items from a collection table
@@ -127,7 +105,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(sqlQuery, null);
 
-        ArrayList<Item> items = new ArrayList<Item>();
+        ArrayList<Item> items = new ArrayList<>();
         while (cursor.moveToNext()) {
             //Item(int newId, String newName, int newHearts, int newPrice,
             // String newDescription, String newDate, int newImg,  int newTableID)
@@ -143,7 +121,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     );
             items.add(currentItem);
         }
-//        db.close();
+        cursor.close();
         return items;
     }
 
@@ -178,18 +156,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
         wishlistDocIdRef.set(wishlist)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ")");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ")"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
 
         values.put(COLUMN_NAME, name);
         values.put(FIRESTORE_ID, wishlistDocIdRef.getId());

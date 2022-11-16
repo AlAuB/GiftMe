@@ -1,6 +1,7 @@
 package com.example.giftme;
 
 import android.content.Intent;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,10 +17,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.reflect.Array;
@@ -45,7 +48,7 @@ public class MyCollectionItems extends AppCompatActivity {
         collectionNameTV = findViewById(R.id.collection_name);
         itemCountTV = findViewById(R.id.num_items);
         shareImgButton = findViewById(R.id.share);
-        recyclerView= findViewById(R.id.recycle_items);
+        recyclerView = findViewById(R.id.recycle_items);
 
         addNewItemButton = findViewById(R.id.add_new_item);
         addNewItemButton.setOnClickListener(view -> confirmDialog());
@@ -58,26 +61,27 @@ public class MyCollectionItems extends AppCompatActivity {
             collection_name = getIntent().getStringExtra("collection_name");
             collectionNameTV.setText(collection_name);
             items = dataBaseHelper.selectAll(collection_name);
+            itemCountTV.setText(String.valueOf(items.size()));
         }
 
         setItemAdapter(items);
-        recyclerView.setItemAnimator(null);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(MyCollectionItems.this));
-        Log.d("items", items.toString());
     }
 
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        outState.putString("collection_name", collectionNameTV.getText().toString());
-//        super.onSaveInstanceState(outState);
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        collectionNameTV.setText(savedInstanceState.getString("collection_name"));
-//    }
-    public void setItemAdapter(ArrayList<Item> items){
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("collection_name", collectionNameTV.getText().toString());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        collectionNameTV.setText(savedInstanceState.getString("collection_name"));
+    }
+
+    public void setItemAdapter(ArrayList<Item> items) {
         itemAdapter = new ItemsAdapter(MyCollectionItems.this, this, items);
         recyclerView.setAdapter(itemAdapter);
     }
@@ -109,11 +113,10 @@ public class MyCollectionItems extends AppCompatActivity {
                 itemAdapter.notifyItemInserted(items.size() - 1);
                 Log.d("items", items.toString());
                 //Update collection count
-//                itemCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
+                itemCountTV.setText(String.valueOf(itemAdapter.getItemCount()));
             }
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();
     }
-
 }
