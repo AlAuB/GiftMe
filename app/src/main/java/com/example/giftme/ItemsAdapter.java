@@ -2,6 +2,7 @@ package com.example.giftme;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         ImageButton imgButton = holder.editButton;
 
         holder.currentItem= myItems.get(index);
+
+        holder.linearLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(this.activity, EditItemActivity.class);
+            //put in name, price description, hearts, and link etc
+            this.activity.startActivity(intent);
+        });
 
     }
 
