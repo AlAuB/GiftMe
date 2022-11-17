@@ -152,7 +152,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    //????
     public String getData(String rowId, String tableName) {
         // still using rowId to fetch data.. should be changed to either id or firestore_id
         String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + rowId;

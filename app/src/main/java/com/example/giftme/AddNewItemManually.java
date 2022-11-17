@@ -3,6 +3,7 @@ package com.example.giftme;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -32,11 +33,13 @@ public class AddNewItemManually extends AppCompatActivity {
     String collectionName;
     ActivityResultLauncher<Intent> activityResultLauncher;
     Bitmap bitmap;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_item_manually);
+        context = getApplicationContext();
 
         if (getIntent().hasExtra("collection_name")) {
             collectionName = getIntent().getStringExtra("collection_name");
@@ -73,17 +76,10 @@ public class AddNewItemManually extends AppCompatActivity {
             public void onClick(View view) {
                 //Add image path into database, save image in folder, and return to MyCollectionItems
                 try {
-                    String path = Environment.getExternalStorageDirectory().toString();
-                    String fileName = "Test.jpg";
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName);
-                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg");
-                    File file = new File(path, fileName);
-                    values.put(MediaStore.MediaColumns.DATA, file.getAbsolutePath());
-                    Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                    try (OutputStream output = getContentResolver().openOutputStream(uri)) {
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, output);
-                    }
+                    FileOutputStream fileOutputStream = context.openFileOutput("Test.jpg", Context.MODE_PRIVATE);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                    fileOutputStream.close();
+                    File file = new File(context.getApplicationContext().getFilesDir() + "/Test.jpg");
                 } catch (Exception e) {
                     Toast.makeText(AddNewItemManually.this, "Save image NOT success", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
