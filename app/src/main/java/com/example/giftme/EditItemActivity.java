@@ -48,6 +48,7 @@ public class EditItemActivity extends AppCompatActivity {
         int itemHearts = intent.getIntExtra("itemHearts", 0);
         int itemPrice = intent.getIntExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
+        if(itemDes == "null"){ itemDes = "";}
         int img = intent.getIntExtra("itemImg", 0);
         String date = " ";
         String fsID= "FSid here";
