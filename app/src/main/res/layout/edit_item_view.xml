@@ -24,20 +24,10 @@
             <EditText
                 android:id="@+id/linkET"
                 android:layout_width="0dp"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:hint="insert shopping link here">
             </EditText>
-
-            <Button
-                android:id="@+id/button_shop"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="50dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:text="Shop now"
-                />
         </LinearLayout>
 
         <ImageView
@@ -104,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:text=""
-            android:hint="Description of your item here eg: I want the blue one!! "
+            android:hint="@string/description_hint"
             />
 
         <LinearLayout

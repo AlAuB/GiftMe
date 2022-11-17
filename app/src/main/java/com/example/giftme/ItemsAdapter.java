@@ -3,6 +3,7 @@ package com.example.giftme;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
             intent.putExtra("itemDes", item.getDescription());
+            Log.d("itemDes", item.getDescription());
             intent.putExtra("itemImg", item.getImg());
             //firestore ID?
             intent.putExtra("collectionName", collectionName);

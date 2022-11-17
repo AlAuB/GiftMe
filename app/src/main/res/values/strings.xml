@@ -25,4 +25,5 @@
     <string name="detailed_view">Detailed view</string>
     <string name="compacted_view">Compacted view</string>
     <string name="edit">Edit</string>
+    <string name="description_hint">Description of your item here: e.g., I want the blue one!</string>
 </resources>
