@@ -78,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:text=""
-            android:hint="Description of your item here eg: I am size  "
+            android:hint="@string/description_hint"
             />
         <Button
             android:id="@+id/button_shop"
