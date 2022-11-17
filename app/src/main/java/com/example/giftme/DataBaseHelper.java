@@ -2,22 +2,17 @@ package com.example.giftme;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -96,7 +91,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     /**
      * insert (new) item to [Collection] table
      * **/
-
     public void insertItemIntoCollection(String collection, Item item){
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlInsert = "insert into " + "'" + collection + "'";
@@ -108,37 +102,20 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "', '" + item.getImg()
                 + "', '" +  item.getTableID() + "' )";
         db.execSQL(sqlInsert);
-//        db.close();
     }
 
     /**
      * get all items from a collection table
      *
      */
-    public ArrayList<Item> selectAll(String collectionName) {
+    public Cursor selectAll(String collectionName) {
         String sqlQuery = "select * from " + "'" + collectionName + "'";
-
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(sqlQuery, null);
-
-        ArrayList<Item> items = new ArrayList<Item>();
-        while (cursor.moveToNext()) {
-            //Item(int newId, String newName, int newHearts, int newPrice,
-            // String newDescription, String newDate, int newImg,  int newTableID)
-            Item currentItem
-                    = new Item(Integer.parseInt(cursor.getString(0)),
-                    cursor.getString(1),
-                    Integer.parseInt(cursor.getString(2)),
-                    Integer.parseInt(cursor.getString(3)),
-                    cursor.getString(4),
-                    cursor.getString(5),
-                    Integer.parseInt(cursor.getString(6)),
-                    cursor.getString(7)
-                    );
-            items.add(currentItem);
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(sqlQuery, null);
         }
-//        db.close();
-        return items;
+        return cursor;
     }
 
     /**
@@ -193,18 +170,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
         wishlistDocIdRef.set(wishlist)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ")");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ")"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
 
         values.put(COLUMN_NAME, name);
         values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
@@ -216,7 +183,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    //????
     public String getData(String rowId, String tableName) {
         // still using rowId to fetch data.. should be changed to either id or firestore_id
         String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + rowId;

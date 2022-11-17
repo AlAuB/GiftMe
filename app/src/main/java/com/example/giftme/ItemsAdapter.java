@@ -21,12 +21,12 @@ import java.util.List;
 
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
-    static Context context;
+    Context context;
     Activity activity;
-    private List<Item> myItems;
     private TextView collectionNameTV;
+    List<Item> myItems;
 
-    public ItemsAdapter(Activity activity, Context context, List<Item> items){
+    public ItemsAdapter(Activity activity, Context context, List<Item> items) {
         this.context = context;
         this.activity = activity;
         this.myItems = items;
@@ -38,9 +38,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     public ItemsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View itemView = inflater.inflate(R.layout.item_card, parent, false);
-        ViewHolder viewHolder = new ViewHolder(itemView);
-
-        return viewHolder;
+        return new ViewHolder(itemView);
     }
 
     @Override
@@ -51,15 +49,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         //set views
         TextView itemName = holder.itemNameTV;
         itemName.setText(item.getName());
-
         RatingBar ratingBar = holder.ratingBar;
         ratingBar.setRating(item.getHearts());
-
         ImageButton imgButton = holder.editButton;
-
+        
         String collectionName = (String) collectionNameTV.getText();
-
-        holder.currentItem= myItems.get(index);
+        holder.currentItem = myItems.get(index);
 
         holder.linearLayout.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, DetailedItemViewActivity.class);
@@ -77,16 +72,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
     }
 
-//    public void update(ArrayList<Item> items){
-//        myItems.clear();
-//        myItems.addAll(items);
-//    }
     @Override
     public int getItemCount() {
         return myItems.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView itemNameTV;
         public RatingBar ratingBar;
@@ -97,12 +88,12 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            
             itemNameTV = itemView.findViewById(R.id.item_name);
             editButton = itemView.findViewById(R.id.edit_button);
             ratingBar = itemView.findViewById(R.id.rating);
-            linearLayout = itemView.findViewById(R.id.item_lv);
 
+            linearLayout = itemView.findViewById(R.id.item_lv);
         }
     }
 }

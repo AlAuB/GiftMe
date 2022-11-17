@@ -1,9 +1,14 @@
 package com.example.giftme;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +21,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class AddNewItemManually extends AppCompatActivity {
 
@@ -25,11 +33,13 @@ public class AddNewItemManually extends AppCompatActivity {
     String collectionName;
     ActivityResultLauncher<Intent> activityResultLauncher;
     Bitmap bitmap;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_item_manually);
+        context = getApplicationContext();
 
         if (getIntent().hasExtra("collection_name")) {
             collectionName = getIntent().getStringExtra("collection_name");
@@ -64,16 +74,22 @@ public class AddNewItemManually extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //Add data into database, save image in folder, and return to MyCollectionItems
                 //Add image path into database, save image in folder, and return to MyCollectionItems
-
+                try {
+                    FileOutputStream fileOutputStream = context.openFileOutput("Test.jpg", Context.MODE_PRIVATE);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                    fileOutputStream.close();
+                    File file = new File(context.getApplicationContext().getFilesDir() + "/Test.jpg");
+                } catch (Exception e) {
+                    Toast.makeText(AddNewItemManually.this, "Save image NOT success", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
             }
         });
 
         cancel.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), MyCollectionItems.class);
-            intent.putExtra("name", collectionName);
+            intent.putExtra("collection_name", collectionName);
             startActivity(intent);
         });
     }
