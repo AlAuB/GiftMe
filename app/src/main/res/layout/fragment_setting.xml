@@ -63,115 +63,130 @@
 
     <!--MID PART-->
     <!--USER-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="User"
-        android:textSize="20sp"
-        android:padding="5dp"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Profile"
-        android:textSize="18sp"
-        android:padding="5dp"
-        style="@style/settings_topics"/>
-
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            style="@style/settings_topics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="User"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Profile"
             android:textSize="18sp"
             android:padding="5dp"
-            android:text="Notifications"
-            android:layout_weight="0.95"/>
+            style="@style/settings_topics"/>
 
-        <Switch
-            android:id="@+id/switch1"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                style="@style/settings_topics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:text="Notifications"
+                android:layout_weight="0.95"/>
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.05"
+                android:layout_gravity="center_vertical"/>
+
+        </LinearLayout>
+
+        <!--USER END-->
+
+        <!--CUSTOMIZATION-->
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.05"
-            android:layout_gravity="center_vertical"/>
+            android:text="Customization"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:padding="5dp"/>
+        <TextView
+            android:id="@+id/themestore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Theme Store"
+            android:padding="5dp"
+            android:textSize="18sp"
+            style="@style/settings_topics"/>
+        <!--CUSTOMIZATION END-->
 
+        <!--ABOUT-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="About"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:padding="5dp"/>
+        <TextView
+            android:id="@+id/privacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Privacy Policy"
+            android:textSize="18sp"
+            android:padding="5dp"
+            style="@style/settings_topics"/>
+        <TextView
+            android:id="@+id/term"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Terms of Use"
+            android:textSize="18sp"
+            android:padding="5dp"
+            style="@style/settings_topics"/>
+
+        <!--ABOUT END-->
+
+        <!--SUPPORT-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Support"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:padding="5dp"/>
+        <TextView
+            android:id="@+id/FAQ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FAQs"
+            android:textSize="18sp"
+            android:padding="5dp"
+            style="@style/settings_topics"/>
+        <TextView
+            android:id="@+id/support"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Help and Support"
+            android:textSize="18sp"
+            android:padding="5dp"
+            style="@style/settings_topics"/>
+        <!--SUPPORT END-->
     </LinearLayout>
-
-    <!--USER END-->
-
-    <!--CUSTOMIZATION-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Customization"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:padding="5dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Theme Store"
-        android:padding="5dp"
-        android:textSize="18sp"
-        style="@style/settings_topics"/>
-    <!--CUSTOMIZATION END-->
-
-    <!--ABOUT-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="About"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:padding="5dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Privacy Policy"
-        android:textSize="18sp"
-        android:padding="5dp"
-        style="@style/settings_topics"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Terms of Use"
-        android:textSize="18sp"
-        android:padding="5dp"
-        style="@style/settings_topics"/>
-
-    <!--ABOUT END-->
-
-    <!--SUPPORT-->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Support"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:padding="5dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FAQs"
-        android:textSize="18sp"
-        android:padding="5dp"
-        style="@style/settings_topics"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Help and Support"
-        android:textSize="18sp"
-        android:padding="5dp"
-        style="@style/settings_topics"/>
-    <!--SUPPORT END-->
-
+    </ScrollView>
 </LinearLayout>
