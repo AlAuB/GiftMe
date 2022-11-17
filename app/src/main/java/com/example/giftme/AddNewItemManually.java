@@ -93,7 +93,7 @@ public class AddNewItemManually extends AppCompatActivity {
 
         cancel.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), MyCollectionItems.class);
-            intent.putExtra("name", collectionName);
+            intent.putExtra("collection_name", collectionName);
             startActivity(intent);
         });
     }

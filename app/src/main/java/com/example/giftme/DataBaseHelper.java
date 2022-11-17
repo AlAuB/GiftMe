@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -99,30 +98,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * get all items from a collection table
      *
      */
-    public ArrayList<Item> selectAll(String collectionName) {
+    public Cursor selectAll(String collectionName) {
         String sqlQuery = "select * from " + "'" + collectionName + "'";
-
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(sqlQuery, null);
-
-        ArrayList<Item> items = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            //Item(int newId, String newName, int newHearts, int newPrice,
-            // String newDescription, String newDate, int newImg,  int newTableID)
-            Item currentItem
-                    = new Item(Integer.parseInt(cursor.getString(0)),
-                    cursor.getString(1),
-                    Integer.parseInt(cursor.getString(2)),
-                    Integer.parseInt(cursor.getString(3)),
-                    cursor.getString(4),
-                    cursor.getString(5),
-                    Integer.parseInt(cursor.getString(6)),
-                    Integer.parseInt(cursor.getString(7))
-                    );
-            items.add(currentItem);
+        Cursor cursor = null;
+        if (db != null) {
+            cursor = db.rawQuery(sqlQuery, null);
         }
-        cursor.close();
-        return items;
+        return cursor;
     }
 
     /**
