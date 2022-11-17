@@ -112,7 +112,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
 
         if (view.getId() == R.id.profile) {
-            Intent intent = new Intent(getActivity(), user_profile.class);
+            Intent intent = new Intent(getActivity(), User_Profile.class);
             startActivity(intent);
         }
         else if (view.getId() == R.id.themestore){
