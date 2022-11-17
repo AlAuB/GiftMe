@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +29,7 @@ public class CompactViewFragment extends Fragment {
     ItemsAdapter itemAdapter;
     ArrayList<Item> items;
     String collection_name;
+    itemNumListener itemNumListener;
 
     public CompactViewFragment() {
         // Required empty public constructor
@@ -52,6 +54,7 @@ public class CompactViewFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(itemAdapter);
+        itemNumListener.updateItemNum(String.valueOf(itemAdapter.getItemCount()));
         return view;
     }
 
@@ -93,9 +96,27 @@ public class CompactViewFragment extends Fragment {
             getAllItems();
             itemAdapter.notifyItemInserted(items.size() - 1);
             //Update collection count
-
+            itemNumListener.updateItemNum(String.valueOf(itemAdapter.getItemCount()));
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();
+    }
+
+    public interface itemNumListener {
+        void updateItemNum(String count);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof itemNumListener) {
+            itemNumListener = (itemNumListener) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        itemNumListener = null;
     }
 }

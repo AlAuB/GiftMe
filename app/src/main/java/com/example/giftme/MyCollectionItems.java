@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MyCollectionItems extends AppCompatActivity {
+public class MyCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener{
 
     TextView itemCount, collectionName;
     ImageButton shareImgButton, detailedViewButton, compactViewButton;
@@ -71,5 +71,10 @@ public class MyCollectionItems extends AppCompatActivity {
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         collectionName.setText(savedInstanceState.getString("collection_name"));
+    }
+
+    @Override
+    public void updateItemNum(String count) {
+        itemCount.setText(count);
     }
 }
