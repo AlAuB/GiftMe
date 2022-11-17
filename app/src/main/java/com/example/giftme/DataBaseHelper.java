@@ -183,6 +183,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //update Collection Name by FirestoreID
+    public void updateCollectionNameById(String fireStoreId, String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String sqlUpdate = "update " + "'" + TABLE_NAME + "'"
+                + " set " + COLUMN_NAME + " = '" + name + "', "
+                +  "where " + FIRESTORE_ID + "= " + fireStoreId;
+
+        db.execSQL(sqlUpdate);
+
+    }
+
     public String getData(String rowId, String tableName) {
         // still using rowId to fetch data.. should be changed to either id or firestore_id
         String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + rowId;
