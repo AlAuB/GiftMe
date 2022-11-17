@@ -21,6 +21,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private final Context context;
 
+    //other
     private static final String DATABASE_NAME = "WISHLIST_DB";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "COLLECTIONS";
@@ -39,6 +40,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     "wycalex@bu.edu"
             };
     private static final int random = new Random().nextInt(uniqueId.length);
+
+    //for ITEMS
+    private static final String ITEM_ID = "ITEM_ID";
+    private static final String ITEM_NAME = "ITEM_NAME";
+    private static final String ITEM_HEARTS = "ITEM_HEARTS";
+    private static final String ITEM_PRICE = "ITEM_PRICE";
+    private static final String ITEM_DESCRIPTION = "ITEM_DESCRIPTION";
+    private static final String ITEM_DATE = "ITEM_DATE";
+    private static final String ITEM_IMAGE = "ITEM_IMAGE";
 
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -67,13 +77,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void createNewTable(String table_name) {
         SQLiteDatabase database = this.getWritableDatabase();
         String create_table = "CREATE TABLE " + "'" + table_name + "'" + " ( " +
-                "ITEM_ID" + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "ITEM_NAME" + " TEXT, " +
-                "ITEM_HEARTS" + " INTEGER, " +
-                "ITEM_PRICE" + " INTEGER, " +
-                "ITEM_DESCRIPTION" + " TEXT, " +
-                "ITEM_DATE" + " TEXT, " +
-                "ITEM_IMAGE" + " INTEGER, " +
+                ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                ITEM_NAME + " TEXT, " +
+                ITEM_HEARTS + " INTEGER, " +
+                ITEM_PRICE + " INTEGER, " +
+                ITEM_DESCRIPTION + " TEXT, " +
+                ITEM_DATE + " TEXT, " +
+                ITEM_IMAGE + " INTEGER, " +
                 FIRESTORE_ID + " TEXT " +" ) "; //redundant???
         database.execSQL(create_table);
     }
@@ -106,6 +116,27 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             cursor = db.rawQuery(sqlQuery, null);
         }
         return cursor;
+    }
+
+    /**
+     *  update item in database
+     */
+    //add link later
+    public void updateById(String collection_name, int id, String name, int price, String description,
+                           int hearts, int img, String fireStoreId){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String sqlUpdate = "update " + "'" + collection_name + "'"
+                + " set " + ITEM_NAME + " = '" + name + "', "
+                + ITEM_HEARTS + "= '" + hearts + "', "
+                + ITEM_PRICE + "= '" + price + "', "
+                + ITEM_DESCRIPTION + "= '" + description + "', "
+                + ITEM_IMAGE + "= '" + img + "', "
+                + FIRESTORE_ID + "= '" + fireStoreId + "' "
+                +  "where " + ITEM_ID + "= " + id;
+
+        db.execSQL(sqlUpdate);
+//        db.close();
     }
 
     /**

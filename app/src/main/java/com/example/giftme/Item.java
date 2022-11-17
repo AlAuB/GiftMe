@@ -1,6 +1,8 @@
 package com.example.giftme;
 
 public class Item {
+    //can look into implementing parcelable
+
     private int id;
     private String name;
     private int hearts;
@@ -8,12 +10,12 @@ public class Item {
     private String description;
     private String date;
     private int img; //may change
-    private int tableID; //FIRESTORE_ID
+    private String tableID; //FIRESTORE_ID
 
     public Item(){
 
     }
-    public Item(int newId, String newName, int newHearts, int newPrice, String newDescription, String newDate, int newImg,  int newTableID){
+    public Item(int newId, String newName, int newHearts, int newPrice, String newDescription, String newDate, int newImg,  String newTableID){
         setId( newId);
         setName(newName);
         setHearts(newHearts);
@@ -32,7 +34,7 @@ public class Item {
     public void setDescription( String newDescription){description = newDescription;}
     public void setImg( int newImg){ img = newImg;}
     public void setDate(String newDate){ date = newDate;}
-    public void setTableID(int newTableID){ tableID = newTableID;}
+    public void setTableID(String newTableID){ tableID = newTableID;}
 
     //getters
     public int getId() {return id;}
@@ -42,7 +44,7 @@ public class Item {
     public String getDescription() {return description;}
     public String getDate(){return date;}
     public int getImg(){return img;}
-    public int getTableID() {return tableID;}
+    public String getTableID() {return tableID;}
 
     //toString
     @Override

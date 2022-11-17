@@ -2,6 +2,7 @@ package com.example.giftme;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +23,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
     Context context;
     Activity activity;
+    private TextView collectionNameTV;
     List<Item> myItems;
 
     public ItemsAdapter(Activity activity, Context context, List<Item> items) {
         this.context = context;
         this.activity = activity;
         this.myItems = items;
+        collectionNameTV = ((Activity) context).findViewById(R.id.collection_name);
     }
 
     @NonNull
@@ -47,7 +52,23 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         RatingBar ratingBar = holder.ratingBar;
         ratingBar.setRating(item.getHearts());
         ImageButton imgButton = holder.editButton;
+        
+        String collectionName = (String) collectionNameTV.getText();
         holder.currentItem = myItems.get(index);
+
+        holder.linearLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(this.activity, DetailedItemViewActivity.class);
+            //put in name, price description, hearts, and link etc
+            intent.putExtra("itemID", item.getId());
+            intent.putExtra("itemName", item.getName());
+            intent.putExtra("itemHearts", item.getHearts());
+            intent.putExtra("itemPrice", item.getPrice());
+            intent.putExtra("itemDes", item.getDescription());
+            intent.putExtra("itemImg", item.getImg());
+            //firestore ID?
+            intent.putExtra("collectionName", collectionName);
+            this.activity.startActivity(intent);
+        });
 
     }
 
@@ -67,9 +88,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemNameTV = (TextView) itemView.findViewById(R.id.item_name);
-            editButton = (ImageButton) itemView.findViewById(R.id.edit_button);
-            ratingBar = (RatingBar) itemView.findViewById(R.id.rating);
+            
+            itemNameTV = itemView.findViewById(R.id.item_name);
+            editButton = itemView.findViewById(R.id.edit_button);
+            ratingBar = itemView.findViewById(R.id.rating);
+
             linearLayout = itemView.findViewById(R.id.item_lv);
         }
     }
