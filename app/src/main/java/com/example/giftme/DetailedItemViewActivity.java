@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
     //EditText linkET;
     RatingBar ratingBar;
     Button editButton;
+    ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,14 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         priceTV.setText(String.valueOf(item.getPrice()));
         descriptionTV.setText(item.getDescription());
         ratingBar.setRating(item.getHearts());
+
+        backButton = findViewById(R.id.imageButton_backToPrevious);
+        backButton.setOnClickListener((view -> {
+            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
+            myCollectionItemsIntent.putExtra("collection_name", collectionName);
+            finish();
+            startActivity(myCollectionItemsIntent);
+        }));
 
         editButton = findViewById(R.id.button_edit);
         editButton.setOnClickListener(view -> {

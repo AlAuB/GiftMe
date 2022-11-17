@@ -55,7 +55,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         String collectionName = (String) collectionNameTV.getText();
         holder.currentItem = myItems.get(index);
 
-        holder.editButton.setOnClickListener(view -> {
+        holder.linearLayout.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, DetailedItemViewActivity.class);
             //put in name, price description, hearts, and link etc
             intent.putExtra("itemID", item.getId());
@@ -82,7 +82,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         public TextView itemNameTV;
         public RatingBar ratingBar;
-        public ImageButton editButton;
         public View view;
         public Item currentItem;
         public LinearLayout linearLayout;
@@ -91,7 +90,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             super(itemView);
             
             itemNameTV = itemView.findViewById(R.id.item_name);
-            editButton = itemView.findViewById(R.id.edit_button);
             ratingBar = itemView.findViewById(R.id.rating);
 
             linearLayout = itemView.findViewById(R.id.item_lv);

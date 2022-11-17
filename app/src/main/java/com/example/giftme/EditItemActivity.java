@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ public class EditItemActivity extends AppCompatActivity {
     Button saveButton;
     Button cancelButton;
     DataBaseHelper dataBaseHelper;
+    ImageButton backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,22 @@ public class EditItemActivity extends AppCompatActivity {
         //imgView.setImageBitmap();
         //get link
         ratingBar.setRating(itemHearts);
+
+        backButton = findViewById(R.id.imageButton_backToPrevious);
+        backButton.setOnClickListener((view -> {
+            Intent newIntent = new Intent(this, DetailedItemViewActivity.class);
+            //put in name, price description, hearts, and link etc
+            newIntent.putExtra("itemID", item.getId());
+            newIntent.putExtra("itemName", item.getName());
+            newIntent.putExtra("itemHearts", item.getHearts());
+            newIntent.putExtra("itemPrice", item.getPrice());
+            newIntent.putExtra("itemDes", item.getDescription());
+            newIntent.putExtra("itemImg", item.getImg());
+            newIntent.putExtra("itemFSID", item.getTableID());
+            newIntent.putExtra("collectionName", collectionName);
+            finish();
+            startActivity(newIntent);
+        }));
 
         saveButton.setOnClickListener(view -> {
             String newName = String.valueOf(nameET.getText());
