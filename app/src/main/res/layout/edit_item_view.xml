@@ -54,11 +54,6 @@
             android:layout_height="35dp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/image_itemIcon"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:background="@color/black"/>
             <TextView
                 android:id="@+id/textView_date"
                 android:layout_width="match_parent"
@@ -100,6 +95,8 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="right|center_vertical"
                 android:stepSize="1"
+                android:numStars="5"
+                android:rating="0"
                 />
         </LinearLayout>
         <EditText

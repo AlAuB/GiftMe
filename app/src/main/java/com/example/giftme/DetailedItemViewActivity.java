@@ -65,6 +65,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("itemImg", item.getImg());
             newIntent.putExtra("itemFSID", item.getTableID());
             newIntent.putExtra("collectionName", collectionName);
+            finish();
             startActivity(newIntent);
 
         });

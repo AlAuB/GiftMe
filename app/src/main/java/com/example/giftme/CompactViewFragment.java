@@ -70,7 +70,7 @@ public class CompactViewFragment extends Fragment {
                         cursor.getString(4),
                         cursor.getString(5),
                         Integer.parseInt(cursor.getString(6)),
-                        Integer.parseInt(cursor.getString(7))
+                        cursor.getString(7)
                 );
                 items.add(currentItem);
             }

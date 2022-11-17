@@ -51,12 +51,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         itemName.setText(item.getName());
         RatingBar ratingBar = holder.ratingBar;
         ratingBar.setRating(item.getHearts());
-        ImageButton imgButton = holder.editButton;
         
         String collectionName = (String) collectionNameTV.getText();
         holder.currentItem = myItems.get(index);
 
-        holder.linearLayout.setOnClickListener(view -> {
+        holder.editButton.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, DetailedItemViewActivity.class);
             //put in name, price description, hearts, and link etc
             intent.putExtra("itemID", item.getId());
@@ -67,7 +66,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemImg", item.getImg());
             //firestore ID?
             intent.putExtra("collectionName", collectionName);
+            this.activity.finish();
             this.activity.startActivity(intent);
+
         });
 
     }

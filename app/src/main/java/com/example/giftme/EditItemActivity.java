@@ -78,6 +78,7 @@ public class EditItemActivity extends AppCompatActivity {
             //edit flow later: this --> detaileditemview -> mycollectionitems
             Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
             myCollectionItemsIntent.putExtra("collection_name", collectionName);
+            finish();
             startActivity(myCollectionItemsIntent);
         });
     }
