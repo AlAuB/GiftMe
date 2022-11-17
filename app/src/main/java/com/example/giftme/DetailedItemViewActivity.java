@@ -44,11 +44,14 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         //assign the views
         itemNameTV = findViewById(R.id.itemNameTV);
         priceTV = findViewById(R.id.itemPriceTV);
+        descriptionTV = findViewById(R.id.descriptionTV);
+        ratingBar = findViewById(R.id.ratingBar);
 
         //set the views
         itemNameTV.setText(item.getName());
         priceTV.setText(String.valueOf(item.getPrice()));
-
+        descriptionTV.setText(item.getDescription());
+        ratingBar.setRating(item.getHearts());
 
         editButton = findViewById(R.id.button_edit);
         editButton.setOnClickListener(view -> {

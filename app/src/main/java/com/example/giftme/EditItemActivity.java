@@ -29,9 +29,14 @@ public class EditItemActivity extends AppCompatActivity {
 
         //set everything
         nameET = findViewById(R.id.itemNameET);
-        saveButton = findViewById(R.id.button_save);
-        cancelButton = findViewById(R.id.button_cancel);
+        descriptionET = findViewById(R.id.descriptionET);
+        imgView = findViewById(R.id.item_image_input);
+        linkET = findViewById(R.id.linkET);
+        priceET = findViewById(R.id.itemPriceET);
         ratingBar = findViewById(R.id.ratingBar);
+
+        cancelButton = findViewById(R.id.button_cancel);
+        saveButton = findViewById(R.id.button_save);
         dataBaseHelper = new DataBaseHelper(this);
 
         //get information from intent
@@ -52,12 +57,20 @@ public class EditItemActivity extends AppCompatActivity {
 
         //set views
         nameET.setText(itemName);
+        descriptionET.setText(item.getDescription());
+        priceET.setText(String.valueOf(item.getPrice()));
+        //imgView.setImageBitmap();
+        //get link
         ratingBar.setRating(itemHearts);
 
         saveButton.setOnClickListener(view -> {
             String newName = String.valueOf(nameET.getText());
-            dataBaseHelper.updateById(collectionName, item.getId(), newName, item.getPrice(),
-                     item.getDescription(), item.getHearts(), item.getImg(), item.getTableID());
+            String newDescription = String.valueOf(descriptionET.getText());
+            int newPrice = Integer.parseInt(String.valueOf(priceET.getText()));
+            int newRating = (int) ratingBar.getRating();
+
+            dataBaseHelper.updateById(collectionName, item.getId(), newName, newPrice,
+                     newDescription, newRating, item.getImg(), item.getTableID());
             Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
         });
 
