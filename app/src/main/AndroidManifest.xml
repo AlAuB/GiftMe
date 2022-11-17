@@ -41,6 +41,7 @@
                 android:value="" />
         </activity>
         <activity android:name=".EditItemActivity"></activity>
+        <activity android:name=".DetailedItemViewActivity"></activity>
     </application>
 
 </manifest>

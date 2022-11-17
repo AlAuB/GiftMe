@@ -43,10 +43,11 @@
                 />
         </LinearLayout>
         <TextView
-            android:id="@+id/textView_itemName"
+            android:id="@+id/itemNameTV"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="Jordan Hydro XI Retro"
+            android:text=""
+            android:hint="Item Name Here"
             android:textColor="@color/black"
             android:textSize="19dp"/>
 
@@ -55,26 +56,29 @@
             android:layout_height="45dp"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/textView_itemPrice"
+                android:id="@+id/itemPriceTV"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:gravity="left|center_vertical"
                 android:textColor="@color/black"
-                android:text="$65"
+                android:text=""
+                android:hint="input price"
                 android:layout_marginLeft="10dp"/>
             <RatingBar
-                android:id="@+id/ratingBar_itemRating"
+                android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="right|center_vertical"
+                android:stepSize="1"
                 android:layout_marginLeft="50dp"
                 />
         </LinearLayout>
         <TextView
-            android:id="@+id/textView_itemDetailInfor"
+            android:id="@+id/descriptionTV"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:text="Note: my size should be 9."
+            android:text=""
+            android:hint="Description of your item here eg: I am size  "
             />
         <Button
             android:id="@+id/button_shop"
