@@ -65,12 +65,13 @@ public class CompactViewFragment extends Fragment {
                 Item currentItem
                         = new Item(Integer.parseInt(cursor.getString(0)),
                         cursor.getString(1),
-                        Integer.parseInt(cursor.getString(2)),
+                        cursor.getString(2),
                         Integer.parseInt(cursor.getString(3)),
-                        cursor.getString(4),
+                        Integer.parseInt(cursor.getString(4)),
                         cursor.getString(5),
-                        Integer.parseInt(cursor.getString(6)),
-                        cursor.getString(7)
+                        cursor.getString(6),
+                        cursor.getString(7),
+                        cursor.getString(8)
                 );
                 items.add(currentItem);
             }

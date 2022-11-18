@@ -15,16 +15,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
     Context context;
     Activity activity;
-    private TextView collectionNameTV;
+    TextView collectionNameTV;
     List<Item> myItems;
 
     public ItemsAdapter(Activity activity, Context context, List<Item> items) {
@@ -52,10 +49,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         itemName.setText(item.getName());
         RatingBar ratingBar = holder.ratingBar;
         ratingBar.setRating(item.getHearts());
-        
         String collectionName = (String) collectionNameTV.getText();
         holder.currentItem = myItems.get(index);
-
         holder.linearLayout.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, DetailedItemViewActivity.class);
             //put in name, price description, hearts, and link etc
@@ -70,9 +65,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("collectionName", collectionName);
             this.activity.finish();
             this.activity.startActivity(intent);
-
         });
-
     }
 
     @Override
@@ -90,10 +83,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            
             itemNameTV = itemView.findViewById(R.id.item_name);
             ratingBar = itemView.findViewById(R.id.rating);
-
             linearLayout = itemView.findViewById(R.id.item_lv);
         }
     }

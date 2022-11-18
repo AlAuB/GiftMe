@@ -1,36 +1,39 @@
 package com.example.giftme;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Objects;
 
 public class AddNewItemManually extends AppCompatActivity {
 
-    EditText name;
+    TextInputEditText name, website, price, extraInfo;
     ImageView imageView;
     Button cancel, save;
+    RatingBar ratingBar;
     String collectionName;
+    DataBaseHelper dataBaseHelper;
     ActivityResultLauncher<Intent> activityResultLauncher;
     Bitmap bitmap;
     Context context;
@@ -44,6 +47,16 @@ public class AddNewItemManually extends AppCompatActivity {
         if (getIntent().hasExtra("collection_name")) {
             collectionName = getIntent().getStringExtra("collection_name");
         }
+
+        website = findViewById(R.id.website_link);
+        name = findViewById(R.id.item_name_input);
+        price = findViewById(R.id.item_price_input);
+        extraInfo = findViewById(R.id.extraInfo);
+        imageView = findViewById(R.id.item_image_input);
+        cancel = findViewById(R.id.cancel);
+        save = findViewById(R.id.save);
+        ratingBar = findViewById(R.id.item_rating);
+        dataBaseHelper = new DataBaseHelper(context);
 
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -64,26 +77,47 @@ public class AddNewItemManually extends AppCompatActivity {
                     }
                 });
 
-        name = findViewById(R.id.item_name_input);
-        imageView = findViewById(R.id.item_image_input);
-        cancel = findViewById(R.id.cancel);
-        save = findViewById(R.id.save);
-
         imageView.setOnClickListener(view -> openGallery());
 
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Add image path into database, save image in folder, and return to MyCollectionItems
-                try {
-                    FileOutputStream fileOutputStream = context.openFileOutput("Test.jpg", Context.MODE_PRIVATE);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                    fileOutputStream.close();
-                    File file = new File(context.getApplicationContext().getFilesDir() + "/Test.jpg");
-                } catch (Exception e) {
-                    Toast.makeText(AddNewItemManually.this, "Save image NOT success", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+        save.setOnClickListener(view -> {
+            //Add image path into database, save image in folder, and return to MyCollectionItems
+            try {
+                String date;
+                Date dateObj = new Date();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    date = LocalDate.now().toString();
+                } else {
+                    @SuppressLint("SimpleDateFormat") DateFormat dateFormat
+                            = new SimpleDateFormat("yyyy-MM-dd");
+                    date = dateFormat.format(dateObj);
                 }
+                String fileName = dateObj.getTime() + ".jpg";
+                FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                fileOutputStream.close();
+                String itemName = Objects.requireNonNull(name.getText()).toString();
+                String itemPrice = Objects.requireNonNull(price.getText()).toString();
+                String itemExtraInfo = Objects.requireNonNull(extraInfo.getText()).toString();
+                if (itemName.length() > 30 || itemPrice.length() > 10 || itemExtraInfo.length() > 100) {
+                    Toast.makeText(context, "Invalid Input", Toast.LENGTH_SHORT).show();
+                } else {
+                    Item item = new Item();
+                    item.setWebsite(Objects.requireNonNull(website.getText()).toString());
+                    item.setDate(date);
+                    item.setName(itemName);
+                    item.setDescription(itemExtraInfo);
+                    item.setHearts(ratingBar.getRating());
+                    item.setPrice(Integer.parseInt(itemPrice));
+                    item.setImg(context.getApplicationContext().getFilesDir() + "/" + fileName);
+                    dataBaseHelper.insertItemIntoCollection(collectionName, item);
+                    Intent intent = new Intent(context, MyCollectionItems.class);
+                    intent.putExtra("view", "Detailed");
+                    intent.putExtra("collection_name", collectionName);
+                    startActivity(intent);
+                }
+            } catch (Exception e) {
+                Toast.makeText(AddNewItemManually.this, "Save image NOT success", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
         });
 

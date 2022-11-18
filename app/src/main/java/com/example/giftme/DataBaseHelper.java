@@ -43,6 +43,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //for ITEMS
     private static final String ITEM_ID = "ITEM_ID";
+    private static final String ITEM_URL = "ITEM_URL";
     private static final String ITEM_NAME = "ITEM_NAME";
     private static final String ITEM_HEARTS = "ITEM_HEARTS";
     private static final String ITEM_PRICE = "ITEM_PRICE";
@@ -78,8 +79,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         String create_table = "CREATE TABLE " + "'" + table_name + "'" + " ( " +
                 ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                ITEM_URL + " TEXT, " +
                 ITEM_NAME + " TEXT, " +
-                ITEM_HEARTS + " INTEGER, " +
+                ITEM_HEARTS + " REAL, " +
                 ITEM_PRICE + " INTEGER, " +
                 ITEM_DESCRIPTION + " TEXT, " +
                 ITEM_DATE + " TEXT, " +
@@ -94,7 +96,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void insertItemIntoCollection(String collection, Item item){
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlInsert = "insert into " + "'" + collection + "'";
-        sqlInsert += " values( null, '" + item.getName()
+        sqlInsert += " values( null, '" + item.getWebsite()
+                + "', '" + item.getName()
                 + "', '" + item.getHearts()
                 + "', '" + item.getPrice()
                 + "', '" + item.getDescription()
@@ -123,7 +126,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     //add link later
     public void updateById(String collection_name, int id, String name, int price, String description,
-                           int hearts, int img, String fireStoreId){
+                           int hearts, String img, String fireStoreId){
         SQLiteDatabase db = this.getWritableDatabase();
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
@@ -206,7 +209,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void deleteData(String rowId, String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         String firestoreId = getData(rowId, tableName);
-        Log.d(TAG, "deleteData: " + firestoreId);
         long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();

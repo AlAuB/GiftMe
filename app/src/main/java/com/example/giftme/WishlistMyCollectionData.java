@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,8 +16,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class WishlistMyCollectionData extends Fragment {
 
@@ -84,11 +85,11 @@ public class WishlistMyCollectionData extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
         builder.setTitle("Create New Collection");
         View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
-        EditText input = view.findViewById(R.id.input);
+        TextInputEditText input = view.findViewById(R.id.input);
         builder.setView(view);
         builder.setPositiveButton("OK", (dialogInterface, i) -> {
-            String insert = input.getText().toString().trim();
-            if (collections.contains(insert) || insert.length() == 0) {
+            String insert = Objects.requireNonNull(input.getText()).toString().trim();
+            if (collections.contains(insert) || insert.length() == 0 || insert.length() > 30) {
                 Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
             } else {
                 //Add collection name to Collection Table
