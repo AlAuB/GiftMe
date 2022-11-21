@@ -16,12 +16,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -51,7 +54,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     private GoogleSignInClient googleSignInClient;
     private GoogleSignInOptions googleSignInOptions;
     private FirebaseAuth firebaseAuth;
-
+    private TextView settingUserNameTV;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -108,6 +111,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         TextView support = (TextView) view.findViewById(R.id.support);
         support.setOnClickListener(this);
 
+        settingUserNameTV = (TextView) view.findViewById(R.id.settings_user_name);
+        //need shared preferences here to keep name the user's
+
         return view;
     }
 
@@ -138,17 +144,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             Intent intent6 = new Intent(getActivity(), Support.class);
             startActivity(intent6);
         }
-        else if(view.getId() == R.id.sign_out_button){
-            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-                @Override
-                public void onResult(Status status) {
-                    // ...
-                    Toast.makeText(getApplicationContext(),"Logged Out",Toast.LENGTH_SHORT).show();
-                    Intent i=new Intent(getApplicationContext(),MainActivity.class);
-                    startActivity(i);
-                }
-            });
-        }
     }
 
     @Override
@@ -163,26 +158,43 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
         firebaseAuth = FirebaseAuth.getInstance();
 
+        //sign in button
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
             }
         });
+        //sign out button
+        signOutButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                signOut();
+            }
+
+        });
 
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private void signOut(){
+        GoogleSignIn.getClient(
+                getContext(),
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        ).signOut();
+
+        if (signInButton.getVisibility()==View.GONE) {
+            signInButton.setVisibility(View.VISIBLE);
+        }
+        if (signOutButton.getVisibility()==View.VISIBLE) {
+            signOutButton.setVisibility(View.GONE);
+        }
+        settingUserNameTV.setText(R.string.guest);
+    }
     private void signIn() {
         Log.d("debugging::", "signIn");
         Intent intent = googleSignInClient.getSignInIntent();
         startActivityForResult(intent, 100);
-//        if (signInButton.getVisibility()==View.VISIBLE) {
-//            signInButton.setVisibility(View.GONE);
-//        }
-//        if (signOutButton.getVisibility()==View.GONE) {
-//            signOutButton.setVisibility(View.VISIBLE);
-//        }
     }
 
     @Override
@@ -223,6 +235,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             Log.d("debugging::", "firebaseAuth: " + user.getIdToken(true));
                             // after connecting the account to firebase, pass the info to the next activity
                             // navigateToSecondActivity();
+                            settingUserNameTV.setText(user.getDisplayName());
+                            if (signInButton.getVisibility()==View.VISIBLE) {
+                                signInButton.setVisibility(View.GONE);
+                            }
+                            if (signOutButton.getVisibility()==View.GONE) {
+                                signOutButton.setVisibility(View.VISIBLE);
+                            }
                         } else {
                             Log.d("debugging::", "firebaseAuth failed: " + task.getException().getMessage());
                         }

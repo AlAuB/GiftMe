@@ -30,4 +30,5 @@
     <string name="enter_name">Name</string>
     <string name="enter_price">Price</string>
     <string name="extra_info">Extra info</string>
+    <string name="guest">GUEST</string>
 </resources>
