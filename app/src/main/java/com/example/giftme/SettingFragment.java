@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,9 +47,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     private String mParam2;
 
     private SignInButton signInButton;
+    private Button signOutButton;
     private GoogleSignInClient googleSignInClient;
     private GoogleSignInOptions googleSignInOptions;
     private FirebaseAuth firebaseAuth;
+
 
     public SettingFragment() {
         // Required empty public constructor
@@ -135,11 +138,24 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             Intent intent6 = new Intent(getActivity(), Support.class);
             startActivity(intent6);
         }
+        else if(view.getId() == R.id.sign_out_button){
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(Status status) {
+                    // ...
+                    Toast.makeText(getApplicationContext(),"Logged Out",Toast.LENGTH_SHORT).show();
+                    Intent i=new Intent(getApplicationContext(),MainActivity.class);
+                    startActivity(i);
+                }
+            });
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         signInButton = (SignInButton) getView().findViewById(R.id.google_sign_in_button);
+        signOutButton = getView().findViewById(R.id.sign_out_button);
+
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -153,6 +169,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 signIn();
             }
         });
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -160,6 +177,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         Log.d("debugging::", "signIn");
         Intent intent = googleSignInClient.getSignInIntent();
         startActivityForResult(intent, 100);
+//        if (signInButton.getVisibility()==View.VISIBLE) {
+//            signInButton.setVisibility(View.GONE);
+//        }
+//        if (signOutButton.getVisibility()==View.GONE) {
+//            signOutButton.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override
