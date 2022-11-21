@@ -35,7 +35,7 @@
                 android:layout_height="40dp"
                 android:scaleX=".4"
                 android:scaleY=".4"
-                android:stepSize="1"
+                android:stepSize="0.5"
                 android:transformPivotX="0dp"
                 android:transformPivotY="0dp"
                 app:layout_constraintEnd_toEndOf="parent"

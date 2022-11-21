@@ -38,11 +38,19 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
         shareImgButton.setOnClickListener(view -> Toast.makeText(this, "This feature is under development", Toast.LENGTH_SHORT).show());
 
         //Default view
-        compactViewFragment = new CompactViewFragment();
-        compactViewFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().
-                replace(R.id.data_view, compactViewFragment, "Compact").
-                setReorderingAllowed(true).commit();
+        if (getIntent().hasExtra("view")) {
+            detailViewFragment = new DetailViewFragment();
+            detailViewFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.data_view, detailViewFragment, "detail").
+                    setReorderingAllowed(true).commit();
+        } else {
+            compactViewFragment = new CompactViewFragment();
+            compactViewFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.data_view, compactViewFragment, "Compact").
+                    setReorderingAllowed(true).commit();
+        }
 
         detailedViewButton.setOnClickListener(view -> {
             detailViewFragment = new DetailViewFragment();

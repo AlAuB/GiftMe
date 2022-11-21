@@ -35,13 +35,14 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         int itemPrice = intent.getIntExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
         if(itemDes.equals("null")){ itemDes = "";}
-        int img = intent.getIntExtra("itemImg", 0);
+        String img = intent.getStringExtra("itemImg");
         String date = " ";
+        String url = "";
         String fsID= "FSid here";
         String collectionName = intent.getStringExtra("collectionName");
 
         //(re)create item obj
-        Item item = new Item(itemID, itemName, itemHearts, itemPrice,
+        Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
         itemDes, date, img, fsID );
         //assign the views
         itemNameTV = findViewById(R.id.itemNameTV);
