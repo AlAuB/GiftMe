@@ -237,4 +237,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.execSQL("DELETE FROM " + "'" + tableName + "'");
     }
+
+    public void deleteItemInCollection(String id, String tableName) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long status = sqLiteDatabase.delete(tableName, ITEM_ID + "=?", new String[]{id});
+        if (status == -1) {
+            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.giftme;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -66,7 +67,33 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             this.activity.finish();
             this.activity.startActivity(intent);
         });
+        holder.linearLayout.setOnLongClickListener(view -> {
+            int index2 = holder.getAdapterPosition();
+            confirmDialogForDeleteItem(index2, collectionName);
+            return true;
+        });
     }
+    private void confirmDialogForDeleteItem(int position, String collectionName) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Delete " + myItems.get(position).getName() + " ?");
+        builder.setMessage("Items details will also be deleted!");
+        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
+            DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+            dataBaseHelper.deleteItemInCollection(String.valueOf(myItems.get(position).getId()),collectionName);
+            //TextView textView = activity.findViewById(R.id.collectionCount);
+            myItems.clear();
+            //textView.setText(String.valueOf(getItemCount()));
+            notifyItemRemoved(position);
+
+
+
+
+        });
+        builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
+        builder.create().show();
+    }
+
 
     @Override
     public int getItemCount() {
