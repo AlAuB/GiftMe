@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     Activity activity;
     TextView collectionNameTV;
     List<Item> myItems;
+    DataBaseHelper dataBaseHelper;
 
     public ItemsAdapter(Activity activity, Context context, List<Item> items) {
         this.context = context;
@@ -79,11 +81,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         builder.setTitle("Delete " + myItems.get(position).getName() + " ?");
         builder.setMessage("Items details will also be deleted!");
         builder.setPositiveButton("Yes", (dialogInterface, i) -> {
-            DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+            dataBaseHelper = new DataBaseHelper(context);
             dataBaseHelper.deleteItemInCollection(String.valueOf(myItems.get(position).getId()),collectionName);
-            //TextView textView = activity.findViewById(R.id.collectionCount);
             myItems.clear();
-            //textView.setText(String.valueOf(getItemCount()));
+            getAllItems();
             notifyItemRemoved(position);
 
 
@@ -92,6 +93,26 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         });
         builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();
+    }
+    private void getAllItems() {
+        Cursor cursor = dataBaseHelper.selectAll(collectionNameTV.getText().toString());
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                Item currentItem
+                        = new Item(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        Integer.parseInt(cursor.getString(3)),
+                        Integer.parseInt(cursor.getString(4)),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(7),
+                        cursor.getString(8)
+                );
+                myItems.add(currentItem);
+            }
+            cursor.close();
+        }
     }
 
 
