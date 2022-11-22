@@ -90,6 +90,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.execSQL(create_table);
     }
 
+
+
     /**
      * insert (new) item to [Collection] table
      * **/
