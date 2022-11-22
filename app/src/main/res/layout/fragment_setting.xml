@@ -34,7 +34,7 @@
             android:padding="10dp">
 
             <ImageView
-                android:id="@+id/profile_pic"
+                android:id="@+id/settings_profile_pic"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"

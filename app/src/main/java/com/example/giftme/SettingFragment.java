@@ -3,12 +3,16 @@ package com.example.giftme;
 import android.app.Activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +37,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SettingFragment#newInstance} factory method to
@@ -55,6 +63,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     private GoogleSignInOptions googleSignInOptions;
     private FirebaseAuth firebaseAuth;
     private TextView settingUserNameTV;
+    private ImageView pfpIV;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -113,6 +122,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
         settingUserNameTV = (TextView) view.findViewById(R.id.settings_user_name);
         //need shared preferences here to keep name the user's
+        pfpIV = (ImageView) view.findViewById(R.id.settings_profile_pic);
 
         return view;
     }
@@ -236,6 +246,21 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             // after connecting the account to firebase, pass the info to the next activity
                             // navigateToSecondActivity();
                             settingUserNameTV.setText(user.getDisplayName());
+                            String personPhoto = user.getPhotoUrl().toString();
+//                            pfpIV.setImageURI(null);
+                            URL url = null;
+                            try {
+                                url = new URL(personPhoto);
+                                Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                pfpIV.setImageBitmap(bitmap);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+//                            pfpIV.setImageURI(user.getPhotoUrl());
+
+                            Log.d("debugging:::", personPhoto);
                             if (signInButton.getVisibility()==View.VISIBLE) {
                                 signInButton.setVisibility(View.GONE);
                             }
