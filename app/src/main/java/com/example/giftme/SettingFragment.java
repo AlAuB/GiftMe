@@ -36,8 +36,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.ObjectInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -247,20 +249,25 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             // navigateToSecondActivity();
                             settingUserNameTV.setText(user.getDisplayName());
                             String personPhoto = user.getPhotoUrl().toString();
-//                            pfpIV.setImageURI(null);
-                            URL url = null;
-                            try {
-                                url = new URL(personPhoto);
-                                Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                pfpIV.setImageBitmap(bitmap);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+
+
+                            if (personPhoto != null) {
+                                Picasso.get().load(personPhoto).into(pfpIV);
                             }
+////                                Picasso.with(this.getContext())
+//                                        .load(currentArticle.getmImageUrl())
+//                                        .centerCrop()
+//                                        .transform(new CircleTransform(50,0))
+//                                        .fit()
+//                                        .into(image);
+//                            }
+//
 
 
+//                            pfpIV.setImageBitmap(bitmap);
 //                            pfpIV.setImageURI(user.getPhotoUrl());
 
-                            Log.d("debugging:::", personPhoto);
+
                             if (signInButton.getVisibility()==View.VISIBLE) {
                                 signInButton.setVisibility(View.GONE);
                             }
