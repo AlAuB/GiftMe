@@ -134,7 +134,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             signedInState();
         }
         else{
-            signOut();
+            signedOutState();
         }
 
         return view;
@@ -205,8 +205,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 getContext(),
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         ).signOut();
-
         SessionManager.clearSession(getContext());
+        signedOutState();
+    }
+
+    private void signedOutState(){
         if (signInButton.getVisibility()==View.GONE) {
             signInButton.setVisibility(View.VISIBLE);
         }
@@ -214,7 +217,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             signOutButton.setVisibility(View.GONE);
         }
         settingUserNameTV.setText(R.string.guest);
-        pfpIV.setImageResource(0);
+        pfpIV.setImageResource(R.drawable.anony_user);
     }
 
     private void signedInState(){
@@ -225,8 +228,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         if (signOutButton.getVisibility()==View.GONE) {
             signOutButton.setVisibility(View.VISIBLE);
         }
+        settingUserNameTV.setText(SessionManager.getUserName(getContext()));
+        if (SessionManager.getUserStatus(getContext()) == true) {
+            Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
+        } else{
+            pfpIV.setImageResource(R.drawable.anony_user);
+        }
 
-        Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
 
     }
     private void signIn() {
