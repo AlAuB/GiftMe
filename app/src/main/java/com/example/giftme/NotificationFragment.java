@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -14,7 +15,8 @@ import androidx.fragment.app.Fragment;
  */
 public class NotificationFragment extends Fragment {
 
-    SessionManager sessionManager;
+    TextView messageCountTV;
+    TextView notifMessageTV;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,8 +61,21 @@ public class NotificationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        sessionManager = new SessionManager();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification, container, false);
+        View view = inflater.inflate(R.layout.fragment_notification, container, false);
+
+        messageCountTV = view.findViewById(R.id.messg_count);
+        notifMessageTV = view.findViewById(R.id.notif_message);
+
+        if(SessionManager.getUserStatus(getContext()) == true){
+            //if user is logged in
+            messageCountTV.setVisibility(View.VISIBLE);
+            notifMessageTV.setText(R.string.notif_messg);
+        }
+        else{
+            messageCountTV.setVisibility(View.GONE);
+            notifMessageTV.setText(R.string.guest_notif_messg);
+        }
+        return view;
     }
 }

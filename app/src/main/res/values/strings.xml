@@ -20,7 +20,8 @@
     <string name="image_for_current_item">Image for current item</string>
     <string name="cancel">Cancel</string>
     <string name="save">save</string>
-    <string name="messg">New Messages</string>
+    <string name="notif_messg">New Messages</string>
+    <string name="guest_notif_messg">You must sign in to see notifications!</string>
     <string name="detailed_view">Detailed view</string>
     <string name="compacted_view">Compacted view</string>
     <string name="edit">Edit</string>
