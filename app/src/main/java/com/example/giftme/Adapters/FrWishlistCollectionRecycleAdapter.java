@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.giftme.R;
 
 import java.util.ArrayList;
 

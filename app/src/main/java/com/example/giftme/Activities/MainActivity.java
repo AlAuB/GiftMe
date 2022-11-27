@@ -1,10 +1,14 @@
-package com.example.giftme;
+package com.example.giftme.Activities;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.giftme.Fragments.NotificationFragment;
+import com.example.giftme.Fragments.SettingFragment;
+import com.example.giftme.Fragments.WishlistFragment;
+import com.example.giftme.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {

@@ -1,8 +1,7 @@
-package com.example.giftme;
+package com.example.giftme.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -11,6 +10,12 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Helpers.Item;
+import com.example.giftme.R;
+
+import java.util.Objects;
 
 public class EditItemActivity extends AppCompatActivity {
     ImageView imgView;
@@ -48,14 +53,15 @@ public class EditItemActivity extends AppCompatActivity {
         int itemHearts = intent.getIntExtra("itemHearts", 0);
         int itemPrice = intent.getIntExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
-        if(itemDes == "null"){ itemDes = "";}
-        int img = intent.getIntExtra("itemImg", 0);
+        if(Objects.equals(itemDes, "null")){ itemDes = "";}
+        String img = intent.getStringExtra("itemImg");
+        String url = "";
         String date = " ";
         String fsID= "FSid here";
         String collectionName = intent.getStringExtra("collectionName");
 
         //(re)create item obj
-        Item item = new Item(itemID, itemName, itemHearts, itemPrice,
+        Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
                 itemDes, date, img);
 
         //set views

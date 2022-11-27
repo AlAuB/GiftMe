@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Fragments;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -15,6 +15,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.giftme.Adapters.ItemsAdapter;
+import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Helpers.Item;
+import com.example.giftme.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -66,11 +70,12 @@ public class CompactViewFragment extends Fragment {
                         = new Item(
                         Integer.parseInt(cursor.getString(0)),
                         cursor.getString(1),
-                        Integer.parseInt(cursor.getString(2)),
+                        cursor.getString(2),
                         Integer.parseInt(cursor.getString(3)),
-                        cursor.getString(4),
+                        Integer.parseInt(cursor.getString(4)),
                         cursor.getString(5),
-                        Integer.parseInt(cursor.getString(6))
+                        cursor.getString(6),
+                        cursor.getString(7)
                 );
                 items.add(currentItem);
             }

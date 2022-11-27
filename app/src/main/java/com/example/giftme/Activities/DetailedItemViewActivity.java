@@ -1,23 +1,21 @@
-package com.example.giftme;
+package com.example.giftme.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.giftme.Helpers.Item;
+import com.example.giftme.R;
+
 public class DetailedItemViewActivity extends AppCompatActivity {
-    ImageView imgView;
     TextView itemNameTV;
     TextView descriptionTV;
     TextView priceTV;
-    //EditText linkET;
     RatingBar ratingBar;
     Button editButton;
     ImageButton backButton;
@@ -35,13 +33,14 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         int itemPrice = intent.getIntExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
         if(itemDes.equals("null")){ itemDes = "";}
-        int img = intent.getIntExtra("itemImg", 0);
+        String img = intent.getStringExtra("itemImg");
         String date = " ";
+        String url = "";
         String fsID= "FSid here";
         String collectionName = intent.getStringExtra("collectionName");
 
         //(re)create item obj
-        Item item = new Item(itemID, itemName, itemHearts, itemPrice,
+        Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
         itemDes, date, img);
         //assign the views
         itemNameTV = findViewById(R.id.itemNameTV);
@@ -77,7 +76,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("collectionName", collectionName);
             finish();
             startActivity(newIntent);
-
         });
 
     }

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="1"
-    tools:context=".WishlistFragment">
+    tools:context=".Fragments.WishlistFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"

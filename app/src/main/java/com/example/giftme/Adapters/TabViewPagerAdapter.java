@@ -1,9 +1,12 @@
-package com.example.giftme;
+package com.example.giftme.Adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.example.giftme.Fragments.WishlistFriendCollectionData;
+import com.example.giftme.Fragments.WishlistMyCollectionData;
 
 public class TabViewPagerAdapter extends FragmentStateAdapter {
 

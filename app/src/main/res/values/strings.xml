@@ -3,7 +3,6 @@
     <string name="wishlist">Wishlist</string>
     <string name="notification">Notification</string>
     <string name="setting">Setting</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="my">MY</string>
     <string name="friend">FRIEND</string>
@@ -21,9 +20,16 @@
     <string name="image_for_current_item">Image for current item</string>
     <string name="cancel">Cancel</string>
     <string name="save">save</string>
-    <string name="messg">New Messages</string>
+    <string name="notif_messg">New Messages</string>
+    <string name="guest_notif_messg">You must sign in to see notifications!</string>
     <string name="detailed_view">Detailed view</string>
     <string name="compacted_view">Compacted view</string>
     <string name="edit">Edit</string>
-    <string name="description_hint">Description of your item here: e.g., I want the blue one!</string>
+    <string name="website_link">Website Link:</string>
+    <string name="enter_the_website_link">Enter the website link</string>
+    <string name="enter_website_link">Website link</string>
+    <string name="enter_name">Name</string>
+    <string name="enter_price">Price</string>
+    <string name="extra_info">Extra info</string>
+    <string name="guest">GUEST</string>
 </resources>

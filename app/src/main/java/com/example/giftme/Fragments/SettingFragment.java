@@ -1,6 +1,4 @@
-package com.example.giftme;
-
-import android.app.Activity;
+package com.example.giftme.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.giftme.FAQ;
+import com.example.giftme.PrivacyPolicy;
+import com.example.giftme.R;
+import com.example.giftme.Helpers.SessionManager;
+import com.example.giftme.Support;
+import com.example.giftme.TermsUse;
+import com.example.giftme.ThemeStore;
+import com.example.giftme.User_Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,57 +36,20 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.squareup.picasso.Picasso;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SettingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SettingFragment extends Fragment implements View.OnClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private SignInButton signInButton;
+    private Button signOutButton;
     private GoogleSignInClient googleSignInClient;
     private GoogleSignInOptions googleSignInOptions;
     private FirebaseAuth firebaseAuth;
+    private TextView settingUserNameTV;
+    private ImageView pfpIV;
 
     public SettingFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SettingFragment newInstance(String param1, String param2) {
-        SettingFragment fragment = new SettingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -87,23 +58,39 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
-        TextView profile = (TextView) view.findViewById(R.id.profile);
+
+        //initialize the views
+        TextView profile = view.findViewById(R.id.profile);
         profile.setOnClickListener(this);
 
-        TextView themes = (TextView) view.findViewById(R.id.themestore);
+        TextView themes = view.findViewById(R.id.themestore);
         themes.setOnClickListener(this);
 
-        TextView policy = (TextView) view.findViewById(R.id.privacy);
+        TextView policy = view.findViewById(R.id.privacy);
         policy.setOnClickListener(this);
 
-        TextView terms = (TextView) view.findViewById(R.id.term);
+        TextView terms = view.findViewById(R.id.term);
         terms.setOnClickListener(this);
 
-        TextView faq = (TextView) view.findViewById(R.id.FAQ);
+        TextView faq = view.findViewById(R.id.FAQ);
         faq.setOnClickListener(this);
 
-        TextView support = (TextView) view.findViewById(R.id.support);
+        TextView support = view.findViewById(R.id.support);
         support.setOnClickListener(this);
+
+        pfpIV = view.findViewById(R.id.settings_profile_pic);
+        settingUserNameTV = view.findViewById(R.id.settings_user_name);
+
+        signInButton = view.findViewById(R.id.google_sign_in_button);
+        signOutButton = view.findViewById(R.id.sign_out_button);
+
+        if(SessionManager.getUserStatus(this.getContext())){
+            //user signed in
+            signedInState();
+        }
+        else{
+            signedOutState();
+        }
 
         return view;
     }
@@ -139,23 +126,59 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        signInButton = (SignInButton) getView().findViewById(R.id.google_sign_in_button);
+        signInButton = view.findViewById(R.id.google_sign_in_button);
+        signOutButton = view.findViewById(R.id.sign_out_button);
+
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .build();
-        googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), googleSignInOptions);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
+        signInButton.setOnClickListener(v -> signIn());
+        signInButton.setOnClickListener(v -> signOut());
+
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private void signOut(){
+        GoogleSignIn.getClient(
+                requireContext(),
+                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        ).signOut();
+        SessionManager.clearSession(getContext());
+        signedOutState();
+    }
+
+    private void signedOutState(){
+        if (signInButton.getVisibility()==View.GONE) {
+            signInButton.setVisibility(View.VISIBLE);
+        }
+        if (signOutButton.getVisibility()==View.VISIBLE) {
+            signOutButton.setVisibility(View.GONE);
+        }
+        settingUserNameTV.setText(R.string.guest);
+        pfpIV.setImageResource(R.drawable.anony_user);
+    }
+
+    private void signedInState(){
+        //sign in button should be replaced by sign out button
+        if (signInButton.getVisibility()==View.VISIBLE) {
+            signInButton.setVisibility(View.GONE);
+        }
+        if (signOutButton.getVisibility()==View.GONE) {
+            signOutButton.setVisibility(View.VISIBLE);
+        }
+        settingUserNameTV.setText(SessionManager.getUserName(getContext()));
+        if (SessionManager.getUserStatus(getContext())) {
+            Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
+        } else{
+            pfpIV.setImageResource(R.drawable.anony_user);
+        }
+
+
+    }
     private void signIn() {
         Log.d("debugging::", "signIn");
         Intent intent = googleSignInClient.getSignInIntent();
@@ -189,7 +212,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         Log.d("debugging::", "firebaseAuthWithGoogle: " + authCredential.getProvider());
         firebaseAuth.signInWithCredential(authCredential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d("debugging::", "onComplete: " + task.isSuccessful());
@@ -200,6 +223,20 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             Log.d("debugging::", "firebaseAuth: " + user.getIdToken(true));
                             // after connecting the account to firebase, pass the info to the next activity
                             // navigateToSecondActivity();
+
+                            SessionManager.setSession(getContext(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
+                            settingUserNameTV.setText(SessionManager.getUserName(getContext()));
+
+                            if (! SessionManager.getUserPFP(getContext()).equals("")) {
+                                Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
+                            }
+
+                            if (signInButton.getVisibility()==View.VISIBLE) {
+                                signInButton.setVisibility(View.GONE);
+                            }
+                            if (signOutButton.getVisibility()==View.GONE) {
+                                signOutButton.setVisibility(View.VISIBLE);
+                            }
                         } else {
                             Log.d("debugging::", "firebaseAuth failed: " + task.getException().getMessage());
                         }

@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -45,6 +45,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     //for ITEMS
     private static final String ITEM_ID = "ITEM_ID";
+    private static final String ITEM_URL = "ITEM_URL";
     private static final String ITEM_NAME = "ITEM_NAME";
     private static final String ITEM_HEARTS = "ITEM_HEARTS";
     private static final String ITEM_PRICE = "ITEM_PRICE";
@@ -80,15 +81,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = this.getWritableDatabase();
         String create_table = "CREATE TABLE " + "'" + table_name + "'" + " ( " +
                 ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                ITEM_URL + " TEXT, " +
                 ITEM_NAME + " TEXT, " +
-                ITEM_HEARTS + " INTEGER, " +
+                ITEM_HEARTS + " REAL, " +
                 ITEM_PRICE + " INTEGER, " +
                 ITEM_DESCRIPTION + " TEXT, " +
                 ITEM_DATE + " TEXT, " +
                 ITEM_IMAGE + " INTEGER, " +
-                FIRESTORE_ID + " TEXT " +" ) "; //redundant???
+                FIRESTORE_ID + " TEXT " +" ) ";
         database.execSQL(create_table);
     }
+
+
 
     /**
      * insert (new) item to [Collection] table
@@ -96,7 +100,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void insertItemIntoCollection(String collection, Item item){
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlInsert = "insert into " + "'" + collection + "'";
-        sqlInsert += " values( null, '" + item.getName()
+        sqlInsert += " values( null, '" + item.getWebsite()
+                + "', '" + item.getName()
                 + "', '" + item.getHearts()
                 + "', '" + item.getPrice()
                 + "', '" + item.getDescription()
@@ -159,7 +164,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     //add link later
     public void updateById(String collection_name, int id, String name, int price, String description,
-                           int hearts, int img, String fireStoreId){
+                           int hearts, String img, String fireStoreId){
         SQLiteDatabase db = this.getWritableDatabase();
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
@@ -172,7 +177,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 +  "where " + ITEM_ID + "= " + id;
 
         db.execSQL(sqlUpdate);
-//        db.close();
     }
 
     /**
@@ -219,6 +223,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //update Collection Name by FirestoreID
+    public void updateCollectionNameById(String fireStoreId, String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String sqlUpdate = "update " + "'" + TABLE_NAME + "'"
+                + " set " + COLUMN_NAME + " = '" + name + "', "
+                +  "where " + FIRESTORE_ID + "= " + fireStoreId;
+
+        db.execSQL(sqlUpdate);
+
+    }
+
     public String getData(String rowId, String tableName) {
         // still using rowId to fetch data.. should be changed to either id or firestore_id
         String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + rowId;
@@ -242,7 +258,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void deleteData(String rowId, String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         String firestoreId = getData(rowId, tableName);
-        Log.d(TAG, "deleteData: " + firestoreId);
         long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
@@ -270,5 +285,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void deleteAll(String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.execSQL("DELETE FROM " + "'" + tableName + "'");
+    }
+
+    public void deleteItemInCollection(String id, String tableName) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long status = sqLiteDatabase.delete(tableName, ITEM_ID + "=?", new String[]{id});
+        if (status == -1) {
+            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+        }
     }
 }

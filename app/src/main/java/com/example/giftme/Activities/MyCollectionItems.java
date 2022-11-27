@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Activities;
 
 import android.os.Bundle;
 import android.widget.ImageButton;
@@ -7,6 +7,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.giftme.Fragments.CompactViewFragment;
+import com.example.giftme.Fragments.DetailViewFragment;
+import com.example.giftme.R;
 
 public class MyCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener{
 
@@ -38,11 +42,19 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
         shareImgButton.setOnClickListener(view -> Toast.makeText(this, "This feature is under development", Toast.LENGTH_SHORT).show());
 
         //Default view
-        compactViewFragment = new CompactViewFragment();
-        compactViewFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().
-                replace(R.id.data_view, compactViewFragment, "Compact").
-                setReorderingAllowed(true).commit();
+        if (getIntent().hasExtra("view")) {
+            detailViewFragment = new DetailViewFragment();
+            detailViewFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.data_view, detailViewFragment, "detail").
+                    setReorderingAllowed(true).commit();
+        } else {
+            compactViewFragment = new CompactViewFragment();
+            compactViewFragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.data_view, compactViewFragment, "Compact").
+                    setReorderingAllowed(true).commit();
+        }
 
         detailedViewButton.setOnClickListener(view -> {
             detailViewFragment = new DetailViewFragment();
