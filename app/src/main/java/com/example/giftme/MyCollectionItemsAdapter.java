@@ -72,14 +72,10 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
         builder.setTitle("Delete " + items.get(position).getName() + " ?");
         builder.setMessage("Items details will also be deleted!");
         builder.setPositiveButton("Yes", (dialogInterface, i) -> {
-
             dataBaseHelper.deleteItemInCollection(String.valueOf(items.get(position).getId()),collectionName);
             items.clear();
             getAllItems();
             notifyItemRemoved(position);
-
-
-
         });
         builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();

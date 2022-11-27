@@ -86,10 +86,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             myItems.clear();
             getAllItems();
             notifyItemRemoved(position);
-
-
-
-
         });
         builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();

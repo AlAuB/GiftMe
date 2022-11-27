@@ -1,7 +1,5 @@
 package com.example.giftme;
 
-import android.app.Activity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,21 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SettingFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SettingFragment extends Fragment implements View.OnClickListener {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private SignInButton signInButton;
     private GoogleSignInClient googleSignInClient;
@@ -54,55 +38,28 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SettingFragment newInstance(String param1, String param2) {
-        SettingFragment fragment = new SettingFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
-        TextView profile = (TextView) view.findViewById(R.id.profile);
+        TextView profile = view.findViewById(R.id.profile);
         profile.setOnClickListener(this);
 
-        TextView themes = (TextView) view.findViewById(R.id.themestore);
+        TextView themes = view.findViewById(R.id.themestore);
         themes.setOnClickListener(this);
 
-        TextView policy = (TextView) view.findViewById(R.id.privacy);
+        TextView policy = view.findViewById(R.id.privacy);
         policy.setOnClickListener(this);
 
-        TextView terms = (TextView) view.findViewById(R.id.term);
+        TextView terms = view.findViewById(R.id.term);
         terms.setOnClickListener(this);
 
-        TextView faq = (TextView) view.findViewById(R.id.FAQ);
+        TextView faq = view.findViewById(R.id.FAQ);
         faq.setOnClickListener(this);
 
-        TextView support = (TextView) view.findViewById(R.id.support);
+        TextView support = view.findViewById(R.id.support);
         support.setOnClickListener(this);
 
         return view;
@@ -139,20 +96,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        signInButton = (SignInButton) getView().findViewById(R.id.google_sign_in_button);
+        signInButton = view.findViewById(R.id.google_sign_in_button);
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .build();
-        googleSignInClient = GoogleSignIn.getClient(getActivity(), googleSignInOptions);
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), googleSignInOptions);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
+        signInButton.setOnClickListener(v -> signIn());
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -189,7 +141,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         Log.d("debugging::", "firebaseAuthWithGoogle: " + authCredential.getProvider());
         firebaseAuth.signInWithCredential(authCredential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d("debugging::", "onComplete: " + task.isSuccessful());

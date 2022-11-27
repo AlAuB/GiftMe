@@ -86,7 +86,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 ITEM_DESCRIPTION + " TEXT, " +
                 ITEM_DATE + " TEXT, " +
                 ITEM_IMAGE + " INTEGER, " +
-                FIRESTORE_ID + " TEXT " +" ) "; //redundant???
+                FIRESTORE_ID + " TEXT " +" ) ";
         database.execSQL(create_table);
     }
 
@@ -141,7 +141,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 +  "where " + ITEM_ID + "= " + id;
 
         db.execSQL(sqlUpdate);
-//        db.close();
     }
 
     /**
