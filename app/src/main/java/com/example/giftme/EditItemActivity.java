@@ -56,7 +56,7 @@ public class EditItemActivity extends AppCompatActivity {
 
         //(re)create item obj
         Item item = new Item(itemID, itemName, itemHearts, itemPrice,
-                itemDes, date, img, fsID );
+                itemDes, date, img);
 
         //set views
         nameET.setText(itemName);

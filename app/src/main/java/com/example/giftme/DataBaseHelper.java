@@ -12,10 +12,12 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -59,7 +61,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String create_table = "CREATE TABLE " + TABLE_NAME + " ( " +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_NAME + " TEXT, " +
+                COLUMN_NAME + " TEXT UNIQUE, " +
                 FIRESTORE_ID + " TEXT " + " ) ";
         sqLiteDatabase.execSQL(create_table);
     }
@@ -102,6 +104,40 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "', '" + item.getImg()
                 + "', '" +  item.getTableID() + "' )";
         db.execSQL(sqlInsert);
+
+
+        // generate a map object to put into firestore
+        Map<String, Object> firestoreItem = convertItemIntoMap(item);
+
+        // find the firestore_id of the collection in sqlite
+        String sqlSelect =
+                "select " + FIRESTORE_ID + " from "
+                + TABLE_NAME + " where "
+                + COLUMN_NAME + " = '" + collection + "'";
+        Cursor cursor = db.rawQuery(sqlSelect, null);
+        if (cursor.moveToFirst()) {
+            Log.d(TAG, "insertItemIntoCollection: " + cursor.getString(0) + " " + "tg757898305@gmail.com");
+            DocumentReference userDocIdRef = fireStore.collection("usersTest").document("tg757898305@gmail.com");
+            DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(cursor.getString(0));
+            collectionDocIdRef.set(firestoreItem, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {Log.d(TAG, "DocumentSnapshot successfully updated!");})
+                    .addOnFailureListener(e -> {Log.w(TAG, "Error updating document", e);});
+        }
+    }
+
+    public Map<String, Object> convertItemIntoMap(Item item){
+        Map<String, Object> itemMap = new HashMap<>();
+        Map<String, Object> nestedItemMap = new HashMap<>();
+        itemMap.put("name", item.getName());
+        itemMap.put("hearts", item.getHearts());
+        itemMap.put("price", item.getPrice());
+        itemMap.put("description", item.getDescription());
+        itemMap.put("date", item.getDate());
+        itemMap.put("img", item.getImg());
+        Log.d(TAG, "convertItemIntoMap: " + item.getTableID());
+        Log.d(TAG, "convertItemIntoMap: " + item.toString());
+        nestedItemMap.put(item.getTableID(), itemMap);
+        return nestedItemMap;
     }
 
     /**
@@ -170,7 +206,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
         wishlistDocIdRef.set(wishlist)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ")"))
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + uniqueId[random] + ")"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
 
         values.put(COLUMN_NAME, name);
@@ -214,7 +250,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
             // after successful delete in local db, delete in firestore as well
             fireStore.collection("usersTest").document(uniqueId[random]).collection("wishlists").document(firestoreId).delete()
-                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted! (user: " + uniqueId[random] + ")"))
                     .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
         }
     }
