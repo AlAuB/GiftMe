@@ -34,12 +34,12 @@
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="5dp"
+        android:hint="@string/enter_name"
         app:counterEnabled="true"
         app:counterMaxLength="30"
-        android:hint="@string/enter_name"
+        app:endIconMode="clear_text"
         app:helperText="Required"
-        app:helperTextTextColor="#F44336"
-        app:endIconMode="clear_text">
+        app:helperTextTextColor="#F44336">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/item_name_input"
@@ -56,9 +56,9 @@
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="5dp"
+        android:hint="@string/enter_price"
         app:counterEnabled="true"
         app:counterMaxLength="10"
-        android:hint="@string/enter_price"
         app:endIconMode="clear_text"
         app:prefixText="$">
 
@@ -77,9 +77,9 @@
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="5dp"
+        android:hint="@string/extra_info"
         app:counterEnabled="true"
         app:counterMaxLength="100"
-        android:hint="@string/extra_info"
         app:endIconMode="clear_text">
 
         <com.google.android.material.textfield.TextInputEditText

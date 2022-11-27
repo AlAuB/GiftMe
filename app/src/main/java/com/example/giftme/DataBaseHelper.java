@@ -86,9 +86,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 ITEM_DESCRIPTION + " TEXT, " +
                 ITEM_DATE + " TEXT, " +
                 ITEM_IMAGE + " INTEGER, " +
-                FIRESTORE_ID + " TEXT " +" ) "; //redundant???
+                FIRESTORE_ID + " TEXT " +" ) ";
         database.execSQL(create_table);
     }
+
+
 
     /**
      * insert (new) item to [Collection] table
@@ -139,7 +141,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 +  "where " + ITEM_ID + "= " + id;
 
         db.execSQL(sqlUpdate);
-//        db.close();
     }
 
     /**
@@ -248,5 +249,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void deleteAll(String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.execSQL("DELETE FROM " + "'" + tableName + "'");
+    }
+
+    public void deleteItemInCollection(String id, String tableName) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        long status = sqLiteDatabase.delete(tableName, ITEM_ID + "=?", new String[]{id});
+        if (status == -1) {
+            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+        }
     }
 }
