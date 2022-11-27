@@ -104,6 +104,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
+        //initialize the views
         TextView profile = (TextView) view.findViewById(R.id.profile);
         profile.setOnClickListener(this);
 
@@ -122,9 +123,19 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         TextView support = (TextView) view.findViewById(R.id.support);
         support.setOnClickListener(this);
 
-        settingUserNameTV = (TextView) view.findViewById(R.id.settings_user_name);
-        //need shared preferences here to keep name the user's
         pfpIV = (ImageView) view.findViewById(R.id.settings_profile_pic);
+        settingUserNameTV = (TextView) view.findViewById(R.id.settings_user_name);
+
+        signInButton = view.findViewById(R.id.google_sign_in_button);
+        signOutButton = view.findViewById(R.id.sign_out_button);
+
+        if(SessionManager.getUserStatus(this.getContext()) == true){
+            //user signed in
+            signedInState();
+        }
+        else{
+            signOut();
+        }
 
         return view;
     }
@@ -195,6 +206,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         ).signOut();
 
+        SessionManager.clearSession(getContext());
         if (signInButton.getVisibility()==View.GONE) {
             signInButton.setVisibility(View.VISIBLE);
         }
@@ -202,6 +214,20 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             signOutButton.setVisibility(View.GONE);
         }
         settingUserNameTV.setText(R.string.guest);
+        pfpIV.setImageResource(0);
+    }
+
+    private void signedInState(){
+        //sign in button should be replaced by sign out button
+        if (signInButton.getVisibility()==View.VISIBLE) {
+            signInButton.setVisibility(View.GONE);
+        }
+        if (signOutButton.getVisibility()==View.GONE) {
+            signOutButton.setVisibility(View.VISIBLE);
+        }
+
+        Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
+
     }
     private void signIn() {
         Log.d("debugging::", "signIn");
@@ -247,12 +273,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             Log.d("debugging::", "firebaseAuth: " + user.getIdToken(true));
                             // after connecting the account to firebase, pass the info to the next activity
                             // navigateToSecondActivity();
-                            settingUserNameTV.setText(user.getDisplayName());
-                            String personPhoto = user.getPhotoUrl().toString();
 
+                            SessionManager.setSession(getContext(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
+                            settingUserNameTV.setText(SessionManager.getUserName(getContext()));
 
-                            if (personPhoto != null) {
-                                Picasso.get().load(personPhoto).into(pfpIV);
+                            if (! SessionManager.getUserPFP(getContext()).equals("")) {
+                                Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
                             }
 ////                                Picasso.with(this.getContext())
 //                                        .load(currentArticle.getmImageUrl())
@@ -262,11 +288,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 //                                        .into(image);
 //                            }
 //
-
-
-//                            pfpIV.setImageBitmap(bitmap);
-//                            pfpIV.setImageURI(user.getPhotoUrl());
-
 
                             if (signInButton.getVisibility()==View.VISIBLE) {
                                 signInButton.setVisibility(View.GONE);
