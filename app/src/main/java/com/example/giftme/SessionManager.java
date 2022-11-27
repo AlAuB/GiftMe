@@ -22,7 +22,7 @@ public class SessionManager {
         editor.putBoolean(USER_STATUS, true);
         editor.putString(USER_NAME, name);
         editor.putString(USER_PFP, picURL);
-        editor.commit();
+        editor.apply();
     }
 
     //GETTERS
@@ -46,6 +46,6 @@ public class SessionManager {
         editor.remove(USER_STATUS);
         editor.remove(USER_NAME);
         editor.remove(USER_PFP);
-        editor.commit();
+        editor.apply();
     }
 }

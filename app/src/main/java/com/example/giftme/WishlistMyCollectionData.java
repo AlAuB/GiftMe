@@ -84,7 +84,7 @@ public class WishlistMyCollectionData extends Fragment {
      */
     private void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
-        if(SessionManager.getUserStatus(context) == true){
+        if(SessionManager.getUserStatus(context)){
             //user is signed in
             builder.setTitle("Create New Collection");
             View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);

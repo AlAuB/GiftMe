@@ -1,9 +1,6 @@
 package com.example.giftme;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,15 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -35,11 +29,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.ObjectInputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class SettingFragment extends Fragment implements View.OnClickListener {
 
@@ -81,13 +70,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         TextView support = view.findViewById(R.id.support);
         support.setOnClickListener(this);
 
-        pfpIV = (ImageView) view.findViewById(R.id.settings_profile_pic);
-        settingUserNameTV = (TextView) view.findViewById(R.id.settings_user_name);
+        pfpIV = view.findViewById(R.id.settings_profile_pic);
+        settingUserNameTV = view.findViewById(R.id.settings_user_name);
 
         signInButton = view.findViewById(R.id.google_sign_in_button);
         signOutButton = view.findViewById(R.id.sign_out_button);
 
-        if(SessionManager.getUserStatus(this.getContext()) == true){
+        if(SessionManager.getUserStatus(this.getContext())){
             //user signed in
             signedInState();
         }
@@ -147,7 +136,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
     private void signOut(){
         GoogleSignIn.getClient(
-                getContext(),
+                requireContext(),
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         ).signOut();
         SessionManager.clearSession(getContext());
@@ -174,7 +163,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             signOutButton.setVisibility(View.VISIBLE);
         }
         settingUserNameTV.setText(SessionManager.getUserName(getContext()));
-        if (SessionManager.getUserStatus(getContext()) == true) {
+        if (SessionManager.getUserStatus(getContext())) {
             Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
         } else{
             pfpIV.setImageResource(R.drawable.anony_user);

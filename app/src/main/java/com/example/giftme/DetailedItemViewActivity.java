@@ -2,22 +2,17 @@ package com.example.giftme;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class DetailedItemViewActivity extends AppCompatActivity {
-    ImageView imgView;
     TextView itemNameTV;
     TextView descriptionTV;
     TextView priceTV;
-    //EditText linkET;
     RatingBar ratingBar;
     Button editButton;
     ImageButton backButton;
@@ -78,7 +73,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("collectionName", collectionName);
             finish();
             startActivity(newIntent);
-
         });
 
     }
