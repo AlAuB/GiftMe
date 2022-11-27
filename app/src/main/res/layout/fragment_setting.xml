@@ -34,19 +34,20 @@
             android:padding="10dp">
 
             <ImageView
-                android:id="@+id/profile_pic"
+                android:id="@+id/settings_profile_pic"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/anony_user" />
 
             <TextView
+                android:id="@+id/settings_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:text="GUEST"
-                android:textSize="20sp" />
+                android:text="@string/guest"
+                android:textSize="20sp"/>
 
             <!--BUTTONS-->
             <com.google.android.gms.common.SignInButton
@@ -55,7 +56,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                />
+            <Button
+                android:id="@+id/sign_out_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center" 
+                android:text="Logout"
+                android:visibility="gone"
+                />
 
         </LinearLayout>
 

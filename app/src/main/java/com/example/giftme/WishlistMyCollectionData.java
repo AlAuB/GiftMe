@@ -47,6 +47,7 @@ public class WishlistMyCollectionData extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_wishlist_my_collection_data, container, false);
         context = this.getContext();
+
         collectionCount = view.findViewById(R.id.collectionCount);
         recyclerView = view.findViewById(R.id.recycleView);
         floatingActionButton = view.findViewById(R.id.action);
@@ -83,29 +84,38 @@ public class WishlistMyCollectionData extends Fragment {
      */
     private void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
-        builder.setTitle("Create New Collection");
-        View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
-        TextInputEditText input = view.findViewById(R.id.input);
-        builder.setView(view);
-        builder.setPositiveButton("OK", (dialogInterface, i) -> {
-            String insert = Objects.requireNonNull(input.getText()).toString().trim();
-            if (collections.contains(insert) || insert.length() == 0 || insert.length() > 30) {
-                Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
-            } else {
-                //Add collection name to Collection Table
-                dataBaseHelper.addNewCollection(insert);
-                //Create collection-name Table in database
-                dataBaseHelper.createNewTable(insert);
-                //Notify insertion change to RecycleView Adapter
-                ids.clear();
-                collections.clear();
-                getAllCollection();
-                myWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
-                //Update collection count
-                collectionCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
-            }
-        });
-        builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
-        builder.create().show();
+        if(SessionManager.getUserStatus(context) == true){
+            //user is signed in
+            builder.setTitle("Create New Collection");
+            View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
+            TextInputEditText input = view.findViewById(R.id.input);
+            builder.setView(view);
+            builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                String insert = Objects.requireNonNull(input.getText()).toString().trim();
+                if (collections.contains(insert) || insert.length() == 0 || insert.length() > 30) {
+                    Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
+                } else {
+                    //Add collection name to Collection Table
+                    dataBaseHelper.addNewCollection(insert);
+                    //Create collection-name Table in database
+                    dataBaseHelper.createNewTable(insert);
+                    //Notify insertion change to RecycleView Adapter
+                    ids.clear();
+                    collections.clear();
+                    getAllCollection();
+                    myWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
+                    //Update collection count
+                    collectionCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
+                }
+            });
+            builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+            builder.create().show();
+        }
+        else{
+            //user is not signed in
+            builder.setTitle("You must sign in to create a wishlist!");
+            builder.show();
+        }
+
     }
 }
