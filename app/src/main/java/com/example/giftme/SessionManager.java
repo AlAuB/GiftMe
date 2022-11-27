@@ -45,6 +45,7 @@ public class SessionManager {
         editor.remove(USER_EMAIL);
         editor.remove(USER_STATUS);
         editor.remove(USER_NAME);
+        editor.remove(USER_PFP);
         editor.commit();
     }
 }
