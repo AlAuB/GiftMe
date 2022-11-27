@@ -56,22 +56,22 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".AddNewItemManually"
+            android:name=".Activities.AddNewItemManually"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".MyCollectionItems"
+            android:name=".Activities.MyCollectionItems"
             android:exported="false"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".Activities.MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
@@ -85,11 +85,11 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".EditItemActivity"
+            android:name=".Activities.EditItemActivity"
             android:screenOrientation="portrait"
             ></activity>
         <activity
-            android:name=".DetailedItemViewActivity"
+            android:name=".Activities.DetailedItemViewActivity"
             android:screenOrientation="portrait"
             ></activity>
     </application>

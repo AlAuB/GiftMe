@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.giftme.FAQ;
+import com.example.giftme.PrivacyPolicy;
+import com.example.giftme.R;
+import com.example.giftme.Helpers.SessionManager;
+import com.example.giftme.Support;
+import com.example.giftme.TermsUse;
+import com.example.giftme.ThemeStore;
+import com.example.giftme.User_Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;

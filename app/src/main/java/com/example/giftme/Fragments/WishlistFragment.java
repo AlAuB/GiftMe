@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.giftme.Adapters.TabViewPagerAdapter;
+import com.example.giftme.R;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.Objects;

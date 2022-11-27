@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.giftme.Adapters.MyWishlistCollectionRecycleAdapter;
+import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.R;
+import com.example.giftme.Helpers.SessionManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 

@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Activities.MyCollectionItems;
+import com.example.giftme.R;
 
 import java.util.ArrayList;
 

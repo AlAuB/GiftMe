@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,6 +17,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Helpers.Item;
+import com.example.giftme.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.FileOutputStream;

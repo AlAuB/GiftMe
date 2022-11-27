@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+
+import com.example.giftme.R;
+import com.example.giftme.Helpers.SessionManager;
 
 public class NotificationFragment extends Fragment {
 

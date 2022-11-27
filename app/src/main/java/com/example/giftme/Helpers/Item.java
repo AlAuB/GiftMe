@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Helpers;
 
 import androidx.annotation.NonNull;
 

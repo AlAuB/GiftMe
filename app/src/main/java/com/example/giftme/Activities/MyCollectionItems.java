@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Activities;
 
 import android.os.Bundle;
 import android.widget.ImageButton;
@@ -7,6 +7,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.giftme.Fragments.CompactViewFragment;
+import com.example.giftme.Fragments.DetailViewFragment;
+import com.example.giftme.R;
 
 public class MyCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener{
 

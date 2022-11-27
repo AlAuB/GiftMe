@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,6 +17,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Helpers.Item;
+import com.example.giftme.R;
 
 import java.io.File;
 import java.util.ArrayList;

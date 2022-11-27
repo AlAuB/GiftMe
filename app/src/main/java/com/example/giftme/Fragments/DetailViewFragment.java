@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.giftme.Adapters.MyCollectionItemsAdapter;
+import com.example.giftme.Activities.AddNewItemManually;
+import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Helpers.Item;
+import com.example.giftme.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

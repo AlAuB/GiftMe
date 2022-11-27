@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.giftme.Adapters.FrWishlistCollectionRecycleAdapter;
+import com.example.giftme.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class WishlistFriendCollectionData extends Fragment {
     TextView collectionCount1;
     RecyclerView recyclerView1;
     FloatingActionButton floatingActionButton1;
-    FrWishlistCollectionRecycleAdapter FrWishlistCollectionRecycleAdapter;
+    com.example.giftme.Adapters.FrWishlistCollectionRecycleAdapter FrWishlistCollectionRecycleAdapter;
 
     ArrayList<String> ids;
     ArrayList<String> collections;

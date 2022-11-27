@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,9 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.giftme.Helpers.Item;
+import com.example.giftme.R;
 
 public class DetailedItemViewActivity extends AppCompatActivity {
     TextView itemNameTV;

@@ -1,4 +1,4 @@
-package com.example.giftme;
+package com.example.giftme.Helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
