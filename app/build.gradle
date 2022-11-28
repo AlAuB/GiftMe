@@ -3,6 +3,16 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+allprojects {
+    repositories {
+        jcenter()
+        google()
+        // this one 👇
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' } // 👈 this one
+        // this one 👆
+    }
+}
+
 android {
     namespace 'com.example.giftme'
     compileSdk 33
@@ -53,4 +63,8 @@ dependencies {
 
     // Also add the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.4.0'
+
+    // Allow displaying Markdown through TextView
+    final def  markwon_version = 'latest_version'
+    implementation "io.noties.markwon:core: $markwon_version"
 }
