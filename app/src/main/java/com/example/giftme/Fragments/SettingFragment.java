@@ -58,7 +58,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
-
         //initialize the views
         TextView profile = view.findViewById(R.id.profile);
         profile.setOnClickListener(this);
