@@ -6,4 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".Support">
 
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/page4"></WebView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
