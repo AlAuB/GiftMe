@@ -1,8 +1,10 @@
-package com.example.giftme;
+package com.example.giftme.Settings;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.giftme.R;
 
 public class User_Profile extends AppCompatActivity {
 
