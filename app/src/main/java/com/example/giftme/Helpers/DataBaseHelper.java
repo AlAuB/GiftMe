@@ -8,12 +8,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -27,8 +34,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "WISHLIST_DB";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "COLLECTIONS";
+    private static final String FRIEND_ID = "FRIEND_ID";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "NAME";
+    private static final String CLAIMED = "CLAIMED";
     private static final String FIRESTORE_ID = "firestore_id";
     private final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
     private static final String TAG = "DataBaseHelper debug::";
@@ -63,6 +72,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String create_table = "CREATE TABLE " + TABLE_NAME + " ( " +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_NAME + " TEXT UNIQUE, " +
+                FRIEND_ID + " TEXT, " +
                 FIRESTORE_ID + " TEXT " + " ) ";
         sqLiteDatabase.execSQL(create_table);
     }
@@ -88,6 +98,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 ITEM_DESCRIPTION + " TEXT, " +
                 ITEM_DATE + " TEXT, " +
                 ITEM_IMAGE + " INTEGER, " +
+                CLAIMED + " INTEGER, " +
                 FIRESTORE_ID + " TEXT " +" ) ";
         database.execSQL(create_table);
     }
@@ -107,6 +118,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "', '" + item.getDescription()
                 + "', '" + item.getDate()
                 + "', '" + item.getImg()
+                + "', '" + item.getClaimed()
                 + "', '" +  item.getTableID() + "' )";
         db.execSQL(sqlInsert);
 
@@ -121,8 +133,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + COLUMN_NAME + " = '" + collection + "'";
         Cursor cursor = db.rawQuery(sqlSelect, null);
         if (cursor.moveToFirst()) {
-            Log.d(TAG, "insertItemIntoCollection: " + cursor.getString(0) + " " + "tg757898305@gmail.com");
-            DocumentReference userDocIdRef = fireStore.collection("usersTest").document("tg757898305@gmail.com");
+            Log.d(TAG, "insertItemIntoCollection: " + cursor.getString(0) + " " + uniqueId[random]);
+            DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
             DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(cursor.getString(0));
             collectionDocIdRef.set(firestoreItem, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> {Log.d(TAG, "DocumentSnapshot successfully updated!");})
@@ -139,8 +151,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         itemMap.put("description", item.getDescription());
         itemMap.put("date", item.getDate());
         itemMap.put("img", item.getImg());
+        itemMap.put("claimed", item.getClaimed());
         Log.d(TAG, "convertItemIntoMap: " + item.getTableID());
-        Log.d(TAG, "convertItemIntoMap: " + item.toString());
         nestedItemMap.put(item.getTableID(), itemMap);
         return nestedItemMap;
     }
@@ -194,10 +206,39 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public void addFriend(String friendId) {
+        Log.d(TAG, "addFriend: " + uniqueId[random]);
+//        Map<String, Object> friend = new HashMap<>();
+        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        userDocIdRef.update("friends", FieldValue.arrayUnion(friendId));
+    }
+
+    public void getFriends() {
+        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        ArrayList<String> friends = new ArrayList<>();
+        userDocIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
     /**
      * Add new collection in the Collection table
      * @param name collection name
      */
+
+    // TODO:: create another function for adding new collection to COLLECTIONS database and firestore when it's a friend's wishlist
 
     public void addNewCollection(String name) {
         SQLiteDatabase database = this.getWritableDatabase();
@@ -206,6 +247,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // add to firestore first to make sure the collection is created
         // for now, get random unique id from the array above and check if the document's been created in firestore
         Map<String, Object> wishlist = new HashMap<>();
+        wishlist.put("Collection Name", name);
 
         DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
@@ -215,12 +257,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         values.put(COLUMN_NAME, name);
         values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
+        values.putNull(FRIEND_ID);
+
         long status = database.insert(TABLE_NAME, null, values);
         if (status == -1) {
             Toast.makeText(context, "Insert failed", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
         }
+
+        // testing
+        addFriend("Adolf Hitler");
+        getFriends();
     }
 
     //update Collection Name by FirestoreID

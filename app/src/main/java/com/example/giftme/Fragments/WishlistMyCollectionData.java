@@ -88,7 +88,7 @@ public class WishlistMyCollectionData extends Fragment {
      */
     private void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
-        if(SessionManager.getUserStatus(context)){
+//        if(SessionManager.getUserStatus(context)){
             //user is signed in
             builder.setTitle("Create New Collection");
             View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
@@ -114,12 +114,12 @@ public class WishlistMyCollectionData extends Fragment {
             });
             builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
             builder.create().show();
-        }
-        else{
-            //user is not signed in
-            builder.setTitle("You must sign in to create a wishlist!");
-            builder.show();
-        }
+//        }
+//        else{
+//            //user is not signed in
+//            builder.setTitle("You must sign in to create a wishlist!");
+//            builder.show();
+//        }
 
     }
 }
