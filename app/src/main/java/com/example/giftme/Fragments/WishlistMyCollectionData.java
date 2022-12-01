@@ -94,7 +94,7 @@ public class WishlistMyCollectionData extends Fragment {
         return view;
     }
 
-    }
+
     public void signedInState(){
         myWishlistCollectionRecycleAdapter
                 = new MyWishlistCollectionRecycleAdapter(activity, this.getContext(), ids, collections);
