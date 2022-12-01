@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.se.omapi.Session;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +49,20 @@ public class WishlistMyCollectionData extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            if(SessionManager.getUserStatus(context)){
+                //user signed in
+                signedInState();
+            }
+            else{
+                signedOutState();
+            }
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -59,16 +76,38 @@ public class WishlistMyCollectionData extends Fragment {
         collections = new ArrayList<>();
         activity = getActivity();
         dataBaseHelper = new DataBaseHelper(this.getContext());
-        getAllCollection();
         collectionCount.setText(String.valueOf(collections.size()));
+        getAllCollection();
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setHasFixedSize(true);
-        myWishlistCollectionRecycleAdapter
-                = new MyWishlistCollectionRecycleAdapter(activity, this.getContext(), ids, collections);
-        recyclerView.setAdapter(myWishlistCollectionRecycleAdapter);
+       //if user is logged in, then show their collections
+
+        if(SessionManager.getUserStatus(context)){
+            //user signed in
+            signedInState();
+        }
+        else{
+            signedOutState();
+        }
+
         floatingActionButton.setOnClickListener(view -> confirmDialog());
         return view;
     }
+
+    }
+    public void signedInState(){
+        myWishlistCollectionRecycleAdapter
+                = new MyWishlistCollectionRecycleAdapter(activity, this.getContext(), ids, collections);
+        recyclerView.setAdapter(myWishlistCollectionRecycleAdapter);
+        if(recyclerView.getVisibility()==View.GONE){
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+    public void signedOutState(){
+        recyclerView.setVisibility(View.GONE);
+    }
+
+
 
     /**
      * Get all rows from database for Collection Table

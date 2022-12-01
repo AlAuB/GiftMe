@@ -52,6 +52,14 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+
+        }
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -136,7 +144,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         firebaseAuth = FirebaseAuth.getInstance();
 
         signInButton.setOnClickListener(v -> signIn());
-        signInButton.setOnClickListener(v -> signOut());
+        signOutButton.setOnClickListener(v -> signOut());
 
         super.onViewCreated(view, savedInstanceState);
     }

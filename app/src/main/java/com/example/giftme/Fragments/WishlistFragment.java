@@ -1,6 +1,7 @@
 package com.example.giftme.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.giftme.Adapters.TabViewPagerAdapter;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
 import com.google.android.material.tabs.TabLayout;
 
@@ -60,4 +62,7 @@ public class WishlistFragment extends Fragment {
         });
         return view;
     }
+
+
 }
+
