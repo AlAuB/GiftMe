@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.se.omapi.Session;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Adapters.MyWishlistCollectionRecycleAdapter;
 import com.example.giftme.Helpers.DataBaseHelper;
-import com.example.giftme.R;
 import com.example.giftme.Helpers.SessionManager;
+import com.example.giftme.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -49,20 +46,6 @@ public class WishlistMyCollectionData extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(savedInstanceState != null){
-            if(SessionManager.getUserStatus(context)){
-                //user signed in
-                signedInState();
-            }
-            else{
-                signedOutState();
-            }
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -78,27 +61,23 @@ public class WishlistMyCollectionData extends Fragment {
         dataBaseHelper = new DataBaseHelper(this.getContext());
         collectionCount.setText(String.valueOf(collections.size()));
         getAllCollection();
+        myWishlistCollectionRecycleAdapter
+                = new MyWishlistCollectionRecycleAdapter(activity, this.getContext(), ids, collections);
+        recyclerView.setAdapter(myWishlistCollectionRecycleAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setHasFixedSize(true);
-       //if user is logged in, then show their collections
-
+        //if user is logged in, then show their collections
         if(SessionManager.getUserStatus(context)){
-            //user signed in
             signedInState();
         }
         else{
             signedOutState();
         }
-
         floatingActionButton.setOnClickListener(view -> confirmDialog());
         return view;
     }
 
-
     public void signedInState(){
-        myWishlistCollectionRecycleAdapter
-                = new MyWishlistCollectionRecycleAdapter(activity, this.getContext(), ids, collections);
-        recyclerView.setAdapter(myWishlistCollectionRecycleAdapter);
         if(recyclerView.getVisibility()==View.GONE){
             recyclerView.setVisibility(View.VISIBLE);
         }
@@ -106,7 +85,6 @@ public class WishlistMyCollectionData extends Fragment {
     public void signedOutState(){
         recyclerView.setVisibility(View.GONE);
     }
-
 
 
     /**
@@ -138,6 +116,12 @@ public class WishlistMyCollectionData extends Fragment {
                 if (collections.contains(insert) || insert.length() == 0 || insert.length() > 30) {
                     Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
                 } else {
+                    if(SessionManager.getUserStatus(context)){
+                        signedInState();
+                    }
+                    else{
+                        signedOutState();
+                    }
                     //Add collection name to Collection Table
                     dataBaseHelper.addNewCollection(insert);
                     //Create collection-name Table in database
@@ -159,6 +143,5 @@ public class WishlistMyCollectionData extends Fragment {
             builder.setTitle("You must sign in to create a wishlist!");
             builder.show();
         }
-
     }
 }
