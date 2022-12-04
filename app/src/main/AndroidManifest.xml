@@ -14,42 +14,42 @@
         android:theme="@style/Theme.GiftMe"
         tools:targetApi="31">
         <activity
-            android:name=".User_Profile"
+            android:name=".Settings.User_Profile"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ThemeStore"
+            android:name=".Settings.ThemeStore"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".PrivacyPolicy"
+            android:name=".Settings.PrivacyPolicy"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".TermsUse"
+            android:name=".Settings.TermsUse"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".FAQ"
+            android:name=".Settings.FAQ"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".Support"
+            android:name=".Settings.Support"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

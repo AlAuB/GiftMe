@@ -3,9 +3,13 @@ package com.example.giftme.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +25,8 @@ import com.example.giftme.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class DetailViewFragment extends Fragment {
 
@@ -60,9 +66,37 @@ public class DetailViewFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(myCollectionItemsAdapter);
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
         return view;
     }
 
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            dataBaseHelper = new DataBaseHelper(context);
+            dataBaseHelper.deleteItemInCollection(String.valueOf(items.get(position).getId()),collection_name);
+            items.clear();
+            getAllItems();
+            myCollectionItemsAdapter.notifyItemRemoved(position);
+
+        }
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(context,R.color.pink))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .addSwipeLeftLabel("Delete")
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(context,R.color.white))
+                    .create().decorate();
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
     private void getAllItems() {
         Cursor cursor = dataBaseHelper.selectAll(collection_name);
         if (cursor.getCount() != 0) {

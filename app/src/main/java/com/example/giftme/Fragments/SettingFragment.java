@@ -15,14 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.giftme.FAQ;
-import com.example.giftme.PrivacyPolicy;
+import com.example.giftme.Settings.FAQ;
+import com.example.giftme.Settings.PrivacyPolicy;
 import com.example.giftme.R;
 import com.example.giftme.Helpers.SessionManager;
-import com.example.giftme.Support;
-import com.example.giftme.TermsUse;
-import com.example.giftme.ThemeStore;
-import com.example.giftme.User_Profile;
+import com.example.giftme.Settings.Support;
+import com.example.giftme.Settings.TermsUse;
+import com.example.giftme.Settings.ThemeStore;
+import com.example.giftme.Settings.User_Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -57,7 +57,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
-
 
         //initialize the views
         TextView profile = view.findViewById(R.id.profile);
@@ -137,7 +136,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         firebaseAuth = FirebaseAuth.getInstance();
 
         signInButton.setOnClickListener(v -> signIn());
-        signInButton.setOnClickListener(v -> signOut());
+        signOutButton.setOnClickListener(v -> signOut());
 
         super.onViewCreated(view, savedInstanceState);
     }

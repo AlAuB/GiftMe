@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FAQ">
+    tools:context=".Settings.FAQ">
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/page3"></WebView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

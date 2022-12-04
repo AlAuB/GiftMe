@@ -3,6 +3,7 @@ package com.example.giftme.Fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,20 +11,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Adapters.MyWishlistCollectionRecycleAdapter;
 import com.example.giftme.Helpers.DataBaseHelper;
-import com.example.giftme.R;
 import com.example.giftme.Helpers.SessionManager;
+import com.example.giftme.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Objects;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class WishlistMyCollectionData extends Fragment {
 
@@ -59,16 +65,65 @@ public class WishlistMyCollectionData extends Fragment {
         collections = new ArrayList<>();
         activity = getActivity();
         dataBaseHelper = new DataBaseHelper(this.getContext());
-        getAllCollection();
         collectionCount.setText(String.valueOf(collections.size()));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerView.setHasFixedSize(true);
+        getAllCollection();
         myWishlistCollectionRecycleAdapter
                 = new MyWishlistCollectionRecycleAdapter(activity, this.getContext(), ids, collections);
         recyclerView.setAdapter(myWishlistCollectionRecycleAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerView.setHasFixedSize(true);
+        //if user is logged in, then show their collections
+        if(SessionManager.getUserStatus(context)){
+            signedInState();
+        }
+        else{
+            signedOutState();
+        }
         floatingActionButton.setOnClickListener(view -> confirmDialog());
+
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
         return view;
     }
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            dataBaseHelper.deleteData(ids.get(position), "COLLECTIONS");
+            dataBaseHelper.deleteTable(collections.get(position));
+            TextView textView = activity.findViewById(R.id.collectionCount);
+            ids.clear();
+            collections.clear();
+            getAllCollection();
+            textView.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
+            myWishlistCollectionRecycleAdapter.notifyItemRemoved(position);
+
+        }
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(context,R.color.pink))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .addSwipeLeftLabel("Delete")
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(context,R.color.white))
+                    .create().decorate();
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
+
+    public void signedInState(){
+        if(recyclerView.getVisibility()==View.GONE){
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+    public void signedOutState(){
+        recyclerView.setVisibility(View.GONE);
+    }
+
 
     /**
      * Get all rows from database for Collection Table
@@ -102,6 +157,12 @@ public class WishlistMyCollectionData extends Fragment {
                 if (collections.contains(insert) || insert.length() == 0 || insert.length() > 30) {
                     Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
                 } else {
+                    if(SessionManager.getUserStatus(context)){
+                        signedInState();
+                    }
+                    else{
+                        signedOutState();
+                    }
                     //Add collection name to Collection Table
                     //friendID is null since this is inserting User's own collection
                     dataBaseHelper.addNewCollection(insert, null);
@@ -118,12 +179,11 @@ public class WishlistMyCollectionData extends Fragment {
             });
             builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
             builder.create().show();
-//        }
-//        else{
-//            //user is not signed in
-//            builder.setTitle("You must sign in to create a wishlist!");
-//            builder.show();
-//        }
-
+        }
+        else{
+            //user is not signed in
+            builder.setTitle("You must sign in to create a wishlist!");
+            builder.show();
+        }
     }
 }
