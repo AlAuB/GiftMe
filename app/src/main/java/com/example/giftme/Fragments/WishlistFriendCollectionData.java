@@ -51,14 +51,6 @@ public class WishlistFriendCollectionData extends Fragment {
         recyclerView1 = view1.findViewById(R.id.recycleView1);
 
         dataBaseHelper = new DataBaseHelper(context1);
-
-        floatingActionButton1 = view1.findViewById(R.id.action1);
-        //testing
-        floatingActionButton1.setOnClickListener(view -> {
-            dataBaseHelper.addNewCollection("Xmas", "Alice");
-            getAllFriends();
-        });
-
         ids = new ArrayList<>();
         collections = new ArrayList<>();
         friendIds = new ArrayList<>();
@@ -68,6 +60,16 @@ public class WishlistFriendCollectionData extends Fragment {
         recyclerView1.setHasFixedSize(true);
         FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collections, friendIds);
         recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
+
+        floatingActionButton1 = view1.findViewById(R.id.action1);
+        //TESTING START
+        floatingActionButton1.setOnClickListener(view -> {
+            dataBaseHelper.addNewCollection("Xmas", "Alice");
+            getAllFriends();
+            FrWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
+            //Update collection count
+        });
+        //TESTING END
         return view1;
     }
 

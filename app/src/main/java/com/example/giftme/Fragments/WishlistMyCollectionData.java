@@ -77,8 +77,11 @@ public class WishlistMyCollectionData extends Fragment {
         Cursor cursor = dataBaseHelper.readCollectionTableAllData(COLLECTION_TABLE_NAME);
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
-                ids.add(cursor.getString(0));
-                collections.add(cursor.getString(1));
+                //if friendId == null
+                if(cursor.getString(2) == null){
+                    ids.add(cursor.getString(0));
+                    collections.add(cursor.getString(1));
+                }
             }
         }
     }
