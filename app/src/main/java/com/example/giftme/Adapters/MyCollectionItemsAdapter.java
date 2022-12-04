@@ -96,8 +96,7 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
                         Integer.parseInt(cursor.getString(4)),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getString(7),
-                        cursor.getString(8)
+                        cursor.getString(7)
                 );
                 items.add(currentItem);
             }

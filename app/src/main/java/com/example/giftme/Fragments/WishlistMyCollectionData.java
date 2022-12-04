@@ -132,8 +132,11 @@ public class WishlistMyCollectionData extends Fragment {
         Cursor cursor = dataBaseHelper.readCollectionTableAllData(COLLECTION_TABLE_NAME);
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
-                ids.add(cursor.getString(0));
-                collections.add(cursor.getString(1));
+                //if friendId == null
+                if(cursor.getString(2) == null){
+                    ids.add(cursor.getString(0));
+                    collections.add(cursor.getString(1));
+                }
             }
         }
     }
@@ -143,7 +146,7 @@ public class WishlistMyCollectionData extends Fragment {
      */
     private void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
-        if(SessionManager.getUserStatus(context)){
+//        if(SessionManager.getUserStatus(context)){
             //user is signed in
             builder.setTitle("Create New Collection");
             View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
@@ -161,7 +164,8 @@ public class WishlistMyCollectionData extends Fragment {
                         signedOutState();
                     }
                     //Add collection name to Collection Table
-                    dataBaseHelper.addNewCollection(insert);
+                    //friendID is null since this is inserting User's own collection
+                    dataBaseHelper.addNewCollection(insert, null);
                     //Create collection-name Table in database
                     dataBaseHelper.createNewTable(insert);
                     //Notify insertion change to RecycleView Adapter

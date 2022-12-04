@@ -109,15 +109,15 @@ public class CompactViewFragment extends Fragment {
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
                 Item currentItem
-                        = new Item(Integer.parseInt(cursor.getString(0)),
+                        = new Item(
+                        Integer.parseInt(cursor.getString(0)),
                         cursor.getString(1),
                         cursor.getString(2),
                         Integer.parseInt(cursor.getString(3)),
                         Integer.parseInt(cursor.getString(4)),
                         cursor.getString(5),
                         cursor.getString(6),
-                        cursor.getString(7),
-                        cursor.getString(8)
+                        cursor.getString(7)
                 );
                 items.add(currentItem);
             }
