@@ -1,8 +1,10 @@
 package com.example.giftme.Fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +29,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class CompactViewFragment extends Fragment {
 
@@ -86,7 +91,17 @@ public class CompactViewFragment extends Fragment {
             getAllItems();
             //textView.setText(String.valueOf(itemAdapter.getItemCount()));
             itemAdapter.notifyItemRemoved(position);
+        }
 
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(context,R.color.pink))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .addSwipeLeftLabel("Delete")
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(context,R.color.white))
+                    .create().decorate();
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
     private void getAllItems() {
