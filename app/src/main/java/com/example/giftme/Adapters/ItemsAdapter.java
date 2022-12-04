@@ -1,10 +1,8 @@
 package com.example.giftme.Adapters;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Activities.DetailedItemViewActivity;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
@@ -29,7 +26,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     Activity activity;
     TextView collectionNameTV;
     List<Item> myItems;
-    DataBaseHelper dataBaseHelper;
 
     public ItemsAdapter(Activity activity, Context context, List<Item> items) {
         this.context = context;
@@ -49,7 +45,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ItemsAdapter.ViewHolder holder, int position) {
         //populate
-        int index = holder.getAdapterPosition();
+        int index = holder.getBindingAdapterPosition();
         Item item = myItems.get(index);
         //set views
         TextView itemName = holder.itemNameTV;
@@ -73,47 +69,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             this.activity.finish();
             this.activity.startActivity(intent);
         });
-        holder.linearLayout.setOnLongClickListener(view -> {
-            int index2 = holder.getAdapterPosition();
-            confirmDialogForDeleteItem(index2, collectionName);
-            return true;
-        });
     }
-    private void confirmDialogForDeleteItem(int position, String collectionName) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Delete " + myItems.get(position).getName() + " ?");
-        builder.setMessage("Items details will also be deleted!");
-        builder.setPositiveButton("Yes", (dialogInterface, i) -> {
-            dataBaseHelper = new DataBaseHelper(context);
-            dataBaseHelper.deleteItemInCollection(String.valueOf(myItems.get(position).getId()),collectionName);
-            myItems.clear();
-            getAllItems();
-            notifyItemRemoved(position);
-        });
-        builder.setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
-        builder.create().show();
-    }
-    private void getAllItems() {
-        Cursor cursor = dataBaseHelper.selectAll(collectionNameTV.getText().toString());
-        if (cursor.getCount() != 0) {
-            while (cursor.moveToNext()) {
-                Item currentItem
-                        = new Item(Integer.parseInt(cursor.getString(0)),
-                        cursor.getString(1),
-                        cursor.getString(2),
-                        Integer.parseInt(cursor.getString(3)),
-                        Integer.parseInt(cursor.getString(4)),
-                        cursor.getString(5),
-                        cursor.getString(6),
-                        cursor.getString(7)
-                );
-                myItems.add(currentItem);
-            }
-            cursor.close();
-        }
-    }
-
 
     @Override
     public int getItemCount() {

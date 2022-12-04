@@ -56,5 +56,4 @@ dependencies {
 
     //use for swipe to delete
     implementation 'com.github.xabaras:RecyclerViewSwipeDecorator:1.3'
-    
 }

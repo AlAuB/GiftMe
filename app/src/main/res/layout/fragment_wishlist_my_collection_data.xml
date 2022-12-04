@@ -63,7 +63,7 @@
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,10 +73,32 @@
         android:clickable="true"
         android:contentDescription="@string/action_button"
         android:focusable="true"
-        android:tint="@android:color/white"
+        android:text="@string/add_new"
+        app:icon="@drawable/ic_add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/ic_add" />
+        app:layout_constraintRight_toRightOf="parent" />
 
+    <ImageView
+        android:id="@+id/empty_icon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:alpha="0.15"
+        android:contentDescription="@string/empty_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_folder" />
+
+    <TextView
+        android:id="@+id/empty_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.4"
+        android:text="@string/no_collection"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/empty_icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.giftme.Activities;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -8,10 +9,11 @@ import androidx.fragment.app.Fragment;
 import com.example.giftme.Fragments.NotificationFragment;
 import com.example.giftme.Fragments.SettingFragment;
 import com.example.giftme.Fragments.WishlistFragment;
+import com.example.giftme.Fragments.WishlistMyCollectionData;
 import com.example.giftme.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener{
 
     BottomNavigationView bottomNavigationView;
     WishlistFragment wishlistFragment;
@@ -48,5 +50,18 @@ public class MainActivity extends AppCompatActivity {
                     setReorderingAllowed(true).commit();
             return true;
         });
+    }
+
+    @Override
+    public void updateData(boolean status) {
+        Toast.makeText(this, "Sign status is changed!", Toast.LENGTH_SHORT).show();
+        Fragment fragment = getSupportFragmentManager().getFragments().get(0);
+        if (fragment instanceof WishlistMyCollectionData) {
+            if (status) {
+                ((WishlistMyCollectionData) fragment).signedInState();
+            } else {
+                ((WishlistMyCollectionData) fragment).signedOutState();
+            }
+        }
     }
 }
