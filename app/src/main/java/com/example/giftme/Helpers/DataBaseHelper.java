@@ -17,6 +17,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -24,6 +25,7 @@ import java.util.Random;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private final Context context;
+    private static String userEmail;
 
     //other
     private static final String DATABASE_NAME = "WISHLIST_DB";
@@ -34,16 +36,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String FIRESTORE_ID = "firestore_id";
     private final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
     private static final String TAG = "DataBaseHelper debug::";
-    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
-            {
-                    "lesleychen456@gmail.com",
-                    "lyujin@bu.edu",
-                    "sj0726@bu.edu",
-                    "tg757898305@gmail.com",
-                    "tchen556@gmail.com",
-                    "wycalex@bu.edu"
-            };
-    private static final int random = new Random().nextInt(uniqueId.length);
+//    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
+//            {
+//                    "lesleychen456@gmail.com",
+//                    "lyujin@bu.edu",
+//                    "sj0726@bu.edu",
+//                    "tg757898305@gmail.com",
+//                    "tchen556@gmail.com",
+//                    "wycalex@bu.edu"
+//            };
+//    private static final int random = new Random().nextInt(uniqueId.length);
 
     //for ITEMS
     private static final String ITEM_ID = "ITEM_ID";
@@ -101,11 +103,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * @param photoUrl the url of the user's profile picture
      */
     public void createUser(String email, String displayName, String photoUrl) {
+        userEmail = email;
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("displayName", displayName);
         user.put("photoUrl", photoUrl);
+        user.put("friends", new ArrayList<String>());
         Log.d(TAG, "createUser: " + email + " " + displayName + " " + photoUrl);
+
         fireStore.collection("users").document(email).set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -191,6 +196,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
 
     public void addNewCollection(String name) {
+        Log.d(TAG, "addNewCollection: " + userEmail);
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -198,7 +204,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // for now, get random unique id from the array above and check if the document's been created in firestore
         Map<String, Object> wishlist = new HashMap<>();
 
-        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
         wishlistDocIdRef.set(wishlist)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ")"))
@@ -255,7 +261,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
             // after successful delete in local db, delete in firestore as well
-            fireStore.collection("usersTest").document(uniqueId[random]).collection("wishlists").document(firestoreId).delete()
+            fireStore.collection("users").document(userEmail).collection("wishlists").document(firestoreId).delete()
                     .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted!"))
                     .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
         }
