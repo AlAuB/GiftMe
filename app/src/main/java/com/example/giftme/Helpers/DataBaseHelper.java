@@ -8,10 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -90,7 +94,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.execSQL(create_table);
     }
 
-
+    /**
+     * Add a new collection to the database
+     * @param email the email of the user
+     * @param displayName the name of the user
+     * @param photoUrl the url of the user's profile picture
+     */
+    public void createUser(String email, String displayName, String photoUrl) {
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", email);
+        user.put("displayName", displayName);
+        user.put("photoUrl", photoUrl);
+        Log.d(TAG, "createUser: " + email + " " + displayName + " " + photoUrl);
+        fireStore.collection("users").document(email).set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "onSuccess: user " + email + " created");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: user " + email + " " + e.getMessage());
+            }
+        });
+    }
 
     /**
      * insert (new) item to [Collection] table
