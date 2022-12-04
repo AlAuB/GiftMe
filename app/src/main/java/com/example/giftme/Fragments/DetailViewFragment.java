@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -60,9 +62,27 @@ public class DetailViewFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(myCollectionItemsAdapter);
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
         return view;
     }
 
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            dataBaseHelper = new DataBaseHelper(context);
+            dataBaseHelper.deleteItemInCollection(String.valueOf(items.get(position).getId()),collection_name);
+            items.clear();
+            getAllItems();
+            myCollectionItemsAdapter.notifyItemRemoved(position);
+
+        }
+    };
     private void getAllItems() {
         Cursor cursor = dataBaseHelper.selectAll(collection_name);
         if (cursor.getCount() != 0) {

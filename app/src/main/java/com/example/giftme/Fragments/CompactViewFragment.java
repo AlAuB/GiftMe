@@ -1,5 +1,6 @@
 package com.example.giftme.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -7,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +23,7 @@ import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -34,6 +38,7 @@ public class CompactViewFragment extends Fragment {
     ArrayList<Item> items;
     String collection_name;
     itemNumListener itemNumListener;
+    Activity activity;
 
     public CompactViewFragment() {
         // Required empty public constructor
@@ -59,9 +64,31 @@ public class CompactViewFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(itemAdapter);
         itemNumListener.updateItemNum(String.valueOf(itemAdapter.getItemCount()));
+
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
+        activity = getActivity();
         return view;
     }
 
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            //TextView textView = activity.findViewById(R.id.collectionCount);
+            dataBaseHelper = new DataBaseHelper(context);
+            dataBaseHelper.deleteItemInCollection(String.valueOf(items.get(position).getId()),collection_name);
+            items.clear();
+            getAllItems();
+            //textView.setText(String.valueOf(itemAdapter.getItemCount()));
+            itemAdapter.notifyItemRemoved(position);
+
+        }
+    };
     private void getAllItems() {
         Cursor cursor = dataBaseHelper.selectAll(collection_name);
         if (cursor.getCount() != 0) {

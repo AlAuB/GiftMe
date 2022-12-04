@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -74,8 +76,30 @@ public class WishlistMyCollectionData extends Fragment {
             signedOutState();
         }
         floatingActionButton.setOnClickListener(view -> confirmDialog());
+
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
         return view;
     }
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getAdapterPosition();
+            dataBaseHelper.deleteData(ids.get(position), "COLLECTIONS");
+            dataBaseHelper.deleteTable(collections.get(position));
+            TextView textView = activity.findViewById(R.id.collectionCount);
+            ids.clear();
+            collections.clear();
+            getAllCollection();
+            textView.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
+            myWishlistCollectionRecycleAdapter.notifyItemRemoved(position);
+
+        }
+    };
 
     public void signedInState(){
         if(recyclerView.getVisibility()==View.GONE){
