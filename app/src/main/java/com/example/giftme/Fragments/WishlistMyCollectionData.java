@@ -107,7 +107,7 @@ public class WishlistMyCollectionData extends Fragment {
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive)
                     .addBackgroundColor(ContextCompat.getColor(context,R.color.pink))
-                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_edit_24)
                     .addSwipeLeftLabel("Delete")
                     .setSwipeLeftLabelColor(ContextCompat.getColor(context,R.color.white))
                     .create().decorate();
@@ -146,7 +146,7 @@ public class WishlistMyCollectionData extends Fragment {
      */
     private void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
-//        if(SessionManager.getUserStatus(context)){
+        if(SessionManager.getUserStatus(context)){
             //user is signed in
             builder.setTitle("Create New Collection");
             View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
