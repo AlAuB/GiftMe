@@ -100,7 +100,8 @@ public class WishlistMyCollectionData extends Fragment {
                     Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
                 } else {
                     //Add collection name to Collection Table
-                    dataBaseHelper.addNewCollection(insert);
+                    //friendID is null since this is inserting User's own collection
+                    dataBaseHelper.addNewCollection(insert, null);
                     //Create collection-name Table in database
                     dataBaseHelper.createNewTable(insert);
                     //Notify insertion change to RecycleView Adapter

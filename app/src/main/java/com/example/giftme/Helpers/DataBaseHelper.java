@@ -34,7 +34,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "WISHLIST_DB";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "COLLECTIONS";
-    private static final String FRIEND_ID = "FRIEND_ID";
+    private static final String FRIEND_ID = "FRIEND_ID"; //refers to friend's email (?)
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "NAME";
     private static final String CLAIMED = "CLAIMED";
@@ -240,7 +240,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // TODO:: create another function for adding new collection to COLLECTIONS database and firestore when it's a friend's wishlist
 
-    public void addNewCollection(String name) {
+    public void addNewCollection(String name, String friendID) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -248,6 +248,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // for now, get random unique id from the array above and check if the document's been created in firestore
         Map<String, Object> wishlist = new HashMap<>();
         wishlist.put("Collection Name", name);
+        wishlist.put("Friend ID", friendID);
 
         DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
@@ -257,7 +258,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         values.put(COLUMN_NAME, name);
         values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
-        values.putNull(FRIEND_ID);
+        values.put(FRIEND_ID, friendID);
 
         long status = database.insert(TABLE_NAME, null, values);
         if (status == -1) {
@@ -266,9 +267,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
         }
 
-        // testing
-        addFriend("Adolf Hitler");
-        getFriends();
+//        // testing
+//        addFriend("Adolf Hitler");
+//        getFriends();
     }
 
     //update Collection Name by FirestoreID

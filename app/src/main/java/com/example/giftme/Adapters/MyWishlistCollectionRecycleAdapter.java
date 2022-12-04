@@ -84,8 +84,11 @@ public class MyWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<MyW
         Cursor cursor = dataBaseHelper.readCollectionTableAllData("COLLECTIONS");
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
-                ids.add(cursor.getString(0));
-                collections.add(cursor.getString(1));
+                //if friendID == null
+                if (cursor.getString(2) == null){
+                    ids.add(cursor.getString(0));
+                    collections.add(cursor.getString(1));
+                }
             }
         }
     }

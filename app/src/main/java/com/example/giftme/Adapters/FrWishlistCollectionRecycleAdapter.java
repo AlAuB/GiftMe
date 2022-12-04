@@ -1,42 +1,62 @@
 package com.example.giftme.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.giftme.Activities.MyCollectionItems;
 import com.example.giftme.R;
 
 import java.util.ArrayList;
 
 public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrWishlistCollectionRecycleAdapter.MyViewHolder> {
 
+    Activity activity;
     Context context;
     ArrayList<String> collections;
     ArrayList<String> ids;
+    ArrayList<String> friendIds;
 
-    public FrWishlistCollectionRecycleAdapter(Context context, ArrayList<String> ids, ArrayList<String> collections) {
+    public FrWishlistCollectionRecycleAdapter(Activity activity, Context context, ArrayList<String> ids, ArrayList<String> collections, ArrayList<String> names) {
+        this.activity = activity;
         this.context = context;
         this.ids = ids;
         this.collections = collections;
+        this.friendIds = names;
     }
 
     @NonNull
     @Override
     public FrWishlistCollectionRecycleAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.my_collection_row, parent, false);
+        View view = inflater.inflate(R.layout.fr_collection_row, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FrWishlistCollectionRecycleAdapter.MyViewHolder holder, int position) {
-        String name = collections.get(position);
-        holder.textView.setText(name);
+        //populate
+        int index = holder.getAdapterPosition();
+        String wishlistName = collections.get(index);
+        String friendID = friendIds.get(index);
+
+        String title = friendID + "'s " + wishlistName + " Wishlist";
+        holder.wlTitleTV.setText(title);
+
+        holder.linearLayout.setOnClickListener(view -> {
+            int index1 = holder.getAdapterPosition();
+            Intent intent = new Intent(context, MyCollectionItems.class);
+            intent.putExtra("collection_name", collections.get(index1));
+            activity.startActivity(intent);
+        });
     }
 
     @Override
@@ -46,11 +66,13 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textView;
+        TextView wlTitleTV;
+        LinearLayout linearLayout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.collection_name_in_row);
+            wlTitleTV = itemView.findViewById(R.id.friend_wishlist_title);
+            linearLayout = itemView.findViewById(R.id.friend_card);
         }
     }
 }
