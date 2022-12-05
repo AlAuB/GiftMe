@@ -33,6 +33,12 @@
                 android:id="@+id/rating"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:progressTint="#F44336"
                 android:scaleX=".4"
                 android:scaleY=".4"
                 android:stepSize="0.5"
@@ -41,14 +47,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.132"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/item_name"
-                android:isIndicator="true"
-                android:numStars="5"
-                android:rating="4"
-                android:clickable="false"
-                android:focusableInTouchMode="false"
-                android:focusable="false"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/item_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

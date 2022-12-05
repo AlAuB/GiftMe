@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -38,6 +40,8 @@ public class DetailViewFragment extends Fragment {
     ArrayList<Item> items;
     String collection_name;
     itemNumListener itemNumListener;
+    ImageView emptyImage;
+    TextView emptyText;
 
     public DetailViewFragment() {
         // Required empty public constructor
@@ -51,6 +55,8 @@ public class DetailViewFragment extends Fragment {
         context = getContext();
         recyclerView = view.findViewById(R.id.recycler_view_detail_view);
         actionButton = view.findViewById(R.id.detailed_view_action);
+        emptyImage = view.findViewById(R.id.detail_view_empty_icon);
+        emptyText = view.findViewById(R.id.detail_view_empty_text);
         dataBaseHelper = new DataBaseHelper(context);
         items = new ArrayList<>();
         if (getArguments() != null) {
@@ -68,6 +74,7 @@ public class DetailViewFragment extends Fragment {
         recyclerView.setAdapter(myCollectionItemsAdapter);
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
         itemNumListener.detailedViewUpdateItemNum(String.valueOf(myCollectionItemsAdapter.getItemCount()));
+        checkEmptyUI();
         return view;
     }
 
@@ -86,6 +93,7 @@ public class DetailViewFragment extends Fragment {
             getAllItems();
             myCollectionItemsAdapter.notifyItemRemoved(position);
             itemNumListener.detailedViewUpdateItemNum(String.valueOf(myCollectionItemsAdapter.getItemCount()));
+            checkEmptyUI();
         }
 
         @Override
@@ -99,6 +107,16 @@ public class DetailViewFragment extends Fragment {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
+
+    private void checkEmptyUI() {
+        if (items.isEmpty()) {
+            emptyImage.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.VISIBLE);
+        } else {
+            emptyImage.setVisibility(View.GONE);
+            emptyText.setVisibility(View.GONE);
+        }
+    }
 
     private void getAllItems() {
         Cursor cursor = dataBaseHelper.selectAll(collection_name);

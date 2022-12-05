@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="right|center_vertical"
-                android:text="Nov 18, 2020"
+                android:text=""
                 android:layout_marginRight="10dp"
                 android:textColor="@color/black"
                 />
@@ -45,7 +45,7 @@
             android:text=""
             android:hint="Item Name Here"
             android:textColor="@color/black"
-            android:textSize="19dp"/>
+            android:textSize="19sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,47 +60,49 @@
                 android:textColor="@color/black"
                 android:text=""
                 android:hint="input price"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginStart="10dp"/>
             <RatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="0dp"
                 android:layout_weight="3"
                 android:layout_height="match_parent"
                 android:gravity="right|center_vertical"
-                android:layout_marginLeft="50dp"
+                android:layout_marginStart="50dp"
                 android:stepSize="1"
                 android:numStars="5"
-                android:isIndicator="true"
-                />
+                android:isIndicator="true" />
         </LinearLayout>
         <TextView
             android:id="@+id/descriptionTV"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:text=""
-            />
+            android:text="" />
+
         <Button
             android:id="@+id/button_shop"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="Shop now"
-            />
+            android:backgroundTint="#03A9F4"
+            android:text="Shop now" />
+
         <Button
             android:id="@+id/button_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="edit"
-            />
+            android:backgroundTint="#FF9800"
+            android:text="edit" />
+
         <Button
             android:id="@+id/button_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:backgroundTint="#F44336"
             android:text="delete"/>
     </LinearLayout>
 

@@ -1,5 +1,6 @@
 package com.example.giftme.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
@@ -38,7 +39,7 @@ public class WishlistMyCollectionData extends Fragment {
     Activity activity;
     Context context;
     ImageView emptyImage;
-    TextView collectionCount, emptyText;
+    TextView collectionCount, emptyText, collectionText;
     RecyclerView recyclerView;
     ExtendedFloatingActionButton floatingActionButton;
     MyWishlistCollectionRecycleAdapter myWishlistCollectionRecycleAdapter;
@@ -59,8 +60,8 @@ public class WishlistMyCollectionData extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_wishlist_my_collection_data, container, false);
         context = this.getContext();
-
         collectionCount = view.findViewById(R.id.collectionCount);
+        collectionText = view.findViewById(R.id.collection_text);
         recyclerView = view.findViewById(R.id.recycleView);
         floatingActionButton = view.findViewById(R.id.action);
         emptyText = view.findViewById(R.id.empty_text);
@@ -104,11 +105,13 @@ public class WishlistMyCollectionData extends Fragment {
             getAllCollection();
             textView.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
             myWishlistCollectionRecycleAdapter.notifyItemRemoved(position);
+            checkEmptyUI();
         }
+
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive)
-                    .addBackgroundColor(ContextCompat.getColor(context,R.color.pink))
+                    .addBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light))
                     .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
                     .addSwipeLeftLabel("Delete")
                     .setSwipeLeftLabelColor(ContextCompat.getColor(context,R.color.white))
@@ -117,18 +120,35 @@ public class WishlistMyCollectionData extends Fragment {
         }
     };
 
+    private void checkEmptyUI() {
+        if (collections.isEmpty()) {
+            emptyImage.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.VISIBLE);
+        } else {
+            emptyImage.setVisibility(View.GONE);
+            emptyText.setVisibility(View.GONE);
+        }
+    }
+
     public void signedInState() {
         recyclerView.setVisibility(View.VISIBLE);
         floatingActionButton.setVisibility(View.VISIBLE);
-        emptyImage.setVisibility(View.GONE);
-        emptyText.setVisibility(View.GONE);
+        collectionCount.setVisibility(View.VISIBLE);
+        collectionText.setVisibility(View.VISIBLE);
+        collectionCount.setText(String.valueOf(collections.size()));
+        checkEmptyUI();
     }
 
+    @SuppressLint("SetTextI18n")
     public void signedOutState() {
         recyclerView.setVisibility(View.GONE);
         floatingActionButton.setVisibility(View.GONE);
+        //Force to set Visible
         emptyImage.setVisibility(View.VISIBLE);
         emptyText.setVisibility(View.VISIBLE);
+        emptyText.setText("Please Sign-In");
+        collectionCount.setVisibility(View.GONE);
+        collectionText.setVisibility(View.GONE);
     }
 
     /**
@@ -169,6 +189,7 @@ public class WishlistMyCollectionData extends Fragment {
                 myWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
                 //Update collection count
                 collectionCount.setText(String.valueOf(myWishlistCollectionRecycleAdapter.getItemCount()));
+                checkEmptyUI();
             }
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
