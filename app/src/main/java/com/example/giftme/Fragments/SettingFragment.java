@@ -230,7 +230,18 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             SessionManager.setSession(getContext(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
                             settingUserNameTV.setText(SessionManager.getUserName(getContext()));
 
-                            dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
+                            dataBaseHelper.checkUserExists(user.getEmail(), new DataBaseHelper.UserExists() {
+                                public void onCallback(boolean exists) {
+                                    if (exists) {
+                                        Log.d("debugging::", "user exists");
+                                        // if the user already exists in the database, then just update the user's email
+                                        dataBaseHelper.setUserEmail(user.getEmail());
+                                    } else {
+                                        Log.d("debugging::", "user does not exist");
+                                        dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
+                                    }
+                                }
+                            });
 
                             if (! SessionManager.getUserPFP(getContext()).equals("")) {
                                 Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);

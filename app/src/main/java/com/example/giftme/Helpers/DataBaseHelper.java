@@ -11,9 +11,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
@@ -60,6 +63,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+        this.userEmail = SessionManager.getUserEmail(context);
     }
 
     @Override
@@ -96,6 +100,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.execSQL(create_table);
     }
 
+    public void setUserEmail(String email) {
+        this.userEmail = email;
+    }
+
     /**
      * Add a new collection to the database
      * @param email the email of the user
@@ -103,7 +111,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * @param photoUrl the url of the user's profile picture
      */
     public void createUser(String email, String displayName, String photoUrl) {
-        userEmail = email;
+        setUserEmail(email);
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("displayName", displayName);
@@ -120,6 +128,39 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "onFailure: user " + email + " " + e.getMessage());
+            }
+        });
+    }
+
+    /**
+     * callback interface for checkUserExists
+     */
+    public interface UserExists {
+        void onCallback(boolean exists);
+    }
+
+    /**
+     * check if the user exists in the database
+     * @param email the email of the user
+     * @param userExists the callback function
+     */
+    public void checkUserExists(String email, UserExists userExists) {
+        DocumentReference docRef = fireStore.collection("users").document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "User exists: " + document.getData());
+                        userExists.onCallback(true);
+                    } else {
+                        Log.d(TAG, "User doesn't exist");
+                        userExists.onCallback(false);
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
             }
         });
     }
@@ -203,6 +244,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // add to firestore first to make sure the collection is created
         // for now, get random unique id from the array above and check if the document's been created in firestore
         Map<String, Object> wishlist = new HashMap<>();
+        wishlist.put("Collection Name", name);
 
         DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
