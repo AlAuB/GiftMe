@@ -12,7 +12,7 @@ import com.example.giftme.Fragments.CompactViewFragment;
 import com.example.giftme.Fragments.DetailViewFragment;
 import com.example.giftme.R;
 
-public class MyCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener{
+public class MyCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener, DetailViewFragment.itemNumListener {
 
     TextView itemCount, collectionName;
     ImageButton shareImgButton, detailedViewButton, compactViewButton;
@@ -43,12 +43,14 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
 
         //Default view
         if (getIntent().hasExtra("view")) {
+            setButtonsAlpha(0);
             detailViewFragment = new DetailViewFragment();
             detailViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.data_view, detailViewFragment, "detail").
                     setReorderingAllowed(true).commit();
         } else {
+            setButtonsAlpha(1);
             compactViewFragment = new CompactViewFragment();
             compactViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
@@ -57,6 +59,9 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
         }
 
         detailedViewButton.setOnClickListener(view -> {
+            setButtonsAlpha(0);
+            compactViewButton.setAlpha(0.5f);
+            detailedViewButton.setAlpha(1.0f);
             detailViewFragment = new DetailViewFragment();
             detailViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
@@ -65,12 +70,23 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
         });
 
         compactViewButton.setOnClickListener(view -> {
+            setButtonsAlpha(1);
             compactViewFragment = new CompactViewFragment();
             compactViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.data_view, compactViewFragment, "Compact").
                     setReorderingAllowed(true).commit();
         });
+    }
+
+    private void setButtonsAlpha(int position) {
+        if (position == 0) {
+            compactViewButton.setAlpha(0.4f);
+            detailedViewButton.setAlpha(1.0f);
+        } else {
+            detailedViewButton.setAlpha(0.4f);
+            compactViewButton.setAlpha(1.0f);
+        }
     }
 
     @Override
@@ -86,7 +102,12 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
     }
 
     @Override
-    public void updateItemNum(String count) {
+    public void compactViewUpdateItemNum(String count) {
+        itemCount.setText(count);
+    }
+
+    @Override
+    public void detailedViewUpdateItemNum(String count) {
         itemCount.setText(count);
     }
 }

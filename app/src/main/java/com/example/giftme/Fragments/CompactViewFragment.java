@@ -22,7 +22,7 @@ import com.example.giftme.Adapters.ItemsAdapter;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class CompactViewFragment extends Fragment {
     View view;
     Context context;
     RecyclerView recyclerView;
-    FloatingActionButton actionButton;
+    ExtendedFloatingActionButton actionButton;
     DataBaseHelper dataBaseHelper;
     ItemsAdapter itemAdapter;
     ArrayList<Item> items;
@@ -66,7 +66,7 @@ public class CompactViewFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(itemAdapter);
-        itemNumListener.updateItemNum(String.valueOf(itemAdapter.getItemCount()));
+        itemNumListener.compactViewUpdateItemNum(String.valueOf(itemAdapter.getItemCount()));
 
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
         activity = getActivity();
@@ -87,6 +87,7 @@ public class CompactViewFragment extends Fragment {
             items.clear();
             getAllItems();
             itemAdapter.notifyItemRemoved(position);
+            itemNumListener.compactViewUpdateItemNum(String.valueOf(itemAdapter.getItemCount()));
         }
 
         @Override
@@ -143,7 +144,7 @@ public class CompactViewFragment extends Fragment {
                 getAllItems();
                 itemAdapter.notifyItemInserted(items.size() - 1);
                 //Update collection count
-                itemNumListener.updateItemNum(String.valueOf(itemAdapter.getItemCount()));
+                itemNumListener.compactViewUpdateItemNum(String.valueOf(itemAdapter.getItemCount()));
             }
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
@@ -151,7 +152,7 @@ public class CompactViewFragment extends Fragment {
     }
 
     public interface itemNumListener {
-        void updateItemNum(String count);
+        void compactViewUpdateItemNum(String count);
     }
 
     @Override

@@ -19,12 +19,10 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -137,9 +135,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
             DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(cursor.getString(0));
             collectionDocIdRef.set(firestoreItem, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {Log.d(TAG, "DocumentSnapshot successfully updated!");})
-                    .addOnFailureListener(e -> {Log.w(TAG, "Error updating document", e);});
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
         }
+        cursor.close();
     }
 
     public Map<String, Object> convertItemIntoMap(Item item){

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Canvas;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -13,16 +16,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.giftme.Adapters.MyCollectionItemsAdapter;
 import com.example.giftme.Activities.AddNewItemManually;
+import com.example.giftme.Adapters.MyCollectionItemsAdapter;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -33,11 +32,12 @@ public class DetailViewFragment extends Fragment {
     View view;
     Context context;
     RecyclerView recyclerView;
-    FloatingActionButton actionButton;
+    ExtendedFloatingActionButton actionButton;
     MyCollectionItemsAdapter myCollectionItemsAdapter;
     DataBaseHelper dataBaseHelper;
     ArrayList<Item> items;
     String collection_name;
+    itemNumListener itemNumListener;
 
     public DetailViewFragment() {
         // Required empty public constructor
@@ -67,6 +67,7 @@ public class DetailViewFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(myCollectionItemsAdapter);
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
+        itemNumListener.detailedViewUpdateItemNum(String.valueOf(myCollectionItemsAdapter.getItemCount()));
         return view;
     }
 
@@ -80,23 +81,25 @@ public class DetailViewFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getBindingAdapterPosition();
             dataBaseHelper = new DataBaseHelper(context);
-            dataBaseHelper.deleteItemInCollection(String.valueOf(items.get(position).getId()),collection_name);
+            dataBaseHelper.deleteItemInCollection(String.valueOf(items.get(position).getId()), collection_name);
             items.clear();
             getAllItems();
             myCollectionItemsAdapter.notifyItemRemoved(position);
-
+            itemNumListener.detailedViewUpdateItemNum(String.valueOf(myCollectionItemsAdapter.getItemCount()));
         }
+
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-            new RecyclerViewSwipeDecorator.Builder(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive)
-                    .addBackgroundColor(ContextCompat.getColor(context,R.color.pink))
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(context, R.color.pink))
                     .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
                     .addSwipeLeftLabel("Delete")
-                    .setSwipeLeftLabelColor(ContextCompat.getColor(context,R.color.white))
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(context, R.color.white))
                     .create().decorate();
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
+
     private void getAllItems() {
         Cursor cursor = dataBaseHelper.selectAll(collection_name);
         if (cursor.getCount() != 0) {
@@ -115,5 +118,22 @@ public class DetailViewFragment extends Fragment {
             }
             cursor.close();
         }
+    }
+
+    public interface itemNumListener {
+        void detailedViewUpdateItemNum(String count);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof itemNumListener)
+            itemNumListener = (itemNumListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        itemNumListener = null;
     }
 }
