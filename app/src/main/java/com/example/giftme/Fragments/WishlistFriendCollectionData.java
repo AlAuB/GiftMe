@@ -65,6 +65,9 @@ public class WishlistFriendCollectionData extends Fragment {
         //TESTING START
         floatingActionButton1.setOnClickListener(view -> {
             dataBaseHelper.addNewCollection("Xmas", "Alice");
+            ids.clear();
+            collections.clear();
+            friendIds.clear();
             getAllFriends();
             FrWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
             //Update collection count
