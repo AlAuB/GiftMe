@@ -13,4 +13,35 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="settings_topics">
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:color">#FFFFFF</item>
+    </style>
+
+    <style name="titles">
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="sub_titles">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="texts">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="image">
+        <item name="android:colorBackground">#FFFFFF</item>
+    </style>
+
 </resources>

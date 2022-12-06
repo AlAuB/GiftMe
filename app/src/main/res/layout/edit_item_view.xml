@@ -109,6 +109,7 @@
         android:orientation="horizontal">
 
         <Button
+            style="@style/texts"
             android:id="@+id/button_cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -118,6 +119,7 @@
             android:text="cancel" />
 
         <Button
+            style="@style/texts"
             android:id="@+id/button_save"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

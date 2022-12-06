@@ -5,25 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="8dp"
     tools:context=".Fragments.SettingFragment">
 
     <TextView
+        style="@style/titles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="10dp"
         android:text="Settings"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        />
 
     <!--TOP PART: PFP AND LOGIN/LOGOUT/DELETE BUTTONS-->
     <LinearLayout
+        style="@style/image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -41,6 +36,7 @@
                 app:srcCompat="@drawable/anony_user" />
 
             <TextView
+                style="@style/texts"
                 android:id="@+id/settings_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,12 +55,13 @@
                 android:textAlignment="center"
                 />
             <Button
+                style="@style/settings_topics"
                 android:id="@+id/sign_out_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:textAlignment="center" 
+                android:textAlignment="center"
                 android:text="Logout"
                 android:visibility="gone"
                 />
@@ -75,7 +72,7 @@
     </LinearLayout>
 
     <!--MID PART-->
-    <!--USER-->
+    <!--Customization-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -86,22 +83,13 @@
             android:orientation="vertical">
 
             <TextView
+                style="@style/settings_topics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="User"
-                android:textColor="@color/black"
+                android:text="Customization"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/profile"
-                style="@style/settings_topics"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="Profile"
-                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -110,7 +98,33 @@
                 android:weightSum="1">
 
                 <TextView
-                    style="@style/settings_topics"
+                    android:id="@+id/mode"
+                    style="@style/texts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.95"
+                    android:padding="5dp"
+                    android:text="Light Mode"
+                    android:textSize="18sp" />
+
+                <Switch
+                    android:id="@+id/switch0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="0.05" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    style="@style/texts"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.95"
@@ -123,45 +137,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_alignParentRight="true"
                     android:layout_weight="0.05" />
 
             </LinearLayout>
 
-            <!--USER END-->
+            <!--Customization END-->
 
-            <!--CUSTOMIZATION-->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="Customization"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
 
+            <!--ABOUT-->
             <TextView
-                android:id="@+id/themestore"
                 style="@style/settings_topics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="Theme Store"
-                android:textSize="18sp" />
-            <!--CUSTOMIZATION END-->
-
-            <!--ABOUT-->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
                 android:text="About"
-                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/privacy"
-                style="@style/settings_topics"
+                style="@style/texts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -170,7 +166,7 @@
 
             <TextView
                 android:id="@+id/term"
-                style="@style/settings_topics"
+                style="@style/texts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -181,17 +177,17 @@
 
             <!--SUPPORT-->
             <TextView
+                style="@style/settings_topics"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="Support"
-                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/FAQ"
-                style="@style/settings_topics"
+                style="@style/texts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -200,7 +196,7 @@
 
             <TextView
                 android:id="@+id/support"
-                style="@style/settings_topics"
+                style="@style/texts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"

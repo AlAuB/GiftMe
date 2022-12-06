@@ -29,6 +29,7 @@
             android:orientation="horizontal">
 
             <TextView
+                style="@style/texts"
                 android:id="@+id/textView_date"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -79,6 +80,7 @@
             android:text="" />
 
         <Button
+            style="@style/texts"
             android:id="@+id/button_shop"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -88,6 +90,7 @@
             android:text="Shop now" />
 
         <Button
+            style="@style/texts"
             android:id="@+id/button_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,6 +100,7 @@
             android:text="edit" />
 
         <Button
+            style="@style/texts"
             android:id="@+id/button_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

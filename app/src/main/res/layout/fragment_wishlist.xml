@@ -14,11 +14,13 @@
         android:layout_weight="0.07">
 
         <com.google.android.material.tabs.TabItem
+            style="@style/texts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my" />
 
         <com.google.android.material.tabs.TabItem
+            style="@style/texts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/friend" />
