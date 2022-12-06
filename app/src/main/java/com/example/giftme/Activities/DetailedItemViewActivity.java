@@ -41,7 +41,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
 
         //(re)create item obj
         Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
-        itemDes, date, img, fsID );
+        itemDes, date, img);
         //assign the views
         itemNameTV = findViewById(R.id.itemNameTV);
         priceTV = findViewById(R.id.itemPriceTV);
