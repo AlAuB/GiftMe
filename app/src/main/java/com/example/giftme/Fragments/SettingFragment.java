@@ -49,6 +49,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     FirebaseAuth firebaseAuth;
     TextView settingUserNameTV;
     ImageView pfpIV;
+    DataBaseHelper dataBaseHelper;
     SignStatusListener listener;
 
     public SettingFragment() {
