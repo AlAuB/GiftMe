@@ -20,6 +20,7 @@ import com.example.giftme.Settings.FAQ;
 import com.example.giftme.Settings.PrivacyPolicy;
 import com.example.giftme.R;
 import com.example.giftme.Helpers.SessionManager;
+import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Settings.Support;
 import com.example.giftme.Settings.TermsUse;
 import com.example.giftme.Settings.ThemeStore;
@@ -91,6 +92,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         } else {
             signedOutState();
         }
+
+        dataBaseHelper = new DataBaseHelper(this.getContext());
 
         return view;
     }
@@ -222,6 +225,20 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
                             SessionManager.setSession(getContext(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
                             settingUserNameTV.setText(SessionManager.getUserName(getContext()));
+                            
+                            dataBaseHelper.checkUserExists(user.getEmail(), new DataBaseHelper.UserExists() {
+                                public void onCallback(boolean exists) {
+                                    if (exists) {
+                                        Log.d("debugging::", "user exists");
+                                        // if the user already exists in the database, then just update the user's email
+                                        dataBaseHelper.setUserEmail(user.getEmail());
+                                    } else {
+                                        Log.d("debugging::", "user does not exist");
+                                        dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
+                                    }
+                                }
+                            });
+
                             listener.updateData(true);
                             if (!SessionManager.getUserPFP(getContext()).equals("")) {
                                 Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
