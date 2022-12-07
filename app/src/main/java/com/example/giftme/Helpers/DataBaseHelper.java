@@ -18,6 +18,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firestore.v1.Value;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -159,10 +160,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return nestedItemMap;
     }
 
-    public Item convertMapIntoItem(Map<String, Object> map){
+    public Item convertMapIntoItem(Map<String, Object> map, String wishlistID){
+//        String tableID = String.valueOf(map.keySet());
+//        String name = String.valueOf(map.get("name"));
+//        float hearts = ((Double)map.get("hearts")).floatValue();
+//        int price = Math.toIntExact(((Long) map.get("price")));
+//        String description = (String) map.get("description");
+//        String date = (String) map.get("date");
+//        String img = (String) map.get("image");
+//        Boolean isClaimed = (Boolean) map.get("claimed");
+//
+//        Item item = new Item(name, hearts, price, description, date, img, isClaimed);
         Item item = new Item();
-        item.setName((String) map.get("name"));
-        Log.d(TAG, "convertMAP" + item.getName());
+        item.setName(String.valueOf(map.get("name")));
+        item.setHearts(((Double)map.get("hearts")).floatValue());
+        item.setPrice(Math.toIntExact(((Long) map.get("price"))));
+        item.setDescription((String) map.get("description"));
+        item.setDate((String) map.get("date"));
+        item.setImg((String) map.get("image"));
+        item.setClaimed((Boolean) map.get("claimed"));
+        item.setKnownTableID(wishlistID);
         return item;
     }
 

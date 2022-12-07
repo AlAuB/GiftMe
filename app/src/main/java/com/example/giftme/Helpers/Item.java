@@ -57,6 +57,7 @@ public class Item {
     // using Java's UUID class to generate a unique ID for each item (cryptographically strong pseudo random number generator)
     public void setTableID(){ tableID = UUID.randomUUID().toString();}
 
+    public void setKnownTableID(String newTableID){ tableID = newTableID;}
     //getters
     public int getId() {return id;}
     public String getWebsite() {return website;}

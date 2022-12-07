@@ -72,12 +72,18 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
             intent.putExtra("itemName", item.getName());
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
-            intent.putExtra("itemDes", item.getDescription());
-            Log.d("itemDes", item.getDescription());
+            if(item.getDescription() != null){
+                intent.putExtra("itemDes", item.getDescription());
+            }
+            else{
+                String noDescription = "Your friend has not set a description.";
+                intent.putExtra("itemDes", noDescription);
+            }
+
             intent.putExtra("itemImg", item.getImg());
             //firestore ID?
             intent.putExtra("collectionName", collectionName);
-            this.activity.finish();
+//            this.activity.finish();
             this.activity.startActivity(intent);
         });
     }
@@ -98,8 +104,8 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemNameTV = itemView.findViewById(R.id.item_name);
-            ratingBar = itemView.findViewById(R.id.rating);
+            itemNameTV = itemView.findViewById(R.id.friend_item_name);
+            ratingBar = itemView.findViewById(R.id.friend_rating);
             claimedPFP = itemView.findViewById(R.id.claimed_pfp);
             linearLayout = itemView.findViewById(R.id.friend_item_lv);
         }

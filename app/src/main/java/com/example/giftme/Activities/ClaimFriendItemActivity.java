@@ -35,7 +35,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         int itemHearts = intent.getIntExtra("itemHearts", 0);
         int itemPrice = intent.getIntExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
-        if(itemDes.equals("null")){ itemDes = "";}
+//        if(itemDes.equals("")){ itemDes = "";}
         String img = intent.getStringExtra("itemImg");
         String date = " ";
         String url = "";
@@ -46,10 +46,10 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
                 itemDes, date, img);
         //assign the views
-        itemNameTV = findViewById(R.id.itemNameTV);
-        priceTV = findViewById(R.id.itemPriceTV);
-        descriptionTV = findViewById(R.id.descriptionTV);
-        ratingBar = findViewById(R.id.ratingBar);
+        itemNameTV = findViewById(R.id.friend_itemNameTV);
+        priceTV = findViewById(R.id.friend_itemPriceTV);
+        descriptionTV = findViewById(R.id.friend_descriptionTV);
+        ratingBar = findViewById(R.id.friend_ratingBar);
 
         //set the views
         itemNameTV.setText(item.getName());
@@ -59,7 +59,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
 
         backButton = findViewById(R.id.imageButton_backToPrevious);
         backButton.setOnClickListener((view -> {
-            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
+            Intent myCollectionItemsIntent = new Intent(this, FriendCollectionItems.class);
             myCollectionItemsIntent.putExtra("collection_name", collectionName);
             finish();
             startActivity(myCollectionItemsIntent);
@@ -69,6 +69,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         if(item.getClaimed() == true){
             //item is already claimed by someone
             claimButton.setClickable(false);
+            //set anony pfp too
         }
         else{
             claimButton.setClickable(true);
