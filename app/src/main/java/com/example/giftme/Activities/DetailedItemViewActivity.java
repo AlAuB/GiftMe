@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 
@@ -18,7 +19,9 @@ public class DetailedItemViewActivity extends AppCompatActivity {
     TextView priceTV;
     RatingBar ratingBar;
     Button editButton;
+    Button deleteButton;
     ImageButton backButton;
+    DataBaseHelper dataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         String img = intent.getStringExtra("itemImg");
         String date = " ";
         String url = "";
-        String fsID= "FSid here";
         String collectionName = intent.getStringExtra("collectionName");
 
         //(re)create item obj
@@ -76,6 +78,15 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("collectionName", collectionName);
             finish();
             startActivity(newIntent);
+        });
+        deleteButton = findViewById(R.id.button_delete);
+        deleteButton.setOnClickListener(view->{
+            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
+            myCollectionItemsIntent.putExtra("collection_name", collectionName);
+            finish();
+            startActivity(myCollectionItemsIntent);
+            dataBaseHelper = new DataBaseHelper(this);
+            dataBaseHelper.deleteItemInCollection(String.valueOf(item.getId()),collectionName);
         });
 
     }

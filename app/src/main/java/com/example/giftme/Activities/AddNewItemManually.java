@@ -46,11 +46,9 @@ public class AddNewItemManually extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_item_manually);
         context = getApplicationContext();
-
         if (getIntent().hasExtra("collection_name")) {
             collectionName = getIntent().getStringExtra("collection_name");
         }
-
         website = findViewById(R.id.website_link);
         name = findViewById(R.id.item_name_input);
         price = findViewById(R.id.item_price_input);
@@ -60,7 +58,6 @@ public class AddNewItemManually extends AppCompatActivity {
         save = findViewById(R.id.save);
         ratingBar = findViewById(R.id.item_rating);
         dataBaseHelper = new DataBaseHelper(context);
-
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {

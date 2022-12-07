@@ -1,5 +1,6 @@
 package com.example.giftme.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,14 +42,14 @@ import com.squareup.picasso.Picasso;
 
 public class SettingFragment extends Fragment implements View.OnClickListener {
 
-    private SignInButton signInButton;
-    private Button signOutButton;
-    private GoogleSignInClient googleSignInClient;
-    private GoogleSignInOptions googleSignInOptions;
-    private FirebaseAuth firebaseAuth;
-    private TextView settingUserNameTV;
-    private ImageView pfpIV;
-    private DataBaseHelper dataBaseHelper;
+    SignInButton signInButton;
+    Button signOutButton;
+    GoogleSignInClient googleSignInClient;
+    GoogleSignInOptions googleSignInOptions;
+    FirebaseAuth firebaseAuth;
+    TextView settingUserNameTV;
+    ImageView pfpIV;
+    SignStatusListener listener;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -85,11 +86,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         signInButton = view.findViewById(R.id.google_sign_in_button);
         signOutButton = view.findViewById(R.id.sign_out_button);
 
-        if(SessionManager.getUserStatus(this.getContext())){
+        if (SessionManager.getUserStatus(this.getContext())) {
             //user signed in
             signedInState();
-        }
-        else{
+        } else {
             signedOutState();
         }
 
@@ -100,28 +100,22 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-
         if (view.getId() == R.id.profile) {
             Intent intent = new Intent(getActivity(), User_Profile.class);
             startActivity(intent);
-        }
-        else if (view.getId() == R.id.themestore){
+        } else if (view.getId() == R.id.themestore) {
             Intent intent2 = new Intent(getActivity(), ThemeStore.class);
             startActivity(intent2);
-        }
-        else if (view.getId() == R.id.privacy){
+        } else if (view.getId() == R.id.privacy) {
             Intent intent3 = new Intent(getActivity(), PrivacyPolicy.class);
             startActivity(intent3);
-        }
-        else if (view.getId() == R.id.term){
+        } else if (view.getId() == R.id.term) {
             Intent intent4 = new Intent(getActivity(), TermsUse.class);
             startActivity(intent4);
-        }
-        else if (view.getId() == R.id.FAQ){
+        } else if (view.getId() == R.id.FAQ) {
             Intent intent5 = new Intent(getActivity(), FAQ.class);
             startActivity(intent5);
-        }
-        else if (view.getId() == R.id.support){
+        } else if (view.getId() == R.id.support) {
             Intent intent6 = new Intent(getActivity(), Support.class);
             startActivity(intent6);
         }
@@ -145,43 +139,45 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void signOut(){
+    private void signOut() {
         GoogleSignIn.getClient(
                 requireContext(),
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         ).signOut();
+        listener.updateData(false);
         SessionManager.clearSession(getContext());
         signedOutState();
     }
 
-    private void signedOutState(){
-        if (signInButton.getVisibility()==View.GONE) {
+    private void signedOutState() {
+        if (signInButton.getVisibility() == View.GONE) {
             signInButton.setVisibility(View.VISIBLE);
         }
-        if (signOutButton.getVisibility()==View.VISIBLE) {
+        if (signOutButton.getVisibility() == View.VISIBLE) {
             signOutButton.setVisibility(View.GONE);
         }
         settingUserNameTV.setText(R.string.guest);
         pfpIV.setImageResource(R.drawable.anony_user);
     }
 
-    private void signedInState(){
+    private void signedInState() {
         //sign in button should be replaced by sign out button
-        if (signInButton.getVisibility()==View.VISIBLE) {
+        if (signInButton.getVisibility() == View.VISIBLE) {
             signInButton.setVisibility(View.GONE);
         }
-        if (signOutButton.getVisibility()==View.GONE) {
+        if (signOutButton.getVisibility() == View.GONE) {
             signOutButton.setVisibility(View.VISIBLE);
         }
         settingUserNameTV.setText(SessionManager.getUserName(getContext()));
         if (SessionManager.getUserStatus(getContext())) {
             Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
-        } else{
+        } else {
             pfpIV.setImageResource(R.drawable.anony_user);
         }
 
 
     }
+
     private void signIn() {
         Log.d("debugging::", "signIn");
         Intent intent = googleSignInClient.getSignInIntent();
@@ -229,7 +225,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
                             SessionManager.setSession(getContext(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
                             settingUserNameTV.setText(SessionManager.getUserName(getContext()));
-
+                            
                             dataBaseHelper.checkUserExists(user.getEmail(), new DataBaseHelper.UserExists() {
                                 public void onCallback(boolean exists) {
                                     if (exists) {
@@ -243,14 +239,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                                 }
                             });
 
-                            if (! SessionManager.getUserPFP(getContext()).equals("")) {
+                            listener.updateData(true);
+                            if (!SessionManager.getUserPFP(getContext()).equals("")) {
                                 Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
                             }
 
-                            if (signInButton.getVisibility()==View.VISIBLE) {
+                            if (signInButton.getVisibility() == View.VISIBLE) {
                                 signInButton.setVisibility(View.GONE);
                             }
-                            if (signOutButton.getVisibility()==View.GONE) {
+                            if (signOutButton.getVisibility() == View.GONE) {
                                 signOutButton.setVisibility(View.VISIBLE);
                             }
                         } else {
@@ -258,17 +255,22 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                         }
                     }
                 });
+    }
 
-            // just an example of how to navigate to another activity
-    //    private void navigateToSecondActivity() {
-    //        Intent intent = new Intent(getActivity(), SecondActivity.class);
-    //        startActivity(intent);
-    //    }
+    public interface SignStatusListener {
+        void updateData(boolean status);
+    }
 
-        // inside the second activity, you can call the singed in account by following:
-        // GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        // GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        // GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        // account.getId(); account.getDisplayName(); account.getEmail(); account.getIdToken();
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof SignStatusListener)
+            listener = (SignStatusListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 }

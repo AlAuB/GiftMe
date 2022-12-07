@@ -42,7 +42,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "WISHLIST_DB";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "COLLECTIONS";
-    private static final String FRIEND_ID = "FRIEND_ID";
+    private static final String FRIEND_ID = "FRIEND_ID"; //refers to friend's email (?)
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "NAME";
     private static final String CLAIMED = "CLAIMED";
@@ -419,11 +419,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void deleteItemInCollection(String id, String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        long status = sqLiteDatabase.delete(tableName, ITEM_ID + "=?", new String[]{id});
+        String tempName = "'" + tableName + "'";
+        long status = sqLiteDatabase.delete(tempName, ITEM_ID + "=?", new String[]{id});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Chnage the collection table name
+     * @param oldName String
+     * @param newName String
+     */
+    public void changeTableName(String oldName, String newName) {
+        String query = "ALTER TABLE " + "'" + oldName + "'" + " RENAME TO " + "'" + newName + "'";
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL(query);
     }
 }

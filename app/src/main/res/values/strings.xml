@@ -32,4 +32,10 @@
     <string name="enter_price">Price</string>
     <string name="extra_info">Extra info</string>
     <string name="guest">GUEST</string>
+    <string name="empty_icon">empty icon</string>
+    <string name="no_collection">No Collection</string>
+    <string name="add_new">Add New</string>
+    <string name="_0">0</string>
+    <string name="no_item">No Item</string>
+    <string name="no_notification">No Notification</string>
 </resources>

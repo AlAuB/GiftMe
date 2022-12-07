@@ -2,25 +2,26 @@ package com.example.giftme.Adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.database.Cursor;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.giftme.Activities.DetailedItemViewActivity;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
+import com.google.android.material.card.MaterialCardView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        int index = holder.getAdapterPosition();
+        int index = holder.getBindingAdapterPosition();
         Item item = items.get(index);
         holder.name.setText(item.getName());
         holder.price.setText("$" + item.getPrice());
@@ -61,8 +62,22 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
         Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
         holder.imageView.setImageBitmap(getBitMap);
         holder.ratingBar.setRating(item.getHearts());
-
-        String collectionName = (String) collectionNameTV.getText();
+        holder.cardView.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, DetailedItemViewActivity.class);
+            //put in name, price description, hearts, and link etc
+            intent.putExtra("itemID", item.getId());
+            intent.putExtra("itemName", item.getName());
+            intent.putExtra("itemHearts", item.getHearts());
+            intent.putExtra("itemPrice", item.getPrice());
+            intent.putExtra("itemDes", item.getDescription());
+            intent.putExtra("itemDate", item.getDate());
+            Log.d("itemDes", item.getDescription());
+            intent.putExtra("itemImg", item.getImg());
+            //firestore ID?
+            intent.putExtra("collectionName", collectionNameTV.getText().toString());
+            activity.finish();
+            activity.startActivity(intent);
+        });
     }
 
     @Override
@@ -75,7 +90,7 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
         ImageView imageView;
         RatingBar ratingBar;
         TextView name, price, date;
-        public LinearLayout linearLayout;
+        MaterialCardView cardView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -84,7 +99,7 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             price = itemView.findViewById(R.id.detail_view_item_price);
             date = itemView.findViewById(R.id.detail_view_item_date);
             ratingBar = itemView.findViewById(R.id.detail_view_item_rating);
-            linearLayout = itemView.findViewById(R.id.items_row);
+            cardView = itemView.findViewById(R.id.items_row);
         }
     }
 }
