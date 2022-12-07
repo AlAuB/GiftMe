@@ -340,7 +340,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
 
         // testing
-        addFriend("Adolf Hitler");
         getFriends();
     }
 
@@ -385,9 +384,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
             // after successful delete in local db, delete in firestore as well
-            fireStore.collection("users").document(userEmail).collection("wishlists").document(firestoreId).delete()
-                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted! (user: " + userEmail + ")"))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+            DocumentReference wishlistRef = fireStore.collection("users").document(userEmail).collection("wishlists").document(firestoreId);
+            Map<String, Object> updates = new HashMap<>();
+            updates.put(firestoreId, FieldValue.delete());
+            wishlistRef.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "DocumentSnapshot " + firestoreId + "successfully deleted!");
+                    } else {
+                        Log.w(TAG, "Error deleting document", task.getException());
+                    }
+                }
+            });
         }
     }
 
