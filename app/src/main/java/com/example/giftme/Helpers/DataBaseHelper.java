@@ -34,12 +34,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "WISHLIST_DB";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "COLLECTIONS";
-    private static final String FRIEND_ID = "FRIEND_ID"; //refers to friend's email (?)
+    private static final String FRIEND_ID = "FRIEND_ID";
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_NAME = "NAME";
     private static final String CLAIMED = "CLAIMED";
     private static final String FIRESTORE_ID = "firestore_id";
     private final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+    private static final String COLLECTIONS_USERS = "usersTest"; //this should be changed to 'users'
+    private static final String COLLECTIONS_WISHLISTS = "wishlists";
     private static final String TAG = "DataBaseHelper debug::";
     private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
             {
@@ -157,6 +159,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return nestedItemMap;
     }
 
+    public Item convertMapIntoItem(Map<String, Object> map){
+        Item item = new Item();
+        item.setName((String) map.get("name"));
+        Log.d(TAG, "convertMAP" + item.getName());
+        return item;
+    }
+
+//    public List<Item> getAllItemsFromDatabase
+//
     /**
      * get all items from a collection table
      *

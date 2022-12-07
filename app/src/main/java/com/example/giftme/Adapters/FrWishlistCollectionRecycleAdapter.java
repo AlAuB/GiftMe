@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.giftme.Activities.FriendCollectionItems;
 import com.example.giftme.Activities.MyCollectionItems;
 import com.example.giftme.R;
 
@@ -53,7 +54,7 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
 
         holder.linearLayout.setOnClickListener(view -> {
             int index1 = holder.getAdapterPosition();
-            Intent intent = new Intent(context, MyCollectionItems.class);
+            Intent intent = new Intent(context, FriendCollectionItems.class);
             intent.putExtra("collection_name", collections.get(index1));
             activity.startActivity(intent);
         });

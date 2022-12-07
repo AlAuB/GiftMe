@@ -109,10 +109,11 @@ public class WishlistMyCollectionData extends Fragment {
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive)
                     .addBackgroundColor(ContextCompat.getColor(context,R.color.pink))
-                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_edit_24)
                     .addSwipeLeftLabel("Delete")
                     .setSwipeLeftLabelColor(ContextCompat.getColor(context,R.color.white))
                     .create().decorate();
+            //ic_baseline_edit_24 -> ic_baseline_delete_24
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
@@ -138,8 +139,11 @@ public class WishlistMyCollectionData extends Fragment {
         Cursor cursor = dataBaseHelper.readCollectionTableAllData(COLLECTION_TABLE_NAME);
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
-                ids.add(cursor.getString(0));
-                collections.add(cursor.getString(1));
+                //if this isn't the friend's wishlist
+                if(cursor.getBlob(2) == null){
+                    ids.add(cursor.getString(0));
+                    collections.add(cursor.getString(1));
+                }
             }
         }
     }
