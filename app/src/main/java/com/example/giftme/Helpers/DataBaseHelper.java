@@ -265,10 +265,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
         }
-
-//        // testing
-//        addFriend("Adolf Hitler");
-//        getFriends();
     }
 
     //update Collection Name by FirestoreID
@@ -344,5 +340,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Chnage the collection table name
+     * @param oldName String
+     * @param newName String
+     */
+    public void changeTableName(String oldName, String newName) {
+        String query = "ALTER TABLE " + "'" + oldName + "'" + " RENAME TO " + "'" + newName + "'";
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL(query);
     }
 }
