@@ -355,9 +355,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public String getData(String rowId, String tableName) {
+    public String getData(String id, String tableName) {
         // still using rowId to fetch data.. should be changed to either id or firestore_id
-        String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + rowId;
+        String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + id;
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor;
         if (sqLiteDatabase != null) {
@@ -373,11 +373,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * Delete specific data in specific table
-     * @param rowId id for that item in that table
+     * @param id id for that item in that table
+     * @param tableName table name
      */
-    public void deleteData(String rowId, String tableName) {
+    public void deleteData(String id, String tableName) {
+        Log.d(TAG, "deleteData: " + id + " " + tableName);
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String firestoreId = getData(rowId, tableName);
+        Log.d(TAG, "deleteData: " + "test");
+        String firestoreId = getData(id, tableName);
         long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
