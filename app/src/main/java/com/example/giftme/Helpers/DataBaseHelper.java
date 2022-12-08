@@ -47,6 +47,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_NAME = "COLLECTION_NAME";
     private static final String CLAIMED = "CLAIMED";
     private static final String USER_NAME = "USER_NAME";
+    private static final String PROFILE_IMAGE = "PROFILE_IMAGE";
 
     private static final String FIRESTORE_ID = "firestore_id";
     private final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
@@ -89,6 +90,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 COLUMN_NAME + " TEXT, " +
                 USER_NAME + " TEXT, " +
                 FRIEND_ID + " TEXT, " +
+                PROFILE_IMAGE + " TEXT, " +
                 FIRESTORE_ID + " TEXT UNIQUE" + " ) ";
         sqLiteDatabase.execSQL(create_table);
     }
@@ -414,6 +416,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(USER_NAME,  userName);
         values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
         values.putNull(FRIEND_ID);
+        values.putNull(PROFILE_IMAGE); //user does have a profile image but don't really need it.
 
         long status = database.insert(TABLE_NAME, null, values);
         if (status == -1) {
@@ -430,7 +433,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * @param friendID
      * @param fsID
      */
-    public void addNewFriendCollection(String friendName, String collectionName, String friendID, String fsID) {
+    public void addNewFriendCollection(String friendName, String collectionName, String friendID, String fsID, String pfp) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -439,6 +442,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Map<String, Object> wishlist = new HashMap<>();
         wishlist.put("Collection Name", collectionName);
         wishlist.put("Friend ID", friendID);
+        //need to add other fields to firestore
 
         DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
@@ -450,6 +454,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_NAME, collectionName);
         values.put(FIRESTORE_ID, fsID);
         values.put(FRIEND_ID, friendID);
+        values.put(PROFILE_IMAGE, pfp);
 
         long status = database.insert(TABLE_NAME, null, values);
         if (status == -1) {
