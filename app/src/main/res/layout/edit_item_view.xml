@@ -85,15 +85,16 @@
             android:textColor="@color/black" />
 
         <RatingBar
+            style="@style/CustomRatingBarStyle"
             android:id="@+id/ratingBar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_weight="2"
             android:gravity="end|center_vertical"
-            android:numStars="5"
             android:rating="0"
-            android:stepSize="1" />
+            android:stepSize="0.5" />
+
     </LinearLayout>
 
     <EditText
@@ -109,6 +110,7 @@
         android:orientation="horizontal">
 
         <Button
+            style="@style/texts"
             android:id="@+id/button_cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -118,6 +120,7 @@
             android:text="cancel" />
 
         <Button
+            style="@style/texts"
             android:id="@+id/button_save"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

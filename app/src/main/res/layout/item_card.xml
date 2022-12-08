@@ -30,15 +30,14 @@
             android:orientation="horizontal">
 
             <RatingBar
+                style="@style/CustomRatingBarStyle"
                 android:id="@+id/rating"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:clickable="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:isIndicator="true"
-                android:max="5"
-                android:numStars="5"
                 android:progressTint="#F44336"
                 android:scaleX=".4"
                 android:scaleY=".4"
