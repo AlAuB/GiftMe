@@ -189,49 +189,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 .addOnFailureListener(e -> Log.w(TAG, "Error claiming item", e));
     }
 
-    /**
-     * get friend display name from friendID, implement with users in fireStore
-     */
-    public String getFriendName(String userID){
-        DocumentReference userRef = fireStore.collection(COLLECTIONS_USERS).document(userID);
-        String displayName = "displayName";
-        final String[] friendName = new String[1];
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    DocumentSnapshot user = task.getResult();
-                    friendName[0] = user.getString(displayName);
-                    Log.d("friendName", "Name: " + friendName[0]);
-
-                }
-            }
-        });
-        return friendName[0];
-    }
-
-    /**
-     * get collection name from wishlistID, implement with users and wishlists in fireStore
-     */
-    public String getCollectionName(String userID, String collectionID){
-        DocumentReference userRef = fireStore.collection(COLLECTIONS_USERS).document(userID);
-        DocumentReference collectionRef = userRef.collection(COLLECTIONS_WISHLISTS).document(collectionID);
-        String collection_name = "Collection Name";
-        final String[] collectionName= new String[1];
-        collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    DocumentSnapshot collection = task.getResult();
-                    collectionName[0] = collection.getString(collection_name);
-                    Log.d("friendCollectionName", "Name: " + collectionName[0]);
-
-                }
-            }
-        });
-        return collectionName[0];
-    }
-
 
     /**
      * get all items from a collection table

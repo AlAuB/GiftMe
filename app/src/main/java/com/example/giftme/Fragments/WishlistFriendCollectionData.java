@@ -76,7 +76,7 @@ public class WishlistFriendCollectionData extends Fragment {
         floatingActionButton1.setOnClickListener(view -> {
             String userID = "jinpenglyu0605@gmail.com";
 
-            String wishlistID = "QafItkFJs4A9NA57zOMS";
+            String wishlistID = "L74q60KF4tB3PmiR6YiC";
 //            String friendName = dataBaseHelper.getFriendName(userID)
 //            String wishlistName = dataBaseHelper.getCollectionName(userID, wishlistID);
 
