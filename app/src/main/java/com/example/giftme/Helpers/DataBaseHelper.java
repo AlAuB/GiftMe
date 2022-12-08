@@ -12,21 +12,31 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import java.lang.reflect.Array;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private final Context context;
+    private static String userEmail;
 
     //other
     private static final String DATABASE_NAME = "WISHLIST_DB";
@@ -39,16 +49,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String FIRESTORE_ID = "firestore_id";
     private final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
     private static final String TAG = "DataBaseHelper debug::";
-    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
-            {
-                    "lesleychen456@gmail.com",
-                    "lyujin@bu.edu",
-                    "sj0726@bu.edu",
-                    "tg757898305@gmail.com",
-                    "tchen556@gmail.com",
-                    "wycalex@bu.edu"
-            };
-    private static final int random = new Random().nextInt(uniqueId.length);
+//    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
+//            {
+//                    "lesleychen456@gmail.com",
+//                    "lyujin@bu.edu",
+//                    "sj0726@bu.edu",
+//                    "tg757898305@gmail.com",
+//                    "tchen556@gmail.com",
+//                    "wycalex@bu.edu"
+//            };
+//    private static final int random = new Random().nextInt(uniqueId.length);
 
     //for ITEMS
     private static final String ITEM_ID = "ITEM_ID";
@@ -63,6 +73,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+        this.userEmail = SessionManager.getUserEmail(context);
     }
 
     @Override
@@ -101,7 +112,70 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.execSQL(create_table);
     }
 
+    public void setUserEmail(String email) {
+        this.userEmail = email;
+    }
 
+    /**
+     * Add a new collection to the database
+     * @param email the email of the user
+     * @param displayName the name of the user
+     * @param photoUrl the url of the user's profile picture
+     */
+    public void createUser(String email, String displayName, String photoUrl) {
+        setUserEmail(email);
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", email);
+        user.put("displayName", displayName);
+        user.put("photoUrl", photoUrl);
+        user.put("friends", new ArrayList<String>());
+        Log.d(TAG, "createUser: " + email + " " + displayName + " " + photoUrl);
+
+        fireStore.collection("users").document(email).set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "onSuccess: user " + email + " created");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: user " + email + " " + e.getMessage());
+            }
+        });
+    }
+
+    /**
+     * callback interface for checkUserExists
+     */
+    public interface UserExists {
+        void onCallback(boolean exists);
+    }
+
+    /**
+     * check if the user exists in the database
+     * @param email the email of the user
+     * @param userExists the callback function
+     */
+    public void checkUserExists(String email, UserExists userExists) {
+        DocumentReference docRef = fireStore.collection("users").document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "User exists: " + document.getData());
+                        userExists.onCallback(true);
+                    } else {
+                        Log.d(TAG, "User doesn't exist");
+                        userExists.onCallback(false);
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
 
     /**
      * insert (new) item to [Collection] table
@@ -131,14 +205,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + COLUMN_NAME + " = '" + collection + "'";
         Cursor cursor = db.rawQuery(sqlSelect, null);
         if (cursor.moveToFirst()) {
-            Log.d(TAG, "insertItemIntoCollection: " + cursor.getString(0) + " " + uniqueId[random]);
-            DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+            Log.d(TAG, "insertItemIntoCollection: " + cursor.getString(0) + " " + userEmail);
+            DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
             DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(cursor.getString(0));
             collectionDocIdRef.set(firestoreItem, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
+                    .addOnSuccessListener(aVoid -> {Log.d(TAG, "DocumentSnapshot successfully updated!");})
+                    .addOnFailureListener(e -> {Log.w(TAG, "Error updating document", e);});
         }
-        cursor.close();
     }
 
     public Map<String, Object> convertItemIntoMap(Item item){
@@ -206,14 +279,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void addFriend(String friendId) {
-        Log.d(TAG, "addFriend: " + uniqueId[random]);
+        Log.d(TAG, "addFriend: " + userEmail + " " + friendId);
 //        Map<String, Object> friend = new HashMap<>();
-        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         userDocIdRef.update("friends", FieldValue.arrayUnion(friendId));
     }
 
     public void getFriends() {
-        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         ArrayList<String> friends = new ArrayList<>();
         userDocIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -239,7 +312,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // TODO:: create another function for adding new collection to COLLECTIONS database and firestore when it's a friend's wishlist
 
-    public void addNewCollection(String name, String friendID) {
+    public void addNewCollection(String name) {
+        Log.d(TAG, "addNewCollection: " + userEmail);
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -247,17 +321,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // for now, get random unique id from the array above and check if the document's been created in firestore
         Map<String, Object> wishlist = new HashMap<>();
         wishlist.put("Collection Name", name);
-        wishlist.put("Friend ID", friendID);
 
-        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
         wishlistDocIdRef.set(wishlist)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + uniqueId[random] + ")"))
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + userEmail + ")"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
 
         values.put(COLUMN_NAME, name);
         values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
-        values.put(FRIEND_ID, friendID);
+        values.putNull(FRIEND_ID);
 
         long status = database.insert(TABLE_NAME, null, values);
         if (status == -1) {
@@ -266,9 +339,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
         }
 
-//        // testing
-//        addFriend("Adolf Hitler");
-//        getFriends();
+        // testing
+        getFriends();
     }
 
     //update Collection Name by FirestoreID
@@ -312,9 +384,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
             // after successful delete in local db, delete in firestore as well
-            fireStore.collection("usersTest").document(uniqueId[random]).collection("wishlists").document(firestoreId).delete()
-                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted! (user: " + uniqueId[random] + ")"))
-                    .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+            DocumentReference wishlistRef = fireStore.collection("users").document(userEmail).collection("wishlists").document(firestoreId);
+            Map<String, Object> updates = new HashMap<>();
+            updates.put(firestoreId, FieldValue.delete());
+            wishlistRef.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "DocumentSnapshot " + firestoreId + "successfully deleted!");
+                    } else {
+                        Log.w(TAG, "Error deleting document", task.getException());
+                    }
+                }
+            });
         }
     }
 
@@ -344,5 +426,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Chnage the collection table name
+     * @param oldName String
+     * @param newName String
+     */
+    public void changeTableName(String oldName, String newName) {
+        String query = "ALTER TABLE " + "'" + oldName + "'" + " RENAME TO " + "'" + newName + "'";
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        sqLiteDatabase.execSQL(query);
     }
 }
