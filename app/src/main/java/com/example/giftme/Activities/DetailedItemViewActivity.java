@@ -76,7 +76,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("itemPrice", item.getPrice());
             newIntent.putExtra("itemDes", item.getDescription());
             newIntent.putExtra("itemImg", item.getImg());
-            newIntent.putExtra("itemFSID", item.getTableID());
+            newIntent.putExtra("itemFSID", item.getFireStoreID());
             newIntent.putExtra("collectionName", collectionName);
             finish();
             startActivity(newIntent);

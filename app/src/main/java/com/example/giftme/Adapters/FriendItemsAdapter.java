@@ -29,11 +29,15 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
     Activity activity;
     TextView collectionNameTV;
     List<Item> friendItems;
+    String friendID;
+    String collectionID;
 
-    public FriendItemsAdapter(Activity activity, Context context, List<Item> items) {
+    public FriendItemsAdapter(Activity activity, Context context, List<Item> items, String friendID, String collectionID) {
         this.context = context;
         this.activity = activity;
         this.friendItems = items;
+        this.friendID = friendID;
+        this.collectionID = collectionID;
         collectionNameTV = ((Activity) context).findViewById(R.id.collection_name);
     }
 
@@ -81,8 +85,14 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
             }
 
             intent.putExtra("itemImg", item.getImg());
-            //firestore ID?
+            intent.putExtra("collectionID", collectionID);
             intent.putExtra("collectionName", collectionName);
+
+            //friend firestore id: email
+            intent.putExtra("friendID", friendID);
+            intent.putExtra("itemFsID", item.getFireStoreID());
+
+
 //            this.activity.finish();
             this.activity.startActivity(intent);
         });

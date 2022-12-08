@@ -18,6 +18,8 @@ import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 
 public class WishlistFriendCollectionData extends Fragment {
@@ -32,6 +34,7 @@ public class WishlistFriendCollectionData extends Fragment {
     ArrayList<String> ids;
     ArrayList<String> collections;
     ArrayList<String> friendIds;
+    ArrayList<String> friendNames;
 
     DataBaseHelper dataBaseHelper;
 
@@ -54,17 +57,24 @@ public class WishlistFriendCollectionData extends Fragment {
         ids = new ArrayList<>();
         collections = new ArrayList<>();
         friendIds = new ArrayList<>();
+        friendNames = new ArrayList<>();
         getAllFriends();
+
 
         recyclerView1.setLayoutManager(new LinearLayoutManager(context1));
         recyclerView1.setHasFixedSize(true);
-        FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collections, friendIds);
+        FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collections, friendIds, friendNames);
         recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
 
         floatingActionButton1 = view1.findViewById(R.id.action1);
         //TESTING START
         floatingActionButton1.setOnClickListener(view -> {
-            dataBaseHelper.addNewCollection("Xmas", "Alex");
+            String userID = "jinpenglyu0605@gmail.com";
+            String friendName = dataBaseHelper.getFriendName(userID);
+            String wishlistID = "QafItkFJs4A9NA57zOMS";
+            String wishlistName = dataBaseHelper.getCollectionName(userID, wishlistID);
+
+            dataBaseHelper.addNewFriendCollection(wishlistName, userID, wishlistID);
             ids.clear();
             collections.clear();
             friendIds.clear();
@@ -84,7 +94,9 @@ public class WishlistFriendCollectionData extends Fragment {
                 if(cursor.getString(2) != null){
                     ids.add(cursor.getString(0));
                     collections.add(cursor.getString(1));
-                    friendIds.add(cursor.getString(2));
+                    String friendID = cursor.getString(2);
+                    friendIds.add(friendID);
+                    friendNames.add(dataBaseHelper.getFriendName(friendID));
                 }
             }
         }

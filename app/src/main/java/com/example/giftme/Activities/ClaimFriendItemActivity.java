@@ -2,6 +2,7 @@ package com.example.giftme.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
@@ -28,6 +29,8 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friend_detailed_item_view);
 
+        dataBaseHelper = new DataBaseHelper(this);
+
         //get information from intent
         Intent intent = getIntent();
         int itemID = intent.getIntExtra("itemID", 1);
@@ -39,8 +42,12 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         String img = intent.getStringExtra("itemImg");
         String date = " ";
         String url = "";
-        String fsID= "FSid here";
+
+        String friendID = intent.getStringExtra("friendID");
+        String itemFsID = intent.getStringExtra("itemFsID");
+        String friendCollectionID = intent.getStringExtra("collectionID");
         String collectionName = intent.getStringExtra("collectionName");
+        //
 
         //(re)create item obj
         Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
@@ -80,6 +87,9 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
 //            newIntent.putExtra("itemFSID", item.getTableID());
             //we have item.getTableID()
             //call setClaimed with that tableID to firestore
+//            dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFsID, true);
+            Log.d("friendClaim", friendID + " " + friendCollectionID + " " + itemFsID);
+            dataBaseHelper.editClaimed("jinpenglyu0605@gmail.com", friendCollectionID, itemFsID, true);
             finish();
         });
         cancelButton = findViewById(R.id.button_cancel);

@@ -43,6 +43,8 @@ public class FriendCompactViewFragment extends Fragment {
     String collection_name;
     itemNumListener itemNumListener;
     Activity activity;
+    String friendName;
+    String collectionID;
 
     public static String collectionName;
 
@@ -59,6 +61,7 @@ public class FriendCompactViewFragment extends Fragment {
         context = getContext();
         dataBaseHelper = new DataBaseHelper(context);
         items = new ArrayList<>();
+
         if (getArguments() != null) {
             collection_name = getArguments().getString("collection_name");
         }
@@ -74,12 +77,16 @@ public class FriendCompactViewFragment extends Fragment {
 //            //TEST FIRE STORE START
 //            //get fire store collection wishlist items
 //
-        String userID = "wycalex@bu.edu";
-        String wishlistID = "PktmAeturc9c0TTa1adG";
+        String userID = "jinpenglyu0605@gmail.com";
+        String wishlistID = "QafItkFJs4A9NA57zOMS";
 
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-        DocumentReference userRef = fireStore.collection("usersTest").document(userID);
+        DocumentReference userRef = fireStore.collection("users").document(userID);
         DocumentReference collectionRef = userRef.collection("wishlists").document(wishlistID);
+
+        friendName = dataBaseHelper.getFriendName(userID);
+
+        collectionID = wishlistID; //parse from dynamic link
 
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -94,16 +101,12 @@ public class FriendCompactViewFragment extends Fragment {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             itemsInWishlist.forEach((key, value) -> {
                                         if( value instanceof HashMap){
-                                            Item currentItem = dataBaseHelper.convertMapIntoItem( (Map<String, Object>) value, wishlistID);
+                                            Item currentItem = dataBaseHelper.convertMapIntoItem( (Map<String, Object>) value, key);
                                             Log.d("FIRESTORE", currentItem.toString());
                                             items.add(currentItem);
+
                                         }
                                     }
-//                                    Log.d("TEST", key + " " + value)
-
-//                                    Log.d("TEST_VALUE", value.getClass().toString())
-//                                    dataBaseHelper.convertMapIntoItem( (Map<String, Object>) value)
-
                             );
                         }
 //                        dataBaseHelper.convertMapIntoItem(itemsInWishlist);
@@ -112,7 +115,7 @@ public class FriendCompactViewFragment extends Fragment {
 //                        Log.d("friendWLName", wishlistName);
                         collectionName =  (String) doc.get("Collection Name");
                         // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
-                        friendItemAdapter = new FriendItemsAdapter(getActivity(), context, items);
+                        friendItemAdapter = new FriendItemsAdapter(getActivity(), context, items, friendName, collectionID);
                         recyclerView.setLayoutManager(new LinearLayoutManager(context));
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setAdapter(friendItemAdapter);
