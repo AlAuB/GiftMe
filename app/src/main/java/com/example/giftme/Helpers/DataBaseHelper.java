@@ -469,41 +469,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
 
-//    /**
-//     * Delete specific data in specific table
-//     * @param id id for that item in that table
-//     * @param tableName table name
-//     */
-//    public void deleteData(String id, String tableName) {
-//        Log.d(TAG, "deleteData: " + id + " " + tableName);
-//        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-//        Log.d(TAG, "deleteData: " + "test");
-//        HashMap<String, Object> collectionDetails = getData(id, tableName);
-//        String firestoreId = (String) collectionDetails.get("firestore_id");
-//        String collectionName = (String) collectionDetails.get("name");
-//        long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreId});
-//        if (status == -1) {
-//            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
-//            // after successful delete in local db, delete in firestore as well
-//            DocumentReference wishlistRef = fireStore.collection("users").document(userEmail).collection("wishlists").document(firestoreId);
-//            Map<String, Object> updates = new HashMap<>();
-//            updates.put(firestoreId, FieldValue.delete());
-//            wishlistRef.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                @Override
-//                public void onComplete(@NonNull Task<Void> task) {
-//                    if (task.isSuccessful()) {
-//                        Log.d(TAG, "DocumentSnapshot " + firestoreId + "successfully deleted!");
-//                    } else {
-//                        Log.w(TAG, "Error deleting document", task.getException());
-//                    }
-//                }
-//            });
-//        }
-//    }
-
-
     /**
      * Delete a whole table
      * @param tableName The table's name which you want to delete
