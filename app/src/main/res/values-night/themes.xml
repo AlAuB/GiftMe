@@ -3,7 +3,7 @@
     <style name="Theme.GiftMe" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#03A9F4</item>
-        <item name="colorPrimaryVariant">#2196F3</item>
+        <item name="colorPrimaryVariant">#000000</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

@@ -88,7 +88,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
-        this.userEmail = SessionManager.getUserEmail(context);
+        userEmail = SessionManager.getUserEmail(context);
     }
 
     @Override
@@ -129,7 +129,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void setUserEmail(String email) {
-        this.userEmail = email;
+        userEmail = email;
     }
 
     /**
@@ -228,6 +228,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     .addOnSuccessListener(aVoid -> {Log.d(TAG, "DocumentSnapshot successfully updated!");})
                     .addOnFailureListener(e -> {Log.w(TAG, "Error updating document", e);});
         }
+        cursor.close();
     }
 
     public Map<String, Object> convertItemIntoMap(Item item){
@@ -435,10 +436,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * for adding friend's collections
-     * @param friendName
-     * @param collectionName
-     * @param friendID
-     * @param fsID
+     * @param friendName String
+     * @param collectionName String
+     * @param friendID String
+     * @param fsID String
      */
     public void addNewFriendCollection(String friendName, String collectionName, String friendID, String fsID) {
         SQLiteDatabase database = this.getWritableDatabase();
@@ -573,6 +574,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "deleteItem: " + firestoreItemId);
         String firestoreId = getCollectionId(tableName);
         Log.d(TAG, "deleteItem: " + firestoreItemId + " " + firestoreId);
+        tableName = "'" + tableName + "'";
         long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreItemId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
@@ -635,6 +637,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(query);
     }
 
+
     public void storeImageFirebase(Bitmap bitmap, String name) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -673,4 +676,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //        StorageReference mountainsRef = storageRef.child(path);
 //        File localFile = new File(context.getFilesDir(), name);
 //    }
+
+    public String getCollectionFireStoreId(String collectionName) {
+        String query = "SELECT * FROM COLLECTIONS WHERE COLLECTION_NAME = " + "'" + collectionName + "' AND USER_NAME IS NULL AND FRIEND_ID IS NULL";
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        int index = cursor.getColumnIndex(FIRESTORE_ID);
+        String id = "";
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                if (cursor.getBlob(4) != null) {
+                    id = cursor.getString(4);
+                }
+            }
+        }
+        cursor.close();
+        return id;
+    }
 }

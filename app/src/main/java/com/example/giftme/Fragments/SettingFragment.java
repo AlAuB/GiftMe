@@ -261,6 +261,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             });
 
                             listener.updateData(true);
+
                             if (!SessionManager.getUserPFP(getContext()).equals("")) {
                                 Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
                             }

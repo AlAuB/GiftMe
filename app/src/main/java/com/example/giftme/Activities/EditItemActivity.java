@@ -78,7 +78,7 @@ public class EditItemActivity extends AppCompatActivity {
             int newRating = (int) ratingBar.getRating();
 
             dataBaseHelper.updateById(collectionName, item.getId(), newName, newPrice,
-                     newDescription, newRating, item.getImg(), item.getFireStoreID());
+                    newDescription, newRating, item.getImg(), item.getFireStoreID());
             Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
         });
 
