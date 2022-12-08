@@ -4,20 +4,27 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.giftme.Adapters.TabViewPagerAdapter;
 import com.example.giftme.Fragments.NotificationFragment;
 import com.example.giftme.Fragments.SettingFragment;
 import com.example.giftme.Fragments.WishlistFragment;
+import com.example.giftme.Fragments.WishlistFriendCollectionData;
 import com.example.giftme.Fragments.WishlistMyCollectionData;
 import com.example.giftme.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener{
+public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener,
+                                        WishlistMyCollectionData.MyFriendCollectionListener{
 
     BottomNavigationView bottomNavigationView;
     WishlistFragment wishlistFragment;
@@ -64,11 +71,31 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                 System.out.println("The deeplink is: " + deeplink);
                 Toast.makeText(this, deeplink.toString(), Toast.LENGTH_SHORT).show();
                 String temp = deeplink.toString();
-                int index = temp.charAt('=');
+                int index = temp.indexOf('=');
                 String subString = temp.substring(index);
                 System.out.println("Link: " + temp);
                 System.out.println("index: " + index);
                 System.out.println("substring: " + subString);
+
+                int indexPlus = subString.indexOf("+");
+                String userID = subString.substring(1, indexPlus);
+                String collectionID = subString.substring(indexPlus+1);
+                System.out.println("substring: " + userID);
+                System.out.println("substring: " + collectionID);
+
+//                WishlistFriendCollectionData fragment = new WishlistFriendCollectionData();
+//
+//                //---------------------
+//                getSupportFragmentManager().beginTransaction()
+//                        .add(R.id.pages, fragment)
+//                        .addToBackStack("FriendFragment")
+//                        .commit();
+//
+//                Bundle bundle = new Bundle();
+//                bundle.putString("userID", userID);
+//                bundle.putString("collectionID", collectionID);
+//
+//                fragment.setArguments(bundle);
             }
         }).addOnFailureListener(this, e -> Toast.makeText(MainActivity.this, "Cannot get deep link", Toast.LENGTH_SHORT).show());
     }
@@ -94,5 +121,11 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                 ((WishlistMyCollectionData) fragment).signedOutState();
             }
         }
+    }
+
+
+    @Override
+    public void goToFriendCollection() {
+
     }
 }
