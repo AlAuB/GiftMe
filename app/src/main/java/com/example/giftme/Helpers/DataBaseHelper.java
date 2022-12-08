@@ -371,6 +371,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return "FAILED";
     }
 
+    public String getDataItem(String rowId, String tableName) {
+        // still using rowId to fetch data.. should be changed to either id or firestore_id
+        String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + ITEM_ID + " = " + rowId;
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor;
+        if (sqLiteDatabase != null) {
+            cursor = sqLiteDatabase.rawQuery(query, null);
+            if (cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(FIRESTORE_ID);
+                return cursor.getString(nameIndex);
+            }
+            cursor.close();
+        }
+        return "FAILED";
+    }
+
+
+
+
     /**
      * Delete specific data in specific table
      * @param id id for that item in that table
@@ -381,6 +400,31 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Log.d(TAG, "deleteData: " + "test");
         String firestoreId = getData(id, tableName);
+        long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreId});
+        if (status == -1) {
+            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+            // after successful delete in local db, delete in firestore as well
+            DocumentReference wishlistRef = fireStore.collection("users").document(userEmail).collection("wishlists").document(firestoreId);
+            Map<String, Object> updates = new HashMap<>();
+            updates.put(firestoreId, FieldValue.delete());
+            wishlistRef.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "DocumentSnapshot " + firestoreId + "successfully deleted!");
+                    } else {
+                        Log.w(TAG, "Error deleting document", task.getException());
+                    }
+                }
+            });
+        }
+    }
+
+    public void deleteDataItem(String itemId, String tableName) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String firestoreId = getDataItem(itemId, tableName);
         long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();

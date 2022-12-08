@@ -14,13 +14,13 @@
         android:weightSum="1">
 
         <TextView
+            style="@style/titles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
             android:layout_weight="0.005"
             android:text="@string/my_collection"
-            android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold" />
 
@@ -44,6 +44,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                style="@style/texts"
                 android:id="@+id/collection_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

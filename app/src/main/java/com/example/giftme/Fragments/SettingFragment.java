@@ -8,12 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.example.giftme.Settings.FAQ;
@@ -62,13 +65,36 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
+        // initialize switch variable
+        Switch mode_switch = view.findViewById(R.id.switch0);
+        TextView mode = view.findViewById(R.id.mode);
+//        Objects.requireNonNull(getSupportActionBar()).setTitle("Light/Dark Mode Switch");
+
+        // switch
+        mode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    mode.setText("Dark Mode");
+                }else{
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    mode.setText("Light Mode");
+                }
+            }
+        });
+
+        // set the pre theme when app starts
+        boolean isNightModeOn = AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES;
+        mode_switch.setChecked(isNightModeOn);
+
+        if (isNightModeOn){
+            mode.setText("Dark Mode");
+        }else{
+            mode.setText("Light Mode");
+        }
+
         //initialize the views
-        TextView profile = view.findViewById(R.id.profile);
-        profile.setOnClickListener(this);
-
-        TextView themes = view.findViewById(R.id.themestore);
-        themes.setOnClickListener(this);
-
         TextView policy = view.findViewById(R.id.privacy);
         policy.setOnClickListener(this);
 
@@ -101,13 +127,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.profile) {
-            Intent intent = new Intent(getActivity(), User_Profile.class);
-            startActivity(intent);
-        } else if (view.getId() == R.id.themestore) {
-            Intent intent2 = new Intent(getActivity(), ThemeStore.class);
-            startActivity(intent2);
-        } else if (view.getId() == R.id.privacy) {
+        if (view.getId() == R.id.privacy) {
             Intent intent3 = new Intent(getActivity(), PrivacyPolicy.class);
             startActivity(intent3);
         } else if (view.getId() == R.id.term) {
