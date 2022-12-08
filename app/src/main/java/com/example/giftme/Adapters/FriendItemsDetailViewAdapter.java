@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,10 +68,9 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
             holder.imageView.setImageBitmap(getBitMap);
         }
         holder.ratingBar.setRating(item.getHearts());
-//        if(item.getClaimed() == true){
-//            holder.cardView.setBackgroundColor(R.color.pink);
-//            holder.cardView.setBackgroundColor(ContextCompat.getColor(this.context, R.color.pink));
-//        }
+        if(item.getClaimed() == true){
+            holder.cardView.setBackgroundColor(ContextCompat.getColor(this.context, R.color.pink));
+        }
     }
 
     @Override

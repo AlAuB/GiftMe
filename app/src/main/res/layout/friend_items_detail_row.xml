@@ -10,8 +10,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/friend_detail_cardView"
-        android:backgroundTint="@color/white">
+        android:id="@+id/friend_detail_cardView">
 
         <LinearLayout
             android:layout_width="match_parent"
