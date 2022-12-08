@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener{
@@ -77,25 +78,22 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                 deeplink = pendingDynamicLinkData.getLink();
             }
             if (deeplink != null) {
-                System.out.println("The deeplink is: " + deeplink);
                 Toast.makeText(this, deeplink.toString(), Toast.LENGTH_SHORT).show();
                 String temp = deeplink.toString();
-                int index = temp.charAt('=');
-                String subString = temp.substring(index);
-                System.out.println("Link: " + temp);
-                System.out.println("index: " + index);
-                System.out.println("substring: " + subString);
+                int index = temp.indexOf("=");
+                String subString = temp.substring(index + 1);
+                String[] data = subString.split("\\+");
+                getDataFromFireStore(data[0], data[1]);
             }
         }).addOnFailureListener(this, e -> Toast.makeText(MainActivity.this, "Cannot get deep link", Toast.LENGTH_SHORT).show());
     }
 
     private void getDataFromFireStore(String email, String collection_id) {
-
+        System.out.println(email + " " + collection_id);
     }
 
     @Override
     public void updateData(boolean status) {
-        Toast.makeText(this, "Sign status is changed!", Toast.LENGTH_SHORT).show();
         List<Fragment> list = getSupportFragmentManager().getFragments();
         Fragment fragment = null;
         for (int i = 0; i< list.size(); i++) {

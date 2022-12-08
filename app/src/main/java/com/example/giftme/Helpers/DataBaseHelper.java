@@ -564,6 +564,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "deleteItem: " + firestoreItemId);
         String firestoreId = getCollectionId(tableName);
         Log.d(TAG, "deleteItem: " + firestoreItemId + " " + firestoreId);
+        tableName = "'" + tableName + "'";
         long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreItemId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
