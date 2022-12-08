@@ -81,7 +81,7 @@ public class EditItemActivity extends AppCompatActivity {
             newIntent.putExtra("itemPrice", item.getPrice());
             newIntent.putExtra("itemDes", item.getDescription());
             newIntent.putExtra("itemImg", item.getImg());
-            newIntent.putExtra("itemFSID", item.getTableID());
+            newIntent.putExtra("itemFSID", item.getFireStoreID());
             newIntent.putExtra("collectionName", collectionName);
             finish();
             startActivity(newIntent);
@@ -94,7 +94,7 @@ public class EditItemActivity extends AppCompatActivity {
             int newRating = (int) ratingBar.getRating();
 
             dataBaseHelper.updateById(collectionName, item.getId(), newName, newPrice,
-                     newDescription, newRating, item.getImg(), item.getTableID());
+                     newDescription, newRating, item.getImg(), item.getFireStoreID());
             Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
         });
 

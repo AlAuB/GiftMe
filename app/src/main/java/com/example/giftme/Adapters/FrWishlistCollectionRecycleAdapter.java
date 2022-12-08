@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.giftme.Activities.FriendCollectionItems;
 import com.example.giftme.Activities.MyCollectionItems;
 import com.example.giftme.R;
 
@@ -24,13 +25,15 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
     ArrayList<String> collections;
     ArrayList<String> ids;
     ArrayList<String> friendIds;
+    ArrayList<String> friendNames;
 
-    public FrWishlistCollectionRecycleAdapter(Activity activity, Context context, ArrayList<String> ids, ArrayList<String> collections, ArrayList<String> names) {
+    public FrWishlistCollectionRecycleAdapter(Activity activity, Context context, ArrayList<String> ids, ArrayList<String> collections, ArrayList<String> emails, ArrayList<String> names) {
         this.activity = activity;
         this.context = context;
         this.ids = ids;
         this.collections = collections;
-        this.friendIds = names;
+        this.friendIds = emails;
+        this.friendNames = names;
     }
 
     @NonNull
@@ -47,14 +50,16 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
         int index = holder.getAdapterPosition();
         String wishlistName = collections.get(index);
         String friendID = friendIds.get(index);
+        String friendName = friendNames.get(index);
 
-        String title = friendID + "'s " + wishlistName + " Wishlist";
+        String title = friendName + "'s " + wishlistName + " Wishlist";
         holder.wlTitleTV.setText(title);
 
         holder.linearLayout.setOnClickListener(view -> {
             int index1 = holder.getAdapterPosition();
-            Intent intent = new Intent(context, MyCollectionItems.class);
-            intent.putExtra("collection_name", collections.get(index1));
+            Intent intent = new Intent(context, FriendCollectionItems.class);
+            intent.putExtra("collection_name", wishlistName);
+            intent.putExtra("friend_name", friendName);
             activity.startActivity(intent);
         });
     }

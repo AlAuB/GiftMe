@@ -111,11 +111,12 @@ public class WishlistMyCollectionData extends Fragment {
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive)
-                    .addBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light))
-                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .addBackgroundColor(ContextCompat.getColor(context,R.color.pink))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_edit_24)
                     .addSwipeLeftLabel("Delete")
                     .setSwipeLeftLabelColor(ContextCompat.getColor(context,R.color.white))
                     .create().decorate();
+            //ic_baseline_edit_24 -> ic_baseline_delete_24
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
@@ -158,8 +159,11 @@ public class WishlistMyCollectionData extends Fragment {
         Cursor cursor = dataBaseHelper.readCollectionTableAllData(COLLECTION_TABLE_NAME);
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
-                ids.add(cursor.getString(0));
-                collections.add(cursor.getString(1));
+                //if this isn't the friend's wishlist
+                if(cursor.getBlob(3) == null){
+                    ids.add(cursor.getString(0));
+                    collections.add(cursor.getString(1));
+                }
             }
         }
     }
@@ -179,7 +183,8 @@ public class WishlistMyCollectionData extends Fragment {
                 Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
             } else {
                 //Add collection name to Collection Table
-                dataBaseHelper.addNewCollection(insert);
+
+                dataBaseHelper.addNewCollection(null, insert, null);
                 //Create collection-name Table in database
                 dataBaseHelper.createNewTable(insert);
                 //Notify insertion change to RecycleView Adapter

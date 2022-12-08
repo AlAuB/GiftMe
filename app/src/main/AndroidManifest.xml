@@ -89,7 +89,15 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.DetailedItemViewActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            ></activity>
+        <activity
+            android:name = ".Activities.FriendCollectionItems"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".Activities.ClaimFriendItemActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

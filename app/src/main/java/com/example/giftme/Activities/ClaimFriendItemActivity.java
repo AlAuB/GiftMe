@@ -2,6 +2,7 @@ package com.example.giftme.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RatingBar;
@@ -13,20 +14,22 @@ import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 
-public class DetailedItemViewActivity extends AppCompatActivity {
+public class ClaimFriendItemActivity extends AppCompatActivity {
     TextView itemNameTV;
     TextView descriptionTV;
     TextView priceTV;
     RatingBar ratingBar;
-    Button editButton;
-    Button deleteButton;
+    Button claimButton;
+    Button cancelButton;
     ImageButton backButton;
     DataBaseHelper dataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.detailed_item_view);
+        setContentView(R.layout.friend_detailed_item_view);
+
+        dataBaseHelper = new DataBaseHelper(this);
 
         //get information from intent
         Intent intent = getIntent();
@@ -35,20 +38,25 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         int itemHearts = intent.getIntExtra("itemHearts", 0);
         int itemPrice = intent.getIntExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
-        if(itemDes.equals("null")){ itemDes = "";}
+//        if(itemDes.equals("")){ itemDes = "";}
         String img = intent.getStringExtra("itemImg");
         String date = " ";
         String url = "";
+
+        String friendID = intent.getStringExtra("friendID");
+        String itemFsID = intent.getStringExtra("itemFsID");
+        String friendCollectionID = intent.getStringExtra("collectionID");
         String collectionName = intent.getStringExtra("collectionName");
+        //
 
         //(re)create item obj
         Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
-        itemDes, date, img);
+                itemDes, date, img);
         //assign the views
-        itemNameTV = findViewById(R.id.itemNameTV);
-        priceTV = findViewById(R.id.itemPriceTV);
-        descriptionTV = findViewById(R.id.descriptionTV);
-        ratingBar = findViewById(R.id.ratingBar);
+        itemNameTV = findViewById(R.id.friend_itemNameTV);
+        priceTV = findViewById(R.id.friend_itemPriceTV);
+        descriptionTV = findViewById(R.id.friend_descriptionTV);
+        ratingBar = findViewById(R.id.friend_ratingBar);
 
         //set the views
         itemNameTV.setText(item.getName());
@@ -58,35 +66,35 @@ public class DetailedItemViewActivity extends AppCompatActivity {
 
         backButton = findViewById(R.id.imageButton_backToPrevious);
         backButton.setOnClickListener((view -> {
-            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
+            Intent myCollectionItemsIntent = new Intent(this, FriendCollectionItems.class);
             myCollectionItemsIntent.putExtra("collection_name", collectionName);
             finish();
             startActivity(myCollectionItemsIntent);
         }));
 
-        editButton = findViewById(R.id.button_edit);
-        editButton.setOnClickListener(view -> {
-            Intent newIntent = new Intent(this, EditItemActivity.class);
-            //put in name, price description, hearts, and link etc
-            newIntent.putExtra("itemID", item.getId());
-            newIntent.putExtra("itemName", item.getName());
-            newIntent.putExtra("itemHearts", item.getHearts());
-            newIntent.putExtra("itemPrice", item.getPrice());
-            newIntent.putExtra("itemDes", item.getDescription());
-            newIntent.putExtra("itemImg", item.getImg());
-            newIntent.putExtra("itemFSID", item.getFireStoreID());
-            newIntent.putExtra("collectionName", collectionName);
+        claimButton = findViewById(R.id.button_claim);
+        if(item.getClaimed() == true){
+            //item is already claimed by someone
+            claimButton.setClickable(false);
+            //set anony pfp too
+        }
+        else{
+            claimButton.setClickable(true);
+        }
+        claimButton.setOnClickListener(view -> {
+//            Intent newIntent = new Intent(this, EditItemActivity.class);
+//            //put in name, price description, hearts, and link etc
+//            newIntent.putExtra("itemFSID", item.getTableID());
+            //we have item.getTableID()
+            //call setClaimed with that tableID to firestore
+//            dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFsID, true);
+            Log.d("friendClaim", friendID + " " + friendCollectionID + " " + itemFsID);
+            dataBaseHelper.editClaimed("jinpenglyu0605@gmail.com", friendCollectionID, itemFsID, true);
             finish();
-            startActivity(newIntent);
         });
-        deleteButton = findViewById(R.id.button_delete);
-        deleteButton.setOnClickListener(view->{
-            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
-            myCollectionItemsIntent.putExtra("collection_name", collectionName);
+        cancelButton = findViewById(R.id.button_cancel);
+        cancelButton.setOnClickListener(view->{
             finish();
-            startActivity(myCollectionItemsIntent);
-            dataBaseHelper = new DataBaseHelper(this);
-            dataBaseHelper.deleteItemInCollection(String.valueOf(item.getId()),collectionName);
         });
 
     }
