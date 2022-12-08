@@ -3,9 +3,11 @@ package com.example.giftme.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,7 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Activities.FriendCollectionItems;
 import com.example.giftme.Activities.MyCollectionItems;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -26,14 +30,19 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
     ArrayList<String> ids;
     ArrayList<String> friendIds;
     ArrayList<String> friendNames;
+    ArrayList<String> friendProfileImages;
 
-    public FrWishlistCollectionRecycleAdapter(Activity activity, Context context, ArrayList<String> ids, ArrayList<String> collections, ArrayList<String> emails, ArrayList<String> names) {
+    public FrWishlistCollectionRecycleAdapter(Activity activity, Context context,
+                                              ArrayList<String> ids, ArrayList<String> collections,
+                                              ArrayList<String> emails, ArrayList<String> names,
+                                              ArrayList<String> imgs) {
         this.activity = activity;
         this.context = context;
         this.ids = ids;
         this.collections = collections;
         this.friendIds = emails;
         this.friendNames = names;
+        this.friendProfileImages = imgs;
     }
 
     @NonNull
@@ -51,9 +60,13 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
         String wishlistName = collections.get(index);
         String friendID = friendIds.get(index);
         String friendName = friendNames.get(index);
+        String friendPFP = friendProfileImages.get(index);
 
         String title = friendName + "'s " + wishlistName + " Wishlist";
         holder.wlTitleTV.setText(title);
+//        holder.imgView.setImageURI(Uri.parse(friendPFP));
+
+        Picasso.get().load(friendPFP).into(holder.imgView);
 
         holder.linearLayout.setOnClickListener(view -> {
             int index1 = holder.getAdapterPosition();
@@ -73,11 +86,13 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
 
         TextView wlTitleTV;
         LinearLayout linearLayout;
+        ImageView imgView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             wlTitleTV = itemView.findViewById(R.id.friend_wishlist_title);
             linearLayout = itemView.findViewById(R.id.friend_card);
+            imgView = itemView.findViewById((R.id.user_avatar));
         }
     }
 }

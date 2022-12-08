@@ -96,18 +96,18 @@
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
+        app:srcCompat="@drawable/click1"
         android:contentDescription="@string/image_for_current_item" />
 
     <RatingBar
+        style="@style/CustomRatingBarStyle"
         android:id="@+id/item_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:numStars="5"
-        android:progressTint="#F44336"
-        android:rating="0"
-        android:stepSize="0.5" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:progressDrawable="@drawable/custom_rating_bar"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -115,23 +115,25 @@
         android:layout_marginTop="5dp">
 
         <Button
-            android:id="@+id/cancel"
+            style="@style/texts"
+            android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#F44336"
             android:text="@string/cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/save"
+            app:layout_constraintRight_toLeftOf="@id/button_save"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/save"
+            style="@style/texts"
+            android:id="@+id/button_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/cancel"
+            app:layout_constraintLeft_toRightOf="@id/button_cancel"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

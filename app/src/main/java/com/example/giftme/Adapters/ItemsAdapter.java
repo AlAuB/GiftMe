@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.giftme.Activities.DetailedItemViewActivity;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -48,13 +48,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         int index = holder.getBindingAdapterPosition();
         Item item = myItems.get(index);
         //set views
-        TextView itemName = holder.itemNameTV;
-        itemName.setText(item.getName());
-        RatingBar ratingBar = holder.ratingBar;
-        ratingBar.setRating(item.getHearts());
-        String collectionName = (String) collectionNameTV.getText();
+        holder.itemNameTV.setText(item.getName());
+        holder.ratingBar.setRating(item.getHearts());
+        holder.time.setText(item.getDate());
         holder.currentItem = myItems.get(index);
-        holder.linearLayout.setOnClickListener(view -> {
+        holder.cardView.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, DetailedItemViewActivity.class);
             //put in name, price description, hearts, and link etc
             intent.putExtra("itemID", item.getId());
@@ -62,10 +60,11 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
             intent.putExtra("itemDes", item.getDescription());
+            intent.putExtra("itemDate", item.getDate());
             Log.d("itemDes", item.getDescription());
             intent.putExtra("itemImg", item.getImg());
             //firestore ID?
-            intent.putExtra("collectionName", collectionName);
+            intent.putExtra("collectionName", collectionNameTV.getText().toString());
             this.activity.finish();
             this.activity.startActivity(intent);
         });
@@ -78,17 +77,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView itemNameTV;
-        public RatingBar ratingBar;
-        public View view;
-        public Item currentItem;
-        public LinearLayout linearLayout;
+        TextView itemNameTV, time;
+        RatingBar ratingBar;
+        Item currentItem;
+        MaterialCardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemNameTV = itemView.findViewById(R.id.item_name);
+            time = itemView.findViewById(R.id.item_card_time);
             ratingBar = itemView.findViewById(R.id.rating);
-            linearLayout = itemView.findViewById(R.id.item_lv);
+            cardView = itemView.findViewById(R.id.item_lv);
         }
     }
 }

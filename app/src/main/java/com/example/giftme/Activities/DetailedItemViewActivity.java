@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.giftme.Fragments.CompactViewFragment;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
@@ -40,7 +39,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         String img = intent.getStringExtra("itemImg");
         String date = " ";
         String url = "";
-        String fsID= "FSid here";
         String collectionName = intent.getStringExtra("collectionName");
 
         //(re)create item obj
@@ -88,7 +86,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             finish();
             startActivity(myCollectionItemsIntent);
             dataBaseHelper = new DataBaseHelper(this);
-            dataBaseHelper.deleteItemInCollection(String.valueOf(item.getId()),collectionName);
+            dataBaseHelper.deleteItem(String.valueOf(item.getId()),collectionName);
         });
 
     }

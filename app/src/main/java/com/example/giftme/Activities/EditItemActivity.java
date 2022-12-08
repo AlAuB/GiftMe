@@ -57,7 +57,6 @@ public class EditItemActivity extends AppCompatActivity {
         String img = intent.getStringExtra("itemImg");
         String url = "";
         String date = " ";
-        String fsID= "FSid here";
         String collectionName = intent.getStringExtra("collectionName");
 
         //(re)create item obj
