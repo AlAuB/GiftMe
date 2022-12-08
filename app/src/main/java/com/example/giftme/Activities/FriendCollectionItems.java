@@ -19,6 +19,7 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
     TextView itemCount, collectionName;
     ImageButton shareImgButton, detailedViewButton, compactViewButton;
     String collection_name;
+    String friend_name;
     Bundle bundle;
     FriendCompactViewFragment friendCompactViewFragment;
     DetailViewFragment detailViewFragment;
@@ -34,11 +35,13 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
         detailedViewButton = findViewById(R.id.detail_view);
         compactViewButton = findViewById(R.id.compact_view);
 
-        if (getIntent().hasExtra("collection_name")) {
+        if (getIntent().hasExtra("collection_name") || getIntent().hasExtra("friend_name")) {
             collection_name = getIntent().getStringExtra("collection_name");
-            collectionName.setText(collection_name);
+            friend_name = getIntent().getStringExtra("friend_name");
+            String wishlist_title = friend_name + "'s " + collection_name;
+            collectionName.setText(wishlist_title);
             bundle = new Bundle();
-            bundle.putString("collection_name", collection_name);
+            bundle.putString("collection_name", wishlist_title);
         }
 
        shareImgButton.setVisibility(View.GONE);
