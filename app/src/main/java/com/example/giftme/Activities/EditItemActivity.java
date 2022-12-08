@@ -42,8 +42,8 @@ public class EditItemActivity extends AppCompatActivity {
         priceET = findViewById(R.id.itemPriceET);
         ratingBar = findViewById(R.id.ratingBar);
 
-        cancelButton = findViewById(R.id.button_cancel);
-        saveButton = findViewById(R.id.button_save);
+        cancelButton = findViewById(R.id.cancel);
+        saveButton = findViewById(R.id.save);
         dataBaseHelper = new DataBaseHelper(this);
 
         //get information from intent
@@ -71,22 +71,6 @@ public class EditItemActivity extends AppCompatActivity {
         //get link
         ratingBar.setRating(itemHearts);
 
-        backButton = findViewById(R.id.imageButton_backToPrevious);
-        backButton.setOnClickListener((view -> {
-            Intent newIntent = new Intent(this, DetailedItemViewActivity.class);
-            //put in name, price description, hearts, and link etc
-            newIntent.putExtra("itemID", item.getId());
-            newIntent.putExtra("itemName", item.getName());
-            newIntent.putExtra("itemHearts", item.getHearts());
-            newIntent.putExtra("itemPrice", item.getPrice());
-            newIntent.putExtra("itemDes", item.getDescription());
-            newIntent.putExtra("itemImg", item.getImg());
-            newIntent.putExtra("itemFSID", item.getFireStoreID());
-            newIntent.putExtra("collectionName", collectionName);
-            finish();
-            startActivity(newIntent);
-        }));
-
         saveButton.setOnClickListener(view -> {
             String newName = String.valueOf(nameET.getText());
             String newDescription = String.valueOf(descriptionET.getText());
@@ -94,7 +78,7 @@ public class EditItemActivity extends AppCompatActivity {
             int newRating = (int) ratingBar.getRating();
 
             dataBaseHelper.updateById(collectionName, item.getId(), newName, newPrice,
-                     newDescription, newRating, item.getImg(), item.getFireStoreID());
+                    newDescription, newRating, item.getImg(), item.getFireStoreID());
             Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
         });
 

@@ -68,7 +68,7 @@
                 android:layout_height="match_parent"
                 android:gravity="right|center_vertical"
                 android:layout_marginLeft="50dp"
-                android:stepSize="1"
+                android:stepSize="0.5"
                 android:numStars="5"
                 android:isIndicator="true"
                 />

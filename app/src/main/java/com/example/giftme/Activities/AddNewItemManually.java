@@ -54,8 +54,8 @@ public class AddNewItemManually extends AppCompatActivity {
         price = findViewById(R.id.item_price_input);
         extraInfo = findViewById(R.id.extraInfo);
         imageView = findViewById(R.id.item_image_input);
-        cancel = findViewById(R.id.cancel);
-        save = findViewById(R.id.save);
+        cancel = findViewById(R.id.button_cancel);
+        save = findViewById(R.id.button_save);
         ratingBar = findViewById(R.id.item_rating);
         dataBaseHelper = new DataBaseHelper(context);
         activityResultLauncher = registerForActivityResult(
