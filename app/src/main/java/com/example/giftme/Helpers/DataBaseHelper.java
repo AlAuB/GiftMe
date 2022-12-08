@@ -78,7 +78,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 COLUMN_NAME + " TEXT, " +
                 USER_NAME + " TEXT, " +
                 FRIEND_ID + " TEXT, " +
-                FIRESTORE_ID + " TEXT " + " ) ";
+                FIRESTORE_ID + " TEXT UNIQUE" + " ) ";
         sqLiteDatabase.execSQL(create_table);
     }
 
