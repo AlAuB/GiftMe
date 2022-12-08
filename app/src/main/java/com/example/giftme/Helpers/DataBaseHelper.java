@@ -472,9 +472,58 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public String getData(String rowId, String tableName) {
+    // returns the firestore id of the item in a table using id
+    public HashMap<String, Object> getData(String id, String tableName) {
         // still using rowId to fetch data.. should be changed to either id or firestore_id
-        String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + rowId;
+        String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + id;
+        HashMap<String, Object> details = new HashMap<>();
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor;
+        if (sqLiteDatabase != null) {
+            cursor = sqLiteDatabase.rawQuery(query, null);
+            if (cursor.moveToFirst()) {
+                int firestoreId = cursor.getColumnIndex(FIRESTORE_ID);
+                int name = cursor.getColumnIndex(COLUMN_NAME);
+                details.put("firestore_id", cursor.getString(firestoreId));
+                details.put("name", cursor.getString(name));
+                return details;
+            }
+            cursor.close();
+        }
+        return details;
+    }
+
+    /**
+     * Delete a collection
+     * @param id id for that item in that table
+     */
+    public void deleteCollection(String id) {
+        Log.d(TAG, "deleteData: " + id + " " + TABLE_NAME);
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        HashMap<String, Object> collectionDetails = getData(id, TABLE_NAME);
+        String firestoreId = (String) collectionDetails.get("firestore_id");
+        String collectionName = (String) collectionDetails.get("name");
+
+        // first delete it from COLLECTIONS table
+        long status = sqLiteDatabase.delete(TABLE_NAME, FIRESTORE_ID + "=?", new String[]{firestoreId});
+        if (status == -1) {
+            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+            // after successfully deleting from COLLECTIONS table, delete the collection's own table
+            deleteTable(collectionName);
+
+            // after successful delete in local db, delete in firestore as well
+            DocumentReference wishlistRef = fireStore.collection("users").document(userEmail).collection("wishlists").document(firestoreId);
+            wishlistRef.delete()
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted! (ID: " + firestoreId + ", user:" + userEmail + ")"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+        }
+    }
+
+    public String getDataItem(String rowId, String tableName) {
+        // still using rowId to fetch data.. should be changed to either id or firestore_id
+        String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + ITEM_ID + " = " + rowId;
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor;
         if (sqLiteDatabase != null) {
@@ -488,14 +537,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return "FAILED";
     }
 
-    /**
-     * Delete specific data in specific table
-     * @param rowId id for that item in that table
-     */
-    public void deleteData(String rowId, String tableName) {
+    // get firestore id of collection using collection name
+    public String getCollectionId(String tableName) {
+        String query = "SELECT * FROM " + "'" + TABLE_NAME + "'" + " WHERE " + COLUMN_NAME + " = " + "'" + tableName + "'";
+        Log.d(TAG, "getCollectionId: " + query);
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+
+        Cursor cursor;
+        if (sqLiteDatabase != null) {
+            cursor = sqLiteDatabase.rawQuery(query, null);
+            if (cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(FIRESTORE_ID);
+                return cursor.getString(nameIndex);
+            }
+            cursor.close();
+        }
+        return "FAILED";
+    }
+
+    // deletes an item inside a collection
+    public void deleteItem(String itemId, String tableName) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String firestoreId = getData(rowId, tableName);
-        long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreId});
+        Log.d(TAG, "deleteItem: " + itemId + " " + tableName);
+        String firestoreItemId = getDataItem(itemId, tableName);
+        Log.d(TAG, "deleteItem: " + firestoreItemId);
+        String firestoreId = getCollectionId(tableName);
+        Log.d(TAG, "deleteItem: " + firestoreItemId + " " + firestoreId);
+        long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreItemId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
         } else {
@@ -503,12 +571,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             // after successful delete in local db, delete in firestore as well
             DocumentReference wishlistRef = fireStore.collection("users").document(userEmail).collection("wishlists").document(firestoreId);
             Map<String, Object> updates = new HashMap<>();
-            updates.put(firestoreId, FieldValue.delete());
+            updates.put(firestoreItemId, FieldValue.delete());
             wishlistRef.update(updates).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        Log.d(TAG, "DocumentSnapshot " + firestoreId + "successfully deleted!");
+                        Log.d(TAG, "DocumentSnapshot " + firestoreItemId + " successfully deleted!");
                     } else {
                         Log.w(TAG, "Error deleting document", task.getException());
                     }
@@ -516,6 +584,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             });
         }
     }
+
 
     /**
      * Delete a whole table

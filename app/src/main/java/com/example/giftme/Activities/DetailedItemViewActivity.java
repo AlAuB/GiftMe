@@ -86,7 +86,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             finish();
             startActivity(myCollectionItemsIntent);
             dataBaseHelper = new DataBaseHelper(this);
-            dataBaseHelper.deleteItemInCollection(String.valueOf(item.getId()),collectionName);
+            dataBaseHelper.deleteItem(String.valueOf(item.getId()),collectionName);
         });
 
     }

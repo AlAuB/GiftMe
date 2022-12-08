@@ -88,7 +88,7 @@ public class DetailViewFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getBindingAdapterPosition();
             dataBaseHelper = new DataBaseHelper(context);
-            dataBaseHelper.deleteItemInCollection(String.valueOf(items.get(position).getId()), collection_name);
+            dataBaseHelper.deleteItem(String.valueOf(items.get(position).getId()), collection_name);
             items.clear();
             getAllItems();
             myCollectionItemsAdapter.notifyItemRemoved(position);
