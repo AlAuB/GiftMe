@@ -91,7 +91,7 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
     }
 
     @Override
-    public void updateItemNum(String count) {
-        itemCount.setText(count);
+    public void compactViewUpdateItemNum(String count) {
+
     }
 }

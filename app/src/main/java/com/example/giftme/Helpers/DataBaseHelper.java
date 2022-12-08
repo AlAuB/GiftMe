@@ -55,16 +55,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     private static final String TAG = "DataBaseHelper debug::";
-//    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
-//            {
-//                    "lesleychen456@gmail.com",
-//                    "lyujin@bu.edu",
-//                    "sj0726@bu.edu",
-//                    "tg757898305@gmail.com",
-//                    "tchen556@gmail.com",
-//                    "wycalex@bu.edu"
-//            };
-//    private static final int random = new Random().nextInt(uniqueId.length);
+    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
+            {
+                    "lesleychen456@gmail.com",
+                    "lyujin@bu.edu",
+                    "sj0726@bu.edu",
+                    "tg757898305@gmail.com",
+                    "tchen556@gmail.com",
+                    "wycalex@bu.edu"
+            };
+    private static final int random = new Random().nextInt(uniqueId.length);
 
     //for ITEMS
     private static final String ITEM_ID = "ITEM_ID";
@@ -387,7 +387,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * Add new collection in the Collection table
-     * @param name collection name
+     * @param userName etc
      */
 
     // TODO:: create another function for adding new collection to COLLECTIONS database and firestore when it's a friend's wishlist
