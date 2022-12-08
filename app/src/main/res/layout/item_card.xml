@@ -26,14 +26,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:orientation="horizontal">
 
             <RatingBar
-                style="@style/CustomRatingBarStyle"
                 android:id="@+id/rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/CustomRatingBarStyle"
+                android:layout_width="250dp"
+                android:layout_height="43dp"
+                android:layout_marginStart="5dp"
                 android:clickable="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
@@ -41,8 +42,7 @@
                 android:progressTint="#F44336"
                 android:scaleX=".4"
                 android:scaleY=".4"
-                android:stepSize="0.5"
-                android:layout_marginStart="5dp"
+                android:stepSize="1"
                 android:transformPivotX="0dp"
                 android:transformPivotY="15dp" />
 
@@ -55,10 +55,10 @@
                 android:id="@+id/item_card_time"
                 android:layout_width="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:layout_height="40dp"
+                android:layout_height="35dp"
                 android:layout_gravity="end"
                 android:gravity="center_vertical"
-                android:textSize="15sp" />
+                android:textSize="13sp" />
 
         </LinearLayout>
 

@@ -49,22 +49,22 @@
                 android:text=""
                 android:textSize="15sp"
                 android:textStyle="normal" />
-                
+
             <RatingBar
-                style="@style/CustomRatingBarStyle"
                 android:id="@+id/detail_view_item_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/CustomRatingBarStyle"
+                android:layout_width="250dp"
+                android:layout_height="43dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:isIndicator="true"
                 android:progressTint="#F44336"
                 android:scaleX=".4"
                 android:scaleY=".4"
-                android:stepSize="0.5"
-                android:transformPivotX="8dp"
-                android:transformPivotY="15dp"
-                android:clickable="false"
-                android:focusableInTouchMode="false"
-                android:focusable="false"/>
+                android:stepSize="1"
+                android:transformPivotX="5dp"
+                android:transformPivotY="15dp" />
                     
             <TextView
                 android:id="@+id/detail_view_item_price"

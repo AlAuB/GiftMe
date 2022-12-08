@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    android:orientation="vertical">
-
-    <ImageButton
-        android:id="@+id/imageButton_backToPrevious"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:src="@drawable/backward_icon" />
+    android:orientation="vertical"
+    android:weightSum="1"
+    tools:context=".Activities.AddNewItemManually">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/linkET"
-            android:layout_width="0dp"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:hint="insert shopping link here"/>
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="5dp"
+            android:hint="@string/enter_website_link"
+            app:endIconMode="clear_text">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/linkET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textSize="18sp"
+                android:inputType="textWebEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/button_shop"
@@ -40,8 +49,8 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:background="@color/lightblue"
+        android:layout_marginTop="5dp"
+        app:srcCompat="@drawable/click1"
         android:contentDescription="@string/image_for_current_item" />
 
     <LinearLayout
@@ -59,41 +68,70 @@
             android:textColor="@color/black" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/itemNameET"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Item Name Here"
-        android:text=""
-        android:textColor="@color/black"
-        android:textSize="19dp" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="5dp"
+        android:hint="@string/enter_name"
+        app:counterEnabled="true"
+        app:counterMaxLength="30"
+        app:endIconMode="clear_text"
+        app:helperText="Required"
+        app:helperTextTextColor="#F44336">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/itemNameET"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/itemPriceET"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
-            android:gravity="left|center_vertical"
-            android:hint="input price"
-            android:text=""
-            android:textColor="@color/black" />
+            android:hint="@string/enter_price"
+            app:counterEnabled="true"
+            app:counterMaxLength="10"
+            app:endIconMode="clear_text"
+            app:prefixText="$">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/itemPriceET"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:hint="input price"
+                android:text=""
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <RatingBar
             style="@style/CustomRatingBarStyle"
             android:id="@+id/ratingBar"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
             android:layout_weight="2"
-            android:gravity="end|center_vertical"
-            android:rating="0"
-            android:stepSize="0.5" />
+            android:gravity="right|center_vertical"
+            android:stepSize="1" />
 
     </LinearLayout>
 
