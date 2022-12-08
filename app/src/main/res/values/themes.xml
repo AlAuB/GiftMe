@@ -44,4 +44,9 @@
         <item name="android:colorBackground">#FFFFFF</item>
     </style>
 
+    <style name="CustomRatingBarStyle" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_rating_bar</item>
+        <item name="android:numStars">5</item>
+    </style>
+
 </resources>

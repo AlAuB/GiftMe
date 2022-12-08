@@ -62,16 +62,17 @@
                 android:text=""
                 android:hint="input price"
                 android:layout_marginStart="10dp"/>
+
             <RatingBar
+                style="@style/CustomRatingBarStyle"
                 android:id="@+id/ratingBar"
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="right|center_vertical"
-                android:layout_marginStart="50dp"
-                android:stepSize="1"
-                android:numStars="5"
-                android:isIndicator="true" />
+                android:layout_marginStart="10dp"
+                android:isIndicator="true"
+                android:progressDrawable="@drawable/custom_rating_bar"/>
+
         </LinearLayout>
         <TextView
             android:id="@+id/descriptionTV"
