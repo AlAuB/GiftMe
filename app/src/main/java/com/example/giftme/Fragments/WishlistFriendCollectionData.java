@@ -74,18 +74,13 @@ public class WishlistFriendCollectionData extends Fragment {
 
         //TESTING START
         floatingActionButton1.setOnClickListener(view -> {
-            String userID = "jinpenglyu0605@gmail.com";
 
+            String userID = "jinpenglyu0605@gmail.com";
             String wishlistID = "QafItkFJs4A9NA57zOMS";
-//            String friendName = dataBaseHelper.getFriendName(userID)
-//            String wishlistName = dataBaseHelper.getCollectionName(userID, wishlistID);
 
             getCollectionName(userID, wishlistID);
-//            ids.clear();
-//            collections.clear();
-//            friendIds.clear();
-//            getAllFriends();
-//            FrWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
+
+
             //Update collection count
         });
         //TESTING END

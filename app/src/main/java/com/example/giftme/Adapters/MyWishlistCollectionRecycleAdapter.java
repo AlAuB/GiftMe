@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.giftme.Activities.MyCollectionItems;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.R;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,7 @@ public class MyWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<MyW
         int index = holder.getBindingAdapterPosition();
         String name = collections.get(index);
         holder.textView.setText(name);
-        holder.linearLayout.setOnClickListener(view -> {
+        holder.cardView.setOnClickListener(view -> {
             int index1 = holder.getBindingAdapterPosition();
             Intent intent = new Intent(context, MyCollectionItems.class);
             intent.putExtra("collection_name", collections.get(index1));
@@ -63,12 +64,12 @@ public class MyWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<MyW
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView textView;
-        LinearLayout linearLayout;
+        MaterialCardView cardView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.collection_name_in_row);
-            linearLayout = itemView.findViewById(R.id.row);
+            cardView = itemView.findViewById(R.id.row);
         }
     }
 }

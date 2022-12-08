@@ -86,8 +86,7 @@
         </activity>
         <activity
             android:name=".Activities.EditItemActivity"
-            android:screenOrientation="portrait"
-            ></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.DetailedItemViewActivity"
             android:screenOrientation="portrait"

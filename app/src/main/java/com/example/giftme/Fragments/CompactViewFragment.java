@@ -1,13 +1,17 @@
 package com.example.giftme.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,10 +26,14 @@ import com.example.giftme.Adapters.ItemsAdapter;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
@@ -35,13 +43,15 @@ public class CompactViewFragment extends Fragment {
     View view;
     Context context;
     RecyclerView recyclerView;
-    FloatingActionButton actionButton;
+    ExtendedFloatingActionButton actionButton;
     DataBaseHelper dataBaseHelper;
     ItemsAdapter itemAdapter;
     ArrayList<Item> items;
     String collection_name;
     itemNumListener itemNumListener;
     Activity activity;
+    ImageView emptyImage;
+    TextView emptyText;
 
     public CompactViewFragment() {
         // Required empty public constructor
@@ -54,6 +64,8 @@ public class CompactViewFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_compact_view, container, false);
         recyclerView = view.findViewById(R.id.compact_view_recycler_view);
         actionButton = view.findViewById(R.id.compact_view_action);
+        emptyImage = view.findViewById(R.id.compact_view_empty_icon);
+        emptyText = view.findViewById(R.id.compact_view_empty_text);
         context = getContext();
         dataBaseHelper = new DataBaseHelper(context);
         items = new ArrayList<>();
@@ -66,10 +78,10 @@ public class CompactViewFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(itemAdapter);
-        itemNumListener.updateItemNum(String.valueOf(itemAdapter.getItemCount()));
-
+        itemNumListener.compactViewUpdateItemNum(String.valueOf(itemAdapter.getItemCount()));
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
         activity = getActivity();
+        checkEmptyUI();
         return view;
     }
 
@@ -87,6 +99,8 @@ public class CompactViewFragment extends Fragment {
             items.clear();
             getAllItems();
             itemAdapter.notifyItemRemoved(position);
+            itemNumListener.compactViewUpdateItemNum(String.valueOf(itemAdapter.getItemCount()));
+            checkEmptyUI();
         }
 
         @Override
@@ -100,6 +114,16 @@ public class CompactViewFragment extends Fragment {
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
+
+    private void checkEmptyUI() {
+        if (items.isEmpty()) {
+            emptyImage.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.VISIBLE);
+        } else {
+            emptyImage.setVisibility(View.GONE);
+            emptyText.setVisibility(View.GONE);
+        }
+    }
 
     private void getAllItems() {
         Cursor cursor = dataBaseHelper.selectAll(collection_name);
@@ -135,6 +159,16 @@ public class CompactViewFragment extends Fragment {
             } else {
                 Item item = new Item();
                 item.setName(itemName);
+                String date;
+                Date dateObj = new Date();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    date = LocalDate.now().toString();
+                } else {
+                    @SuppressLint("SimpleDateFormat") DateFormat dateFormat
+                            = new SimpleDateFormat("yyyy-MM-dd");
+                    date = dateFormat.format(dateObj);
+                }
+                item.setDate(date);
                 //Add item to Collection
                 dataBaseHelper.insertItemIntoCollection(collection_name, item);
                 Toast.makeText(context, "Added!", Toast.LENGTH_SHORT).show();
@@ -143,7 +177,8 @@ public class CompactViewFragment extends Fragment {
                 getAllItems();
                 itemAdapter.notifyItemInserted(items.size() - 1);
                 //Update collection count
-                itemNumListener.updateItemNum(String.valueOf(itemAdapter.getItemCount()));
+                itemNumListener.compactViewUpdateItemNum(String.valueOf(itemAdapter.getItemCount()));
+                checkEmptyUI();
             }
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
@@ -151,7 +186,7 @@ public class CompactViewFragment extends Fragment {
     }
 
     public interface itemNumListener {
-        void updateItemNum(String count);
+        void compactViewUpdateItemNum(String count);
     }
 
     @Override
