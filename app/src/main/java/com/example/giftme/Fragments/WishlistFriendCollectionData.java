@@ -77,9 +77,10 @@ public class WishlistFriendCollectionData extends Fragment {
         //TESTING START
         floatingActionButton1.setOnClickListener(view -> {
 
+
             String userID = "jinpenglyu0605@gmail.com";
             String wishlistID = "L74q60KF4tB3PmiR6YiC";
-
+            
             getCollectionName(userID, wishlistID);
 
 

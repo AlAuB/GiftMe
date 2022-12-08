@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.giftme.Fragments.CompactViewFragment;
 import com.example.giftme.Fragments.DetailViewFragment;
 import com.example.giftme.Fragments.FriendCompactViewFragment;
+import com.example.giftme.Fragments.FriendDetailViewFragment;
 import com.example.giftme.R;
 
 public class FriendCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener{
@@ -22,7 +23,7 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
     String friend_name;
     Bundle bundle;
     FriendCompactViewFragment friendCompactViewFragment;
-    DetailViewFragment detailViewFragment;
+    FriendDetailViewFragment friendDetailViewFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +49,10 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
 
         //Default view
         if (getIntent().hasExtra("view")) {
-            detailViewFragment = new DetailViewFragment();
-            detailViewFragment.setArguments(bundle);
+            friendDetailViewFragment = new FriendDetailViewFragment();
+            friendDetailViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
-                    replace(R.id.data_view, detailViewFragment, "detail").
+                    replace(R.id.data_view, friendDetailViewFragment, "detail").
                     setReorderingAllowed(true).commit();
         } else {
             friendCompactViewFragment = new FriendCompactViewFragment();
@@ -62,10 +63,10 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
         }
 
         detailedViewButton.setOnClickListener(view -> {
-            detailViewFragment = new DetailViewFragment();
-            detailViewFragment.setArguments(bundle);
+            friendDetailViewFragment = new FriendDetailViewFragment();
+            friendDetailViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
-                    replace(R.id.data_view, detailViewFragment, "detail").
+                    replace(R.id.data_view, friendDetailViewFragment, "detail").
                     setReorderingAllowed(true).commit();
         });
 
