@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -54,8 +55,8 @@ public class AddNewItemManually extends AppCompatActivity {
         price = findViewById(R.id.item_price_input);
         extraInfo = findViewById(R.id.extraInfo);
         imageView = findViewById(R.id.item_image_input);
-        cancel = findViewById(R.id.cancel);
-        save = findViewById(R.id.save);
+        cancel = findViewById(R.id.button_cancel);
+        save = findViewById(R.id.button_save);
         ratingBar = findViewById(R.id.item_rating);
         dataBaseHelper = new DataBaseHelper(context);
         activityResultLauncher = registerForActivityResult(
@@ -95,6 +96,7 @@ public class AddNewItemManually extends AppCompatActivity {
                 FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                 fileOutputStream.close();
+                dataBaseHelper.storeImageFirebase(bitmap, fileName);
                 String itemName = Objects.requireNonNull(name.getText()).toString();
                 String itemPrice = Objects.requireNonNull(price.getText()).toString();
                 String itemExtraInfo = Objects.requireNonNull(extraInfo.getText()).toString();
@@ -102,6 +104,7 @@ public class AddNewItemManually extends AppCompatActivity {
                     Toast.makeText(context, "Invalid Input", Toast.LENGTH_SHORT).show();
                 } else {
                     Item item = new Item();
+                    Log.d("debug::", "onCreate: " + item.getClaimed());
                     item.setWebsite(Objects.requireNonNull(website.getText()).toString());
                     item.setDate(date);
                     item.setName(itemName);
@@ -109,6 +112,7 @@ public class AddNewItemManually extends AppCompatActivity {
                     item.setHearts(ratingBar.getRating());
                     item.setPrice(Integer.parseInt(itemPrice));
                     item.setImg(context.getApplicationContext().getFilesDir() + "/" + fileName);
+                    Log.d("debug::", "onCreate: " + item.getImg());
                     dataBaseHelper.insertItemIntoCollection(collectionName, item);
                     Intent intent = new Intent(context, MyCollectionItems.class);
                     intent.putExtra("view", "Detailed");

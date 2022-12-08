@@ -23,7 +23,7 @@ public class Item {
     public Item(){
         // there should be a way to tell if the item object is being created just for the UI
         // or if it is being created for the database
-        //setClaimed();
+        setClaimed(false);
         setFireStoreID();
     }
     public Item(int newId, String website, String newName, float newHearts, int newPrice, String newDescription, String newDate,
@@ -36,7 +36,7 @@ public class Item {
         setDescription(newDescription);
         setDate(newDate);
         setImg(newImg);
-        //setClaimed(isClaimed);
+//        setClaimed(isClaimed);
         setFireStoreID();
     }
 
@@ -49,15 +49,11 @@ public class Item {
     public void setDescription( String newDescription){description = newDescription;}
     public void setImg( String newImg){ img = newImg;}
     public void setDate(String newDate){ date = newDate;}
-    public void setClaimed(Boolean isClaimed){
-        claimed = isClaimed;
-        //isGood
-        //need to update item
-        }
+    public void setClaimed(Boolean isClaimed){ claimed = isClaimed; }
     // using Java's UUID class to generate a unique ID for each item (cryptographically strong pseudo random number generator)
     public void setFireStoreID(){ fireStore_ID = UUID.randomUUID().toString();}
-
     public void setKnownFireStoreID(String newItemID){ fireStore_ID = newItemID;}
+
     //getters
     public int getId() {return id;}
     public String getWebsite() {return website;}
