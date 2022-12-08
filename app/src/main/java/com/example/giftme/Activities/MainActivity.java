@@ -1,5 +1,6 @@
 package com.example.giftme.Activities;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -12,6 +13,9 @@ import com.example.giftme.Fragments.WishlistFragment;
 import com.example.giftme.Fragments.WishlistMyCollectionData;
 import com.example.giftme.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener{
 
@@ -50,12 +54,39 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                     setReorderingAllowed(true).commit();
             return true;
         });
+
+        FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent()).addOnSuccessListener(this, pendingDynamicLinkData -> {
+            Uri deeplink = null;
+            if (pendingDynamicLinkData != null) {
+                deeplink = pendingDynamicLinkData.getLink();
+            }
+            if (deeplink != null) {
+                System.out.println("The deeplink is: " + deeplink);
+                Toast.makeText(this, deeplink.toString(), Toast.LENGTH_SHORT).show();
+                String temp = deeplink.toString();
+                int index = temp.charAt('=');
+                String subString = temp.substring(index);
+                System.out.println("Link: " + temp);
+                System.out.println("index: " + index);
+                System.out.println("substring: " + subString);
+            }
+        }).addOnFailureListener(this, e -> Toast.makeText(MainActivity.this, "Cannot get deep link", Toast.LENGTH_SHORT).show());
+    }
+
+    private void getDataFromFireStore(String email, String collection_id) {
+
     }
 
     @Override
     public void updateData(boolean status) {
         Toast.makeText(this, "Sign status is changed!", Toast.LENGTH_SHORT).show();
-        Fragment fragment = getSupportFragmentManager().getFragments().get(0);
+        List<Fragment> list = getSupportFragmentManager().getFragments();
+        Fragment fragment = null;
+        for (int i = 0; i< list.size(); i++) {
+            if (list.get(i) instanceof WishlistMyCollectionData) {
+                fragment = list.get(i);
+            }
+        }
         if (fragment instanceof WishlistMyCollectionData) {
             if (status) {
                 ((WishlistMyCollectionData) fragment).signedInState();
