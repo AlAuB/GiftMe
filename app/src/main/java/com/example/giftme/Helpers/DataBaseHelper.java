@@ -79,7 +79,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
-        this.userEmail = SessionManager.getUserEmail(context);
+        userEmail = SessionManager.getUserEmail(context);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void setUserEmail(String email) {
-        this.userEmail = email;
+        userEmail = email;
     }
 
     /**
@@ -218,6 +218,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     .addOnSuccessListener(aVoid -> {Log.d(TAG, "DocumentSnapshot successfully updated!");})
                     .addOnFailureListener(e -> {Log.w(TAG, "Error updating document", e);});
         }
+        cursor.close();
     }
 
     public Map<String, Object> convertItemIntoMap(Item item){
@@ -425,10 +426,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * for adding friend's collections
-     * @param friendName
-     * @param collectionName
-     * @param friendID
-     * @param fsID
+     * @param friendName String
+     * @param collectionName String
+     * @param friendID String
+     * @param fsID String
      */
     public void addNewFriendCollection(String friendName, String collectionName, String friendID, String fsID) {
         SQLiteDatabase database = this.getWritableDatabase();
@@ -623,5 +624,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String query = "ALTER TABLE " + "'" + oldName + "'" + " RENAME TO " + "'" + newName + "'";
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.execSQL(query);
+    }
+
+    public String getCollectionFireStoreId(String collectionName) {
+        String query = "SELECT * FROM COLLECTIONS WHERE COLLECTION_NAME = " + "'" + collectionName + "' AND USER_NAME IS NULL AND FRIEND_ID IS NULL";
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        int index = cursor.getColumnIndex(FIRESTORE_ID);
+        String id = "";
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                if (cursor.getBlob(4) != null) {
+                    id = cursor.getString(4);
+                }
+            }
+        }
+        cursor.close();
+        return id;
     }
 }

@@ -1,6 +1,9 @@
 package com.example.giftme.Activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,7 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giftme.Fragments.CompactViewFragment;
 import com.example.giftme.Fragments.DetailViewFragment;
+import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
+import com.google.firebase.dynamiclinks.DynamicLink;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+
+import org.jetbrains.annotations.NotNull;
 
 public class MyCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener, DetailViewFragment.itemNumListener {
 
@@ -20,6 +29,9 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
     Bundle bundle;
     CompactViewFragment compactViewFragment;
     DetailViewFragment detailViewFragment;
+    DataBaseHelper dataBaseHelper;
+    String DEEP_LINK_URL = "https://example.com/deeplinks";
+    String DYNAMIC_LINK_PREFIX = "https://giftme.page.link";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +43,7 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
         itemCount = findViewById(R.id.num_items);
         detailedViewButton = findViewById(R.id.detail_view);
         compactViewButton = findViewById(R.id.compact_view);
+        dataBaseHelper = new DataBaseHelper(getBaseContext());
 
         if (getIntent().hasExtra("collection_name")) {
             collection_name = getIntent().getStringExtra("collection_name");
@@ -39,7 +52,13 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
             bundle.putString("collection_name", collection_name);
         }
 
-        shareImgButton.setOnClickListener(view -> Toast.makeText(this, "This feature is under development", Toast.LENGTH_SHORT).show());
+        shareImgButton.setOnClickListener(v -> {
+            String email = SessionManager.getUserEmail(getApplicationContext());
+            String collectionID = dataBaseHelper.getCollectionFireStoreId(collection_name);
+            Uri link = Uri.parse(DEEP_LINK_URL + "/?data=" + email + " " + collectionID);
+            System.out.println("collectionID is: " + collectionID);
+            shareDeepLink(buildDynamicLink(link).toString());
+        });
 
         //Default view
         if (getIntent().hasExtra("view")) {
@@ -77,6 +96,23 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
                     replace(R.id.data_view, compactViewFragment, "Compact").
                     setReorderingAllowed(true).commit();
         });
+    }
+
+    private void shareDeepLink(String deepLink) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Firebase Deep Link");
+        intent.putExtra(Intent.EXTRA_TEXT, deepLink);
+        startActivity(intent);
+    }
+
+    private Uri buildDynamicLink(@NotNull Uri deeplink) {
+        DynamicLink.Builder builder = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setDomainUriPrefix(DYNAMIC_LINK_PREFIX).setAndroidParameters(
+                        new DynamicLink.AndroidParameters.Builder().build()).setLink(deeplink);
+        DynamicLink link = builder.buildDynamicLink();
+        System.out.println("Link: " + link.getUri());
+        return link.getUri();
     }
 
     private void setButtonsAlpha(int position) {
