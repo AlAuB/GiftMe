@@ -116,24 +116,24 @@
 
         <Button
             style="@style/texts"
-            android:id="@+id/cancel"
+            android:id="@+id/button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#F44336"
             android:text="@string/cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/save"
+            app:layout_constraintRight_toLeftOf="@id/button_save"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             style="@style/texts"
-            android:id="@+id/save"
+            android:id="@+id/button_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/cancel"
+            app:layout_constraintLeft_toRightOf="@id/button_cancel"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
