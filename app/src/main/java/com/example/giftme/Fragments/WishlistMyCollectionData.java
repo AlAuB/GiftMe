@@ -97,8 +97,9 @@ public class WishlistMyCollectionData extends Fragment {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getBindingAdapterPosition();
-            dataBaseHelper.deleteData(ids.get(position), "COLLECTIONS");
-            dataBaseHelper.deleteTable(collections.get(position));
+            dataBaseHelper.deleteCollection(ids.get(position));
+//            dataBaseHelper.deleteData(ids.get(position), "COLLECTIONS");
+//            dataBaseHelper.deleteTable(collections.get(position));
             TextView textView = activity.findViewById(R.id.collectionCount);
             ids.clear();
             collections.clear();
