@@ -72,7 +72,7 @@ public class FriendCompactViewFragment extends Fragment {
     }
 
     //get all items from firestore with collectionID
-    private void  getAllItemsFirestore() {
+    private void getAllItemsFirestore() {
 
 //            //TEST FIRE STORE START
 //            //get fire store collection wishlist items

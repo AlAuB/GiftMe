@@ -18,15 +18,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.firestore.Source;
-import com.google.firestore.v1.Value;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -38,13 +34,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME = "COLLECTIONS";
     private static final String FRIEND_ID = "FRIEND_ID";
     private static final String COLUMN_ID = "id";
-    private static final String COLUMN_NAME = "NAME";
+    private static final String COLUMN_NAME = "COLLECTION_NAME";
     private static final String CLAIMED = "CLAIMED";
+    private static final String USER_NAME = "USER_NAME";
 
     private static final String FIRESTORE_ID = "firestore_id";
     private final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
     private static final String COLLECTIONS_USERS = "users"; //this should be changed to 'users'
     private static final String COLLECTIONS_WISHLISTS = "wishlists";
+
 
     private static final String TAG = "DataBaseHelper debug::";
     private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
@@ -77,7 +75,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String create_table = "CREATE TABLE " + TABLE_NAME + " ( " +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_NAME + " TEXT UNIQUE, " +
+                COLUMN_NAME + " TEXT, " +
+                USER_NAME + " TEXT, " +
                 FRIEND_ID + " TEXT, " +
                 FIRESTORE_ID + " TEXT " + " ) ";
         sqLiteDatabase.execSQL(create_table);
@@ -233,6 +232,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return collectionName[0];
     }
 
+
     /**
      * get all items from a collection table
      *
@@ -316,41 +316,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // TODO:: create another function for adding new collection to COLLECTIONS database and firestore when it's a friend's wishlist
 
-    public void addNewCollection(String name, String friendID) {
-        SQLiteDatabase database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        // add to firestore first to make sure the collection is created
-        // for now, get random unique id from the array above and check if the document's been created in firestore
-        Map<String, Object> wishlist = new HashMap<>();
-        wishlist.put("Collection Name", name);
-        wishlist.put("Friend ID", friendID);
-
-        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
-        DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
-        wishlistDocIdRef.set(wishlist)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + uniqueId[random] + ")"))
-                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
-
-        values.put(COLUMN_NAME, name);
-        values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
-        values.put(FRIEND_ID, friendID);
-
-        long status = database.insert(TABLE_NAME, null, values);
-        if (status == -1) {
-            Toast.makeText(context, "Insert failed", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * for adding friend's collections
-     * @param collectionName
-     * @param friendID
-     * @param fsID
-     */
-    public void addNewFriendCollection(String collectionName, String friendID, String fsID) {
+    public void addNewCollection(String userName, String collectionName, String friendID) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -366,6 +332,43 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + uniqueId[random] + ")"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
 
+        values.put(COLUMN_NAME, collectionName);
+        values.put(USER_NAME,  userName);
+        values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
+        values.put(FRIEND_ID, friendID);
+
+        long status = database.insert(TABLE_NAME, null, values);
+        if (status == -1) {
+            Toast.makeText(context, "Insert failed", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * for adding friend's collections
+     * @param friendName
+     * @param collectionName
+     * @param friendID
+     * @param fsID
+     */
+    public void addNewFriendCollection(String friendName, String collectionName, String friendID, String fsID) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        // add to firestore first to make sure the collection is created
+        // for now, get random unique id from the array above and check if the document's been created in firestore
+        Map<String, Object> wishlist = new HashMap<>();
+        wishlist.put("Collection Name", collectionName);
+        wishlist.put("Friend ID", friendID);
+
+        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
+        wishlistDocIdRef.set(wishlist)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + uniqueId[random] + ")"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
+
+        values.put(USER_NAME, friendName);
         values.put(COLUMN_NAME, collectionName);
         values.put(FIRESTORE_ID, fsID);
         values.put(FRIEND_ID, friendID);

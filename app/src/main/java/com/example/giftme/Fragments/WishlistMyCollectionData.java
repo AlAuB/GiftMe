@@ -140,7 +140,7 @@ public class WishlistMyCollectionData extends Fragment {
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
                 //if this isn't the friend's wishlist
-                if(cursor.getBlob(2) == null){
+                if(cursor.getBlob(3) == null){
                     ids.add(cursor.getString(0));
                     collections.add(cursor.getString(1));
                 }
@@ -163,7 +163,7 @@ public class WishlistMyCollectionData extends Fragment {
                 Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
             } else {
                 //Add collection name to Collection Table
-                dataBaseHelper.addNewCollection(insert, null);
+                dataBaseHelper.addNewCollection(null, insert, null);
                 //Create collection-name Table in database
                 dataBaseHelper.createNewTable(insert);
                 //Notify insertion change to RecycleView Adapter
