@@ -110,12 +110,12 @@ public class FriendDetailViewFragment extends Fragment {
                             });
                         }
                         // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
-                        friendItemsDetailAdapter = new FriendItemsDetailViewAdapter(getActivity(), context, items, friend_id, collection_id);
+                        friendItemsDetailAdapter = new FriendItemsDetailViewAdapter(activity, context, items, friend_id, collection_id);
                         recyclerView.setLayoutManager(new LinearLayoutManager(context));
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setAdapter(friendItemsDetailAdapter);
 //        itemNumListener.updateItemNum(String.valueOf(friendItemAdapter.getItemCount()));
-                        activity = getActivity();
+
                         // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
                     }
                 }else
