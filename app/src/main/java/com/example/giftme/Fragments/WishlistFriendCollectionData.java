@@ -110,7 +110,7 @@ public class WishlistFriendCollectionData extends Fragment {
     //MAYBE RENAME TO ADD COLLECTION?
     public void getCollectionName(String userID, String collectionID){
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-        DocumentReference userRef = fireStore.collection("usersTest").document(userID);
+        DocumentReference userRef = fireStore.collection("users").document(userID);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collectionID);
         String collection_name = "Collection Name";
 
