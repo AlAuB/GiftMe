@@ -201,4 +201,9 @@ public class WishlistMyCollectionData extends Fragment {
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();
     }
+
+    //interface
+    public interface MyFriendCollectionListener{
+        public void goToFriendCollection();
+    }
 }

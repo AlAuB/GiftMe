@@ -2,14 +2,17 @@ package com.example.giftme.Fragments;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +23,7 @@ import com.example.giftme.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class WishlistFriendCollectionData extends Fragment {
 
@@ -47,6 +52,7 @@ public class WishlistFriendCollectionData extends Fragment {
 
     private static final String TABLE_NAME = "COLLECTIONS";
 
+
     public WishlistFriendCollectionData() {
         // Required empty public constructor
     }
@@ -65,7 +71,17 @@ public class WishlistFriendCollectionData extends Fragment {
         collections = new ArrayList<>();
         friendIds = new ArrayList<>();
         friendNames = new ArrayList<>();
+
         friendImgs = new ArrayList<>();
+
+        //get userID and collectionID
+//        if(getArguments() !=null){
+//            String friendID = getArguments().getString("userID");
+//            String collectionID = getArguments().getString("collectionID");
+//            System.out.println("TESTsubstring: " + friendID);
+//            System.out.println("TESTsubstring: " + collectionID);
+//        }
+
         getAllFriends();
 
         recyclerView1.setLayoutManager(new LinearLayoutManager(context1));
@@ -78,13 +94,13 @@ public class WishlistFriendCollectionData extends Fragment {
         floatingActionButton1.setOnClickListener(view -> {
 
 
-            String userID = "jinpenglyu0605@gmail.com";
-            String wishlistID = "L74q60KF4tB3PmiR6YiC";
-            
-            getCollectionName(userID, wishlistID);
+//            String userID = "jinpenglyu0605@gmail.com";
+//            String wishlistID = "QafItkFJs4A9NA57zOMS";
+//
+//            getCollectionName(userID, wishlistID);
 
+            confirmDialog();
 
-            //Update collection count
         });
         //TESTING END
         return view1;
@@ -94,7 +110,7 @@ public class WishlistFriendCollectionData extends Fragment {
     //MAYBE RENAME TO ADD COLLECTION?
     public void getCollectionName(String userID, String collectionID){
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-        DocumentReference userRef = fireStore.collection("users").document(userID);
+        DocumentReference userRef = fireStore.collection("usersTest").document(userID);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collectionID);
         String collection_name = "Collection Name";
 
@@ -154,4 +170,57 @@ public class WishlistFriendCollectionData extends Fragment {
             }
         }
     }
+
+    /**
+     * Private function that pop up confirm dialog that wait user input
+     */
+    private void confirmDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
+        builder.setTitle("Add Friend's Collection");
+        View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
+        TextInputEditText input = view.findViewById(R.id.input);
+        builder.setView(view);
+        builder.setPositiveButton("OK", (dialogInterface, i) -> {
+            String insert = Objects.requireNonNull(input.getText()).toString().trim();
+            if (collections.contains(insert) || insert.length() == 0 || insert.length() > 200) {
+                Toast.makeText(context1, "Invalid collection name", Toast.LENGTH_LONG).show();
+            } else {
+                //get link from input
+                int index_parseDeepLink = insert.indexOf("3D");
+                String deepLink = insert.substring(index_parseDeepLink+2);
+                System.out.println("Link: " + deepLink);
+                System.out.println("INDEX " + index_parseDeepLink);
+                //lesleychen456%40gmail.com%20collectionID
+//                int index = deepLink.indexOf('=');
+                int index = deepLink.indexOf("%20");
+                String userEmail = deepLink.substring(0, index);
+                //user ID lesleychen456%40gmail.com
+                int indexAt = userEmail.indexOf('%');
+                String userIDName = userEmail.substring(0,indexAt);
+                String userIDEnd = userEmail.substring(indexAt+3);
+                String userID = userIDName + "@" + userIDEnd;
+
+                String wishlistID = deepLink.substring(index+3);
+                System.out.println("substring: " + userID);
+                System.out.println("substring: " + wishlistID);
+
+//                int indexPlus = subString.indexOf("+");
+//                String userID = subString.substring(1, indexPlus);
+//                String wishlistID = subString.substring(indexPlus+1);
+//                System.out.println("substring: " + userID);
+//                System.out.println("substring: " + wishlistID);
+                //Add Friend's collection
+
+                getCollectionName(userID, wishlistID);
+
+                //Update collection count
+                collectionCount1.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
+//                checkEmptyUI();
+            }
+        });
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+        builder.create().show();
+    }
+
+
 }

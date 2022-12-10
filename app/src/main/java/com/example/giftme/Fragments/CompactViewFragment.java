@@ -134,7 +134,7 @@ public class CompactViewFragment extends Fragment {
                         Integer.parseInt(cursor.getString(0)),
                         cursor.getString(1),
                         cursor.getString(2),
-                        Integer.parseInt(cursor.getString(3)),
+                        Float.parseFloat(cursor.getString(3)),
                         Integer.parseInt(cursor.getString(4)),
                         cursor.getString(5),
                         cursor.getString(6),
