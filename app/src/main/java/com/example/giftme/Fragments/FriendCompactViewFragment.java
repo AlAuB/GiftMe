@@ -43,10 +43,9 @@ public class FriendCompactViewFragment extends Fragment {
     String collection_name;
     itemNumListener itemNumListener;
     Activity activity;
-    String friendName;
-    String collectionID;
+    String friendName, friend_id;
+    String collection_id;
 
-    public static String collectionName;
 
     public FriendCompactViewFragment() {
         // Required empty public constructor
@@ -59,11 +58,14 @@ public class FriendCompactViewFragment extends Fragment {
         view = inflater.inflate(R.layout.friend_fragment_compact_view, container, false);
         recyclerView = view.findViewById(R.id.friend_compact_view_recycler_view);
         context = getContext();
+        activity = getActivity();
         dataBaseHelper = new DataBaseHelper(context);
         items = new ArrayList<>();
 
         if (getArguments() != null) {
             collection_name = getArguments().getString("collection_name");
+            collection_id = getArguments().getString("collection_id");
+            friend_id = getArguments().getString("friend_id");
         }
         getAllItemsFirestore();
         Log.d("FIRESTORE AFTER ", items.toString());
@@ -76,15 +78,9 @@ public class FriendCompactViewFragment extends Fragment {
 
 //            //TEST FIRE STORE START
 //            //get fire store collection wishlist items
-//
-        String userID = "jinpenglyu0605@gmail.com";
-        String wishlistID = "L74q60KF4tB3PmiR6YiC";
-
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-        DocumentReference userRef = fireStore.collection("users").document(userID);
-        DocumentReference collectionRef = userRef.collection("wishlists").document(wishlistID);
-
-        collectionID = wishlistID; //parse from dynamic link
+        DocumentReference userRef = fireStore.collection("users").document(friend_id);
+        DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);
 
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -107,18 +103,13 @@ public class FriendCompactViewFragment extends Fragment {
                                     }
                             );
                         }
-//                        dataBaseHelper.convertMapIntoItem(itemsInWishlist);
-//                        Log.d("fireStore", String.valueOf(itemsInWishlist));
-//                        String wishlistName = (String) doc.get("Collection Name");
-//                        Log.d("friendWLName", wishlistName);
-                        collectionName =  (String) doc.get("Collection Name");
                         // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
-                        friendItemAdapter = new FriendItemsAdapter(getActivity(), context, items, friendName, collectionID);
+                        friendItemAdapter = new FriendItemsAdapter(activity, context, items, friend_id, collection_id);
                         recyclerView.setLayoutManager(new LinearLayoutManager(context));
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setAdapter(friendItemAdapter);
 //        itemNumListener.updateItemNum(String.valueOf(friendItemAdapter.getItemCount()));
-                        activity = getActivity();
+
                         // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
                     }
                 }else

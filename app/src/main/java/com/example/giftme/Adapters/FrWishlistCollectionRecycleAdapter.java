@@ -15,8 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Activities.FriendCollectionItems;
-import com.example.giftme.Activities.MyCollectionItems;
-import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
 import com.squareup.picasso.Picasso;
 
@@ -26,20 +24,23 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
 
     Activity activity;
     Context context;
-    ArrayList<String> collections;
+    ArrayList<String> collectionNames;
+    ArrayList<String> collectionIDs;
     ArrayList<String> ids;
     ArrayList<String> friendIds;
     ArrayList<String> friendNames;
     ArrayList<String> friendProfileImages;
 
     public FrWishlistCollectionRecycleAdapter(Activity activity, Context context,
-                                              ArrayList<String> ids, ArrayList<String> collections,
+                                              ArrayList<String> ids, ArrayList<String> collectionNames,
+                                              ArrayList<String> collectionIDs,
                                               ArrayList<String> emails, ArrayList<String> names,
                                               ArrayList<String> imgs) {
         this.activity = activity;
         this.context = context;
         this.ids = ids;
-        this.collections = collections;
+        this.collectionNames = collectionNames;
+        this.collectionIDs = collectionIDs;
         this.friendIds = emails;
         this.friendNames = names;
         this.friendProfileImages = imgs;
@@ -57,7 +58,8 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
     public void onBindViewHolder(@NonNull FrWishlistCollectionRecycleAdapter.MyViewHolder holder, int position) {
         //populate
         int index = holder.getAdapterPosition();
-        String wishlistName = collections.get(index);
+        String wishlistName = collectionNames.get(index);
+        String wishlistID = collectionIDs.get(index);
         String friendID = friendIds.get(index);
         String friendName = friendNames.get(index);
         String friendPFP = friendProfileImages.get(index);
@@ -73,13 +75,15 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
             Intent intent = new Intent(context, FriendCollectionItems.class);
             intent.putExtra("collection_name", wishlistName);
             intent.putExtra("friend_name", friendName);
+            intent.putExtra("friend_id", friendID);
+            intent.putExtra("collection_id", wishlistID);
             activity.startActivity(intent);
         });
     }
 
     @Override
     public int getItemCount() {
-        return collections.size();
+        return collectionNames.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
