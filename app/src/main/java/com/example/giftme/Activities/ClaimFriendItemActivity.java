@@ -89,7 +89,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
             //call setClaimed with that tableID to firestore
 //            dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFsID, true);
             Log.d("friendClaim", friendID + " " + friendCollectionID + " " + itemFsID);
-            dataBaseHelper.editClaimed("jinpenglyu0605@gmail.com", friendCollectionID, itemFsID, true);
+            dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFsID, true);
             finish();
         });
         cancelButton = findViewById(R.id.button_cancel);

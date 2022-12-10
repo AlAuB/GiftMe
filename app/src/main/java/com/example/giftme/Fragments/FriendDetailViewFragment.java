@@ -49,9 +49,8 @@ public class FriendDetailViewFragment extends Fragment {
     FriendItemsDetailViewAdapter friendItemsDetailAdapter;
     DataBaseHelper dataBaseHelper;
     ArrayList<Item> items;
-    String friendName;
-    String collection_name;
-    String collectionID;
+    String friend_name, friend_id;
+    String collection_name, collection_id;
 
    itemNumListener itemNumListener;
 
@@ -72,6 +71,9 @@ public class FriendDetailViewFragment extends Fragment {
         items = new ArrayList<>();
         if (getArguments() != null) {
             collection_name = getArguments().getString("collection_name");
+            collection_id = getArguments().getString("collection_id");
+            friend_name = getArguments().getString("friend_name");
+            friend_id = getArguments().getString("friend_id");
         }
         getAllItemsFirestore();
         return view;
@@ -82,15 +84,11 @@ public class FriendDetailViewFragment extends Fragment {
 
 //            //TEST FIRE STORE START
 //            //get fire store collection wishlist items
-//
-        String userID = "jinpenglyu0605@gmail.com";
-        String wishlistID = "L74q60KF4tB3PmiR6YiC";
 
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-        DocumentReference userRef = fireStore.collection("users").document(userID);
-        DocumentReference collectionRef = userRef.collection("wishlists").document(wishlistID);
+        DocumentReference userRef = fireStore.collection("users").document(friend_id);
+        DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);
 
-        collectionID = wishlistID; //parse from dynamic link
 
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -112,7 +110,7 @@ public class FriendDetailViewFragment extends Fragment {
                             });
                         }
                         // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
-                        friendItemsDetailAdapter = new FriendItemsDetailViewAdapter(getActivity(), context, items, friendName, collectionID);
+                        friendItemsDetailAdapter = new FriendItemsDetailViewAdapter(getActivity(), context, items, friend_id, collection_id);
                         recyclerView.setLayoutManager(new LinearLayoutManager(context));
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setAdapter(friendItemsDetailAdapter);

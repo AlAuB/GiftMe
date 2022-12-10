@@ -75,19 +75,19 @@ public class WishlistFriendCollectionData extends Fragment {
         friendNames = new ArrayList<>();
         friendImgs = new ArrayList<>();
 
-        getAllFriends();
-
-        recyclerView1.setLayoutManager(new LinearLayoutManager(context1));
-        recyclerView1.setHasFixedSize(true);
-        FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collectionNames, collectionIDs, friendIds, friendNames, friendImgs);
-        recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
         floatingActionButton1 = view1.findViewById(R.id.action1);
-
+        getAllFriends();
         //TESTING START
         floatingActionButton1.setOnClickListener(view -> {
             confirmDialog();
         });
         //TESTING END
+        recyclerView1.setLayoutManager(new LinearLayoutManager(context1));
+        recyclerView1.setHasFixedSize(true);
+        FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collectionNames, collectionIDs, friendIds, friendNames, friendImgs);
+        recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
+
+
         return view1;
     }
 
@@ -111,7 +111,7 @@ public class WishlistFriendCollectionData extends Fragment {
                     friend[0] = user.getString(displayName);
                     friend[1] = user.getString(photoURL);
 
-                    Log.d("friend", "PFP: " + friend[1]);
+                    Log.d("friend", "Name: " + friend[0]);
 
                     final String[] collectionName= new String[1];
 
@@ -127,6 +127,7 @@ public class WishlistFriendCollectionData extends Fragment {
                                 ids.clear();
                                 collectionNames.clear();
                                 collectionIDs.clear();
+                                friendNames.clear();
                                 friendIds.clear();
                                 friendImgs.clear();
                                 getAllFriends();
@@ -149,7 +150,6 @@ public class WishlistFriendCollectionData extends Fragment {
                 //if these collections belong to friends
                 if(cursor.getString(3) != null){
                     ids.add(cursor.getString(0));
-                    Log.d("FRIENDIDS", ids.toString());
                     collectionNames.add(cursor.getString(1));
                     friendNames.add(cursor.getString(2));
                     friendIds.add(cursor.getString(3));
