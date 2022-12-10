@@ -76,6 +76,15 @@ public class WishlistFriendCollectionData extends Fragment {
         friendImgs = new ArrayList<>();
 
         floatingActionButton1 = view1.findViewById(R.id.action1);
+
+        final Bundle args = getArguments();
+        Log.d("WISHLISTFRIEND", "ARGS IS NOT NULL " + (args!=null));
+        if(args !=null){
+            String userID = args.getString("user_id");
+            String wishlistID = args.getString("collection_id");
+            getCollectionName(userID, wishlistID);
+        }
+
         getAllFriends();
         //TESTING START
         floatingActionButton1.setOnClickListener(view -> {

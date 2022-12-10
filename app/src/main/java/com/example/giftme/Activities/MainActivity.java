@@ -2,6 +2,7 @@ package com.example.giftme.Activities;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
             return true;
         });
 
+        //----RECEIVING DYNAMIC LINKS START---
         FirebaseDynamicLinks.getInstance().getDynamicLink(getIntent()).addOnSuccessListener(this, pendingDynamicLinkData -> {
             Uri deeplink = null;
             if (pendingDynamicLinkData != null) {
@@ -83,6 +85,19 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                 System.out.println("substring: " + userID);
                 System.out.println("substring: " + collectionID);
 
+
+//                Fragment fragmentWishlist = wishlistFragment;
+//                Bundle bundle = new Bundle();
+//                bundle.putString("userID", userID);
+//                bundle.putString("collectionID", collectionID);
+//                fragmentWishlist.setArguments(bundle);
+//                Log.d("BUNDLEINFO", bundle.getString("userID"));
+                Fragment fragmentWishlist = WishlistFragment.newInstance(userID, collectionID);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frag_view, fragmentWishlist)
+                        .commit();
+
+                //ERROR: VIEWPAGER2 DOES NOT SUPPORT DIRECT CHLD FRAGMENTS
 //                WishlistFriendCollectionData fragment = new WishlistFriendCollectionData();
 //
 //                //---------------------
@@ -94,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
 //                Bundle bundle = new Bundle();
 //                bundle.putString("userID", userID);
 //                bundle.putString("collectionID", collectionID);
-//
+
 //                fragment.setArguments(bundle);
             }
         }).addOnFailureListener(this, e -> Toast.makeText(MainActivity.this, "Cannot get deep link", Toast.LENGTH_SHORT).show());
@@ -126,6 +141,6 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
 
     @Override
     public void goToFriendCollection() {
-
+        //WISHLISTFRIENDCOLLECTIONDATA FRAGMENT
     }
 }

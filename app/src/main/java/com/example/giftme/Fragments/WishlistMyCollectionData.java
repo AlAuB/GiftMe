@@ -204,6 +204,6 @@ public class WishlistMyCollectionData extends Fragment {
 
     //interface
     public interface MyFriendCollectionListener{
-        public void goToFriendCollection();
+        void goToFriendCollection();
     }
 }
