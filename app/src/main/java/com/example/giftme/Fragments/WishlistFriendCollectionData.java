@@ -46,6 +46,7 @@ public class WishlistFriendCollectionData extends Fragment {
     ArrayList<String> collections;
     ArrayList<String> friendIds;
     ArrayList<String> friendNames;
+    ArrayList<String> friendImgs;
 
     DataBaseHelper dataBaseHelper;
 
@@ -71,6 +72,8 @@ public class WishlistFriendCollectionData extends Fragment {
         friendIds = new ArrayList<>();
         friendNames = new ArrayList<>();
 
+        friendImgs = new ArrayList<>();
+
         //get userID and collectionID
 //        if(getArguments() !=null){
 //            String friendID = getArguments().getString("userID");
@@ -83,12 +86,13 @@ public class WishlistFriendCollectionData extends Fragment {
 
         recyclerView1.setLayoutManager(new LinearLayoutManager(context1));
         recyclerView1.setHasFixedSize(true);
-        FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collections, friendIds, friendNames);
+        FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collections, friendIds, friendNames, friendImgs);
         recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
         floatingActionButton1 = view1.findViewById(R.id.action1);
 
         //TESTING START
         floatingActionButton1.setOnClickListener(view -> {
+
 
 //            String userID = "jinpenglyu0605@gmail.com";
 //            String wishlistID = "QafItkFJs4A9NA57zOMS";
@@ -96,6 +100,7 @@ public class WishlistFriendCollectionData extends Fragment {
 //            getCollectionName(userID, wishlistID);
 
             confirmDialog();
+
         });
         //TESTING END
         return view1;
@@ -110,16 +115,21 @@ public class WishlistFriendCollectionData extends Fragment {
         String collection_name = "Collection Name";
 
         String displayName = "displayName";
-        final String[] friendName = new String[1];
+        String photoURL = "photoUrl";
+        final String[] friend = new String[2];
+        //friend[0] = name; friend[1] = pfp
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
                     DocumentSnapshot user = task.getResult();
-                    friendName[0] = user.getString(displayName);
-                    Log.d("friendName", "Name: " + friendName[0]);
+                    friend[0] = user.getString(displayName);
+                    friend[1] = user.getString(photoURL);
+
+                    Log.d("friend", "PFP: " + friend[1]);
 
                     final String[] collectionName= new String[1];
+
                     collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -127,11 +137,12 @@ public class WishlistFriendCollectionData extends Fragment {
                                 DocumentSnapshot collection = task.getResult();
                                 collectionName[0] = collection.getString(collection_name);
                                 Log.d("friendCollectionName", "Name: " + collectionName[0]);
-                                Log.d("friendName2", "Name: " + friendName[0]);
-                                dataBaseHelper.addNewFriendCollection(friendName[0], collectionName[0], userID, collectionID);
+                                Log.d("friendName2", "Name: " + friend[0]);
+                                dataBaseHelper.addNewFriendCollection(friend[0], collectionName[0], userID, collectionID, friend[1]);
                                 ids.clear();
                                 collections.clear();
                                 friendIds.clear();
+                                friendImgs.clear();
                                 getAllFriends();
                                 FrWishlistCollectionRecycleAdapter.notifyItemInserted(collections.size() - 1);
 
@@ -154,6 +165,7 @@ public class WishlistFriendCollectionData extends Fragment {
                     collections.add(cursor.getString(1));
                     friendNames.add(cursor.getString(2));
                     friendIds.add(cursor.getString(3));
+                    friendImgs.add(cursor.getString(4));
                 }
             }
         }
