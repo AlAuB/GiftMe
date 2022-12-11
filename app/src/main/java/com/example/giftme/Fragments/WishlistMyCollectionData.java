@@ -61,7 +61,7 @@ public class WishlistMyCollectionData extends Fragment {
         view = inflater.inflate(R.layout.fragment_wishlist_my_collection_data, container, false);
         context = this.getContext();
         collectionCount = view.findViewById(R.id.collectionCount);
-        collectionText = view.findViewById(R.id.collection_text);
+//        collectionText = view.findViewById(R.id.collection_text);
         recyclerView = view.findViewById(R.id.recycleView);
         floatingActionButton = view.findViewById(R.id.action);
         emptyText = view.findViewById(R.id.empty_text);
@@ -136,7 +136,7 @@ public class WishlistMyCollectionData extends Fragment {
         recyclerView.setVisibility(View.VISIBLE);
         floatingActionButton.setVisibility(View.VISIBLE);
         collectionCount.setVisibility(View.VISIBLE);
-        collectionText.setVisibility(View.VISIBLE);
+//        collectionText.setVisibility(View.VISIBLE);
         collectionCount.setText(String.valueOf(collections.size()));
         checkEmptyUI();
     }
@@ -150,7 +150,7 @@ public class WishlistMyCollectionData extends Fragment {
         emptyText.setVisibility(View.VISIBLE);
         emptyText.setText("Please Sign-In");
         collectionCount.setVisibility(View.GONE);
-        collectionText.setVisibility(View.GONE);
+//        collectionText.setVisibility(View.GONE);
     }
 
     /**
@@ -200,5 +200,10 @@ public class WishlistMyCollectionData extends Fragment {
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
         builder.create().show();
+    }
+
+    //interface
+    public interface MyFriendCollectionListener{
+        void goToFriendCollection();
     }
 }
