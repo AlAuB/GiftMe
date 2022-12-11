@@ -1,9 +1,13 @@
 package com.example.giftme.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -13,14 +17,18 @@ import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 
+import java.io.File;
+
 public class DetailedItemViewActivity extends AppCompatActivity {
     TextView itemNameTV;
     TextView descriptionTV;
     TextView priceTV;
     RatingBar ratingBar;
+    Button shopButton;
     Button editButton;
     Button deleteButton;
     ImageButton backButton;
+    ImageView itemImageView;
     DataBaseHelper dataBaseHelper;
 
     @Override
@@ -38,23 +46,32 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         if(itemDes.equals("null")){ itemDes = "";}
         String img = intent.getStringExtra("itemImg");
         String date = " ";
-        String url = "";
+        String url = intent.getStringExtra("itemURL");
         String collectionName = intent.getStringExtra("collectionName");
 
-        //(re)create item obj
-        Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
-        itemDes, date, img);
         //assign the views
         itemNameTV = findViewById(R.id.itemNameTV);
         priceTV = findViewById(R.id.itemPriceTV);
         descriptionTV = findViewById(R.id.descriptionTV);
         ratingBar = findViewById(R.id.ratingBar);
+        itemImageView = findViewById(R.id.image_itemImage);
 
         //set the views
-        itemNameTV.setText(item.getName());
-        priceTV.setText(String.valueOf(item.getPrice()));
-        descriptionTV.setText(item.getDescription());
-        ratingBar.setRating(item.getHearts());
+        itemNameTV.setText(itemName);
+        priceTV.setText(String.valueOf(itemPrice));
+        descriptionTV.setText(itemDes);
+        ratingBar.setRating(itemHearts);
+        File file = new File(img);
+        Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        itemImageView.setImageBitmap(getBitMap);
+
+        shopButton = findViewById(R.id.button_shop);
+        shopButton.setOnClickListener(view ->{
+            Intent shopIntent = new Intent(Intent.ACTION_VIEW);
+            shopIntent.setData(Uri.parse(url));
+            shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(shopIntent);
+        });
 
         backButton = findViewById(R.id.imageButton_backToPrevious);
         backButton.setOnClickListener((view -> {
