@@ -205,7 +205,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         itemMap.put("price", item.getPrice());
         itemMap.put("description", item.getDescription());
         itemMap.put("date", item.getDate());
-        itemMap.put("img", item.getImg());
+        String fullImgPath = item.getImg();
+        if (fullImgPath != null) {
+            String[] imgPath = fullImgPath.split("/");
+            itemMap.put("img", imgPath[imgPath.length - 1]);
+        }
+        else {
+            itemMap.put("img", null);
+        }
         itemMap.put("claimed", item.getClaimed());
         Log.d(TAG, "convertItemIntoMap: " + item.getFireStoreID());
         nestedItemMap.put(item.getFireStoreID(), itemMap);
