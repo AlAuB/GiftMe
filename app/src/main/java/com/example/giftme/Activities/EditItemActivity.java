@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -87,7 +89,9 @@ public class EditItemActivity extends AppCompatActivity {
         nameET.setText(itemName);
         descriptionET.setText(item.getDescription());
         priceET.setText(String.valueOf(item.getPrice()));
-        //imgView.setImageBitmap();
+        File file = new File(img);
+        Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        imgView.setImageBitmap(getBitMap);
         //get link
         linkET.setText(item.getWebsite());
         ratingBar.setRating(itemHearts);
