@@ -98,6 +98,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:backgroundTint="@color/pink"
             android:text="Shop now" />
 
         <Button
@@ -107,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:backgroundTint="#FF9800"
+            android:backgroundTint="@color/lightpink"
             android:text="edit" />
 
         <Button
@@ -117,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:backgroundTint="#F44336"
+            android:backgroundTint="@color/cerise"
             android:text="delete"/>
     </LinearLayout>
 
