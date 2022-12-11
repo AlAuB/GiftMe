@@ -149,7 +149,6 @@ public class WishlistFriendCollectionData extends Fragment {
                 }
             }
         });
-//        return collectionName[0];
     }
 
     public void getAllFriends(){

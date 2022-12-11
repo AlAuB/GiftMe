@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,6 +26,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.lang.reflect.Array;
 
 
@@ -51,21 +59,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String FIRESTORE_ID = "firestore_id";
     private final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private static final String COLLECTIONS_USERS = "users"; //this should be changed to 'users'
     private static final String COLLECTIONS_WISHLISTS = "wishlists";
 
 
     private static final String TAG = "DataBaseHelper debug::";
-    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
-            {
-                    "lesleychen456@gmail.com",
-                    "lyujin@bu.edu",
-                    "sj0726@bu.edu",
-                    "tg757898305@gmail.com",
-                    "tchen556@gmail.com",
-                    "wycalex@bu.edu"
-            };
-    private static final int random = new Random().nextInt(uniqueId.length);
+//    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
+//            {
+//                    "lesleychen456@gmail.com",
+//                    "lyujin@bu.edu",
+//                    "sj0726@bu.edu",
+//                    "tg757898305@gmail.com",
+//                    "tchen556@gmail.com",
+//                    "wycalex@bu.edu"
+//            };
+//    private static final int random = new Random().nextInt(uniqueId.length);
 
     //for ITEMS
     private static final String ITEM_ID = "ITEM_ID";
@@ -201,6 +210,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "', '" + item.getImg()
                 + "', '" + item.getClaimed()
                 + "', '" +  item.getFireStoreID() + "' )";
+        Log.d(TAG, "insertItemIntoCollection: " + sqlInsert);
         db.execSQL(sqlInsert);
 
         // generate a map object to put into firestore
@@ -402,10 +412,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         wishlist.put("Friend ID", friendID);
         //need to add other fields to firestore
 
-        DocumentReference userDocIdRef = fireStore.collection("usersTest").document(uniqueId[random]);
+        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
         wishlistDocIdRef.set(wishlist)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + uniqueId[random] + ")"))
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + userEmail + ")"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
 
         values.put(USER_NAME, friendName);
@@ -526,6 +536,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "deleteItem: " + firestoreItemId);
         String firestoreId = getCollectionId(tableName);
         Log.d(TAG, "deleteItem: " + firestoreItemId + " " + firestoreId);
+        tableName = "'" + tableName + "'";
         long status = sqLiteDatabase.delete(tableName, FIRESTORE_ID + "=?", new String[]{firestoreItemId});
         if (status == -1) {
             Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
@@ -587,6 +598,46 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.execSQL(query);
     }
+
+
+    public void storeImageFirebase(Bitmap bitmap, String name) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        String path = "images/" + userEmail + "/" + name;
+
+        StorageReference storageRef = storage.getReference();
+        StorageReference mountainsRef = storageRef.child(path);
+        UploadTask uploadTask = mountainsRef.putBytes(data);
+        uploadTask.addOnFailureListener(exception -> {
+            Log.d(TAG, "storeImageFirebase: FAILED (" + path + ") " + exception.getMessage());
+            // Handle unsuccessful uploads
+        }).addOnSuccessListener(taskSnapshot -> {
+            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+            Log.d(TAG, "storeImageFirebase: SUCCESS\nPath: " + taskSnapshot.getMetadata().getPath() + "\nSize (bytes): " + taskSnapshot.getMetadata().getSizeBytes() + "\nContent Type: " + taskSnapshot.getMetadata().getContentType() + "\nCreation Time (ms): " + taskSnapshot.getMetadata().getCreationTimeMillis() + "\nBucket: " + taskSnapshot.getMetadata().getBucket());
+            getDownloadUrlFirebase(name);
+        });
+    }
+
+    public void getDownloadUrlFirebase(String name) {
+        String path = "images/" + userEmail + "/" + name;
+        StorageReference storageRef = storage.getReference();
+        StorageReference mountainsRef = storageRef.child(path);
+        mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            Log.d(TAG, "getDownloadUrlFirebase: " + uri.toString());
+            // Got the download URL for 'users/me/profile.png'
+        }).addOnFailureListener(exception -> {
+            // Handle any errors
+            Log.d(TAG, "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+        });
+    }
+
+//    public void downloadFileFirebase(String name) {
+//        String path = "images/" + userEmail + "/" + name;
+//        StorageReference storageRef = storage.getReference();
+//        StorageReference mountainsRef = storageRef.child(path);
+//        File localFile = new File(context.getFilesDir(), name);
+//    }
 
     public String getCollectionFireStoreId(String collectionName) {
         String query = "SELECT * FROM COLLECTIONS WHERE COLLECTION_NAME = " + "'" + collectionName + "' AND USER_NAME IS NULL AND FRIEND_ID IS NULL";
