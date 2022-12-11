@@ -63,6 +63,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemDate", item.getDate());
             Log.d("itemDes", item.getDescription());
             intent.putExtra("itemImg", item.getImg());
+            intent.putExtra("itemURL", item.getWebsite());
             //firestore ID?
             intent.putExtra("collectionName", collectionNameTV.getText().toString());
             this.activity.finish();
