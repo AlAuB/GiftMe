@@ -27,6 +27,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
     TextView itemNameTV;
     TextView descriptionTV;
     TextView priceTV;
+    TextView dateTV;
     RatingBar ratingBar;
     Button shopButton;
     Button editButton;
@@ -69,6 +70,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         descriptionTV = findViewById(R.id.descriptionTV);
         ratingBar = findViewById(R.id.ratingBar);
         itemImageView = findViewById(R.id.image_itemImage);
+        dateTV = findViewById(R.id.textView_date);
 
         String displayPrice = "$" + itemPrice;
 
@@ -77,6 +79,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         priceTV.setText(displayPrice);
         descriptionTV.setText(itemDes);
         ratingBar.setRating(itemHearts);
+        dateTV.setText(itemDate);
         File file = new File(img);
         Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
         itemImageView.setImageBitmap(getBitMap);
