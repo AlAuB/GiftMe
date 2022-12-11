@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 
 import java.io.File;
+import java.util.Objects;
 
 public class DetailedItemViewActivity extends AppCompatActivity {
     TextView itemNameTV;
@@ -41,17 +43,21 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         int itemID = intent.getIntExtra("itemID", 1);
         String itemName = intent.getStringExtra("itemName");
         int itemHearts = intent.getIntExtra("itemHearts", 0);
+        Log.d("itemHearts", "num: " + itemHearts);
+
         int itemPrice = intent.getIntExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
         if(itemDes.equals("null")){ itemDes = "";}
         String img = intent.getStringExtra("itemImg");
-        String date = " ";
-        String url = intent.getStringExtra("itemURL");
+        String itemURL = intent.getStringExtra("itemURL");
+        if(Objects.equals(itemURL, "null")){ itemDes = "";}
+        String itemDate = intent.getStringExtra("itemDate");
+        if(Objects.equals(itemDate, "null")){ itemDate = "";}
         String collectionName = intent.getStringExtra("collectionName");
 
         //(re)create item obj
-        Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
-                itemDes, date, img);
+        Item item = new Item(itemID, itemURL, itemName, itemHearts, itemPrice,
+                itemDes, itemDate, img);
 
         //assign the views
         itemNameTV = findViewById(R.id.itemNameTV);
@@ -60,9 +66,11 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         itemImageView = findViewById(R.id.image_itemImage);
 
+        String displayPrice = "$" + itemPrice;
+
         //set the views
         itemNameTV.setText(itemName);
-        priceTV.setText(String.valueOf(itemPrice));
+        priceTV.setText(displayPrice);
         descriptionTV.setText(itemDes);
         ratingBar.setRating(itemHearts);
         File file = new File(img);
@@ -72,7 +80,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view ->{
             Intent shopIntent = new Intent(Intent.ACTION_VIEW);
-            shopIntent.setData(Uri.parse(url));
+            shopIntent.setData(Uri.parse(itemURL));
             shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(shopIntent);
         });
@@ -93,6 +101,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("itemName", item.getName());
             newIntent.putExtra("itemHearts", item.getHearts());
             newIntent.putExtra("itemPrice", item.getPrice());
+            newIntent.putExtra("itemURL", item.getWebsite());
             newIntent.putExtra("itemDes", item.getDescription());
             newIntent.putExtra("itemImg", item.getImg());
             newIntent.putExtra("itemFSID", item.getFireStoreID());

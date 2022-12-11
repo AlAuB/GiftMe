@@ -205,8 +205,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         itemMap.put("price", item.getPrice());
         itemMap.put("description", item.getDescription());
         itemMap.put("date", item.getDate());
-        String[] fullImgPath = item.getImg().split("/");
-        itemMap.put("img", fullImgPath[fullImgPath.length - 1]);
+        String fullImgPath = item.getImg();
+        if (fullImgPath != null) {
+            String[] imgPath = fullImgPath.split("/");
+            itemMap.put("img", imgPath[imgPath.length - 1]);
+        }
+        else {
+            itemMap.put("img", null);
+        }
         itemMap.put("claimed", item.getClaimed());
         Log.d(TAG, "convertItemIntoMap: " + item.getFireStoreID());
         nestedItemMap.put(item.getFireStoreID(), itemMap);
@@ -262,13 +268,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      *  update item in database
      */
     //add link later
-    public void updateById(String collection_name, int id, String name, int price, String description,
+    public void updateById(String collection_name, String url, int id, String name, int price, String description,
                            int hearts, String img, String fireStoreId){
         SQLiteDatabase db = this.getWritableDatabase();
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
                 + " set " + ITEM_NAME + " = '" + name + "', "
                 + ITEM_HEARTS + "= '" + hearts + "', "
+                + ITEM_URL + "= '" + url + "', "
                 + ITEM_PRICE + "= '" + price + "', "
                 + ITEM_DESCRIPTION + "= '" + description + "', "
                 + ITEM_IMAGE + "= '" + img + "', "
