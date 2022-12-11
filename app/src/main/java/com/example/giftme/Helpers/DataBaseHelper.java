@@ -274,11 +274,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                 if(friendID == null || friendID.equalsIgnoreCase("null")){
                                     //can't use the below method because we need the fire_store id
 //                                    addNewCollection(userName, collectionName, friendID);
-                                    addNewFriendCollection(null, collectionName, friendID, wishlistID, null);
+//                                    addNewFriendCollection(null, collectionName, friendID, wishlistID, null);
                                 }
                                 else{
                                     //this is user's friend's collections
-                                    addNewFriendCollection(friendName, collectionName, friendID, fsID, pfp);
+//                                    addNewFriendCollection(friendName, collectionName, friendID, fsId, pfp);
                                 }
 
                             }
@@ -406,24 +406,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     /**
      * for adding friend's collections
-     * @param friendName String
-     * @param collectionName String
-     * @param friendID String
-     * @param fsID String
+     * @param friendName friend's name
+     * @param collectionName name of the collection
+     * @param friendID friend's email
+     * @param fsID firestoreId
      */
     public void addNewFriendCollection(String friendName, String collectionName, String friendID, String fsID, String pfp) {
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         // add to firestore first to make sure the collection is created
-        // for now, get random unique id from the array above and check if the document's been created in firestore
         Map<String, Object> wishlist = new HashMap<>();
         wishlist.put("Collection Name", collectionName);
         wishlist.put("Friend ID", friendID);
         //need to add other fields to firestore OR make firestoreID the same
 
         DocumentReference userDocIdRef = fireStore.collection("users").document(friendID);
-        DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
+        DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document(fsID);
         wishlistDocIdRef.set(wishlist)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + userEmail + ")"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
