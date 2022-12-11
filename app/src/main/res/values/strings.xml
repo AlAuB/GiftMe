@@ -38,4 +38,7 @@
     <string name="_0">0</string>
     <string name="no_item">No Item</string>
     <string name="no_notification">No Notification</string>
+    <string name="settings">Settings</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="logout">Logout</string>
 </resources>
