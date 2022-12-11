@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -88,6 +89,7 @@ public class EditItemActivity extends AppCompatActivity {
         //set views
         nameET.setText(itemName);
         descriptionET.setText(item.getDescription());
+        Log.d("itemDes", item.getDescription());
         priceET.setText(String.valueOf(item.getPrice()));
         File file = new File(img);
         Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -120,7 +122,6 @@ public class EditItemActivity extends AppCompatActivity {
         //choose image end --------------
 
         saveButton.setOnClickListener(view -> {
-
             try{
                 String date;
                 Date dateObj = new Date();
@@ -131,8 +132,8 @@ public class EditItemActivity extends AppCompatActivity {
                             = new SimpleDateFormat("yyyy-MM-dd");
                     date = dateFormat.format(dateObj);
                 }
-
                 String fileName = dateObj.getTime() + ".jpg";
+
                 FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                 fileOutputStream.close();
@@ -140,9 +141,11 @@ public class EditItemActivity extends AppCompatActivity {
 
                 String newName = String.valueOf(nameET.getText());
                 String newDescription = String.valueOf(descriptionET.getText());
+                Log.d("newDes", newDescription);
                 int newPrice = Integer.parseInt(String.valueOf(priceET.getText()));
                 int newRating = (int) ratingBar.getRating();
                 String newLink = String.valueOf(linkET.getText());
+
                 String newImg = context.getApplicationContext().getFilesDir() + "/" + fileName;
 
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
@@ -153,9 +156,24 @@ public class EditItemActivity extends AppCompatActivity {
                 myCollectionItemsIntent.putExtra("collection_name", collectionName);
                 finish();
                 startActivity(myCollectionItemsIntent);
-            }catch (Exception e){
-                Toast.makeText(EditItemActivity.this, "Save image NOT success", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
+
+            }catch(Exception e){
+
+                String newName = String.valueOf(nameET.getText());
+                String newDescription = String.valueOf(descriptionET.getText());
+                Log.d("newDes", newDescription);
+                int newPrice = Integer.parseInt(String.valueOf(priceET.getText()));
+                int newRating = (int) ratingBar.getRating();
+                String newLink = String.valueOf(linkET.getText());
+
+                dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
+                        newDescription, newRating, item.getImg(), item.getFireStoreID());
+                Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
+
+                Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
+                myCollectionItemsIntent.putExtra("collection_name", collectionName);
+                finish();
+                startActivity(myCollectionItemsIntent);
             }
         });
 

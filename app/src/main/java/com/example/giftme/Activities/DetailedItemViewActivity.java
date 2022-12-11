@@ -6,11 +6,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.LogPrinter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -47,6 +49,9 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         int itemPrice = intent.getIntExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
         if(itemDes.equals("null")){ itemDes = "";}
+        Log.d("itemDes", "itemDes is null " + itemDes.equals(""));
+        Log.d("itemDesDetailed", itemDes);
+
         String img = intent.getStringExtra("itemImg");
         String itemURL = intent.getStringExtra("itemURL");
         if(Objects.equals(itemURL, "null")){ itemDes = "";}
@@ -78,10 +83,19 @@ public class DetailedItemViewActivity extends AppCompatActivity {
 
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view ->{
-            Intent shopIntent = new Intent(Intent.ACTION_VIEW);
-            shopIntent.setData(Uri.parse(itemURL));
-            shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(shopIntent);
+            //if there is no link
+            if ((itemURL.equals(null)) || (itemURL.equals("null")) || (itemURL.equals("")) || (itemURL.isEmpty())){
+                    Toast.makeText(this, "There is no link", Toast.LENGTH_SHORT).show();
+            }
+            //if there is a link
+            else{
+                Log.d("itemURL", itemURL);
+                Intent shopIntent = new Intent(Intent.ACTION_VIEW);
+                shopIntent.setData(Uri.parse(itemURL));
+                shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(shopIntent);
+            }
+
         });
 
         backButton = findViewById(R.id.imageButton_backToPrevious);

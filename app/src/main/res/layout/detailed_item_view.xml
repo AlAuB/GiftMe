@@ -60,6 +60,7 @@
                 android:textColor="@color/black"
                 android:text=""
                 android:hint="input price"
+                android:textSize="19sp"
                 android:layout_marginStart="10dp"/>
 
             <RatingBar
@@ -70,13 +71,20 @@
                 android:gravity="right|center_vertical"
                 android:layout_marginStart="10dp"
                 android:isIndicator="true"
+                android:scaleX=".7"
+                android:scaleY=".7"
+                android:transformPivotX="0dp"
+                android:transformPivotY="15dp"
                 android:progressDrawable="@drawable/custom_rating_bar"/>
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/descriptionTV"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:textSize="19sp"
+            android:padding="10dp"
             android:text="" />
 
         <Button
