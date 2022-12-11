@@ -11,7 +11,7 @@ public class Item {
 
     private int id;
     private String name;
-    private float hearts;
+    private int hearts;
     private int price;
     private String website;
     private String description;
@@ -26,7 +26,7 @@ public class Item {
         setClaimed(false);
         setFireStoreID();
     }
-    public Item(int newId, String website, String newName, float newHearts, int newPrice, String newDescription, String newDate,
+    public Item(int newId, String website, String newName, int newHearts, int newPrice, String newDescription, String newDate,
                 String newImg){
         setWebsite(website);
         setId( newId);
@@ -44,7 +44,7 @@ public class Item {
     public void setId(int newId){ id = newId; }
     public void setWebsite(String URL) {website = URL;}
     public void setName( String newName){ name = newName; }
-    public void setHearts(float newHearts){ hearts = newHearts;}
+    public void setHearts(int newHearts){ hearts = newHearts;}
     public void setPrice(int newPrice){price = newPrice;}
     public void setDescription( String newDescription){description = newDescription;}
     public void setImg( String newImg){ img = newImg;}
@@ -58,7 +58,7 @@ public class Item {
     public int getId() {return id;}
     public String getWebsite() {return website;}
     public String getName() {return name;}
-    public float getHearts() {return hearts;}
+    public int getHearts() {return hearts;}
     public int getPrice() {return price;}
     public String getDescription() {return description;}
     public String getDate(){return date;}
