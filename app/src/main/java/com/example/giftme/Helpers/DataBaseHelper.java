@@ -18,6 +18,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -249,6 +251,45 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 .addOnFailureListener(e -> Log.w(TAG, "Error claiming item", e));
     }
 
+    /**
+     * get all collections from User on firestore and add to the local database
+     */
+    public void getCollectionsFromUser(String userID) {
+        DocumentReference userRef = fireStore.collection(COLLECTIONS_USERS).document(userID);
+        ArrayList<String> wishlistIDs = new ArrayList<>();
+        userRef.collection(COLLECTIONS_WISHLISTS)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+//                                wishlistIDs.add(document.getId());
+                                String collectionName = (String) document.getData().get("Collection Name");
+                                String friendID = (String) document.getData().get("Friend ID");
+                                String wishlistID = document.getId();
+                                String userName = null;
+                                //if this is user's own wishlist
+                                if(friendID == null || friendID.equalsIgnoreCase("null")){
+                                    //can't use the below method because we need the fire_store id
+//                                    addNewCollection(userName, collectionName, friendID);
+                                    addNewFriendCollection(null, collectionName, friendID, wishlistID, null);
+                                }
+                                else{
+                                    //this is user's friend's collections
+                                    addNewFriendCollection(friendName, collectionName, friendID, fsID, pfp);
+                                }
+
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+    }
 
     /**
      * get all items from a collection table
@@ -379,7 +420,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Map<String, Object> wishlist = new HashMap<>();
         wishlist.put("Collection Name", collectionName);
         wishlist.put("Friend ID", friendID);
-        //need to add other fields to firestore
+        //need to add other fields to firestore OR make firestoreID the same
 
         DocumentReference userDocIdRef = fireStore.collection("users").document(friendID);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();

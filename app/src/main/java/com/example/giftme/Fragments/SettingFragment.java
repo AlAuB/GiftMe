@@ -232,6 +232,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     private void signIn() {
         Log.d("debugging::", "signIn");
         Intent intent = googleSignInClient.getSignInIntent();
+
+        //need to grab collections info from firestore!
         startActivityForResult(intent, 100);
     }
 
@@ -283,6 +285,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                                         Log.d("debugging::", "user exists");
                                         // if the user already exists in the database, then just update the user's email
                                         dataBaseHelper.setUserEmail(user.getEmail());
+
+                                        //gets Collections from User
+                                        dataBaseHelper.getCollectionsFromUser(user.getEmail());
                                     } else {
                                         Log.d("debugging::", "user does not exist");
                                         dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
