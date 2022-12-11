@@ -49,6 +49,10 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         String url = intent.getStringExtra("itemURL");
         String collectionName = intent.getStringExtra("collectionName");
 
+        //(re)create item obj
+        Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
+                itemDes, date, img);
+
         //assign the views
         itemNameTV = findViewById(R.id.itemNameTV);
         priceTV = findViewById(R.id.itemPriceTV);

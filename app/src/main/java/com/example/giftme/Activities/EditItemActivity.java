@@ -55,13 +55,16 @@ public class EditItemActivity extends AppCompatActivity {
         String itemDes = intent.getStringExtra("itemDes");
         if(Objects.equals(itemDes, "null")){ itemDes = "";}
         String img = intent.getStringExtra("itemImg");
-        String url = "";
-        String date = " ";
+        String itemURL = intent.getStringExtra("itemURL");
+        if(Objects.equals(itemURL, "null")){ itemDes = "";}
+        String itemDate = intent.getStringExtra("itemDate");
+        if(Objects.equals(itemDate, "null")){ itemDate = "";}
+
         String collectionName = intent.getStringExtra("collectionName");
 
         //(re)create item obj
-        Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
-                itemDes, date, img);
+        Item item = new Item(itemID, itemURL, itemName, itemHearts, itemPrice,
+                itemDes, itemDate, img);
 
         //set views
         nameET.setText(itemName);
@@ -69,6 +72,7 @@ public class EditItemActivity extends AppCompatActivity {
         priceET.setText(String.valueOf(item.getPrice()));
         //imgView.setImageBitmap();
         //get link
+        linkET.setText(item.getWebsite());
         ratingBar.setRating(itemHearts);
 
         saveButton.setOnClickListener(view -> {
@@ -76,6 +80,7 @@ public class EditItemActivity extends AppCompatActivity {
             String newDescription = String.valueOf(descriptionET.getText());
             int newPrice = Integer.parseInt(String.valueOf(priceET.getText()));
             int newRating = (int) ratingBar.getRating();
+            String newLink = String.valueOf(linkET.getText());
 
             dataBaseHelper.updateById(collectionName, item.getId(), newName, newPrice,
                     newDescription, newRating, item.getImg(), item.getFireStoreID());
