@@ -261,13 +261,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      *  update item in database
      */
     //add link later
-    public void updateById(String collection_name, int id, String name, int price, String description,
+    public void updateById(String collection_name, String url, int id, String name, int price, String description,
                            int hearts, String img, String fireStoreId){
         SQLiteDatabase db = this.getWritableDatabase();
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
                 + " set " + ITEM_NAME + " = '" + name + "', "
                 + ITEM_HEARTS + "= '" + hearts + "', "
+                + ITEM_URL + "= '" + url + "', "
                 + ITEM_PRICE + "= '" + price + "', "
                 + ITEM_DESCRIPTION + "= '" + description + "', "
                 + ITEM_IMAGE + "= '" + img + "', "

@@ -82,9 +82,14 @@ public class EditItemActivity extends AppCompatActivity {
             int newRating = (int) ratingBar.getRating();
             String newLink = String.valueOf(linkET.getText());
 
-            dataBaseHelper.updateById(collectionName, item.getId(), newName, newPrice,
+            dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
                     newDescription, newRating, item.getImg(), item.getFireStoreID());
             Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
+
+            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
+            myCollectionItemsIntent.putExtra("collection_name", collectionName);
+            finish();
+            startActivity(myCollectionItemsIntent);
         });
 
         cancelButton.setOnClickListener(view -> {
