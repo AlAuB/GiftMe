@@ -43,6 +43,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.squareup.picasso.Picasso;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class SettingFragment extends Fragment implements View.OnClickListener {
 
     SignInButton signInButton;
@@ -191,7 +193,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         }
         settingUserNameTV.setText(SessionManager.getUserName(getContext()));
         if (SessionManager.getUserStatus(getContext())) {
-            Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
+            Picasso.get().load(SessionManager.getUserPFP(getContext()))
+                    .transform(new CropCircleTransformation())
+                    .into(pfpIV);
         } else {
             pfpIV.setImageResource(R.drawable.anony_user);
         }

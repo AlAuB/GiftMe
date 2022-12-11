@@ -20,6 +20,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrWishlistCollectionRecycleAdapter.MyViewHolder> {
 
     Activity activity;
@@ -68,7 +70,9 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
         holder.wlTitleTV.setText(title);
 //        holder.imgView.setImageURI(Uri.parse(friendPFP));
 
-        Picasso.get().load(friendPFP).into(holder.imgView);
+        Picasso.get().load(friendPFP)
+                .transform(new CropCircleTransformation())
+                .into(holder.imgView);
 
         holder.linearLayout.setOnClickListener(view -> {
             int index1 = holder.getAdapterPosition();
@@ -96,7 +100,7 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
             super(itemView);
             wlTitleTV = itemView.findViewById(R.id.friend_wishlist_title);
             linearLayout = itemView.findViewById(R.id.friend_card);
-            imgView = itemView.findViewById((R.id.user_avatar));
+            imgView = itemView.findViewById((R.id.friend_user_avatar));
         }
     }
 }

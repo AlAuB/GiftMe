@@ -78,13 +78,12 @@ public class WishlistFriendCollectionData extends Fragment {
         floatingActionButton1 = view1.findViewById(R.id.action1);
 
         final Bundle args = getArguments();
-        Log.d("WISHLISTFRIEND", "ARGS IS NOT NULL " + (args!=null));
         if(args !=null){
             try {
                 String userID = args.getString("user_id");
                 String wishlistID = args.getString("collection_id");
 
-                getCollectionName(userID, wishlistID);
+                addFriendCollection(userID, wishlistID);
 
             }catch(Exception e){
                 System.out.println("Error");
@@ -108,7 +107,7 @@ public class WishlistFriendCollectionData extends Fragment {
 
     //getting the collection Name and inserting the collection into the COLLECTIONS table in SQLite
     //MAYBE RENAME TO ADD COLLECTION?
-    public void getCollectionName(String userID, String collectionID){
+    public void addFriendCollection(String userID, String collectionID){
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         DocumentReference userRef = fireStore.collection("users").document(userID);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collectionID);
@@ -193,11 +192,8 @@ public class WishlistFriendCollectionData extends Fragment {
                 String deepLink = insert.substring(index_parseDeepLink+2);
                 System.out.println("Link: " + deepLink);
                 System.out.println("INDEX " + index_parseDeepLink);
-                //lesleychen456%40gmail.com%20collectionID
-//                int index = deepLink.indexOf('=');
                 int index = deepLink.indexOf("%20");
                 String userEmail = deepLink.substring(0, index);
-                //user ID lesleychen456%40gmail.com
                 int indexAt = userEmail.indexOf('%');
                 String userIDName = userEmail.substring(0,indexAt);
                 String userIDEnd = userEmail.substring(indexAt+3);
@@ -207,14 +203,7 @@ public class WishlistFriendCollectionData extends Fragment {
                 System.out.println("substring: " + userID);
                 System.out.println("substring: " + wishlistID);
 
-//                int indexPlus = subString.indexOf("+");
-//                String userID = subString.substring(1, indexPlus);
-//                String wishlistID = subString.substring(indexPlus+1);
-//                System.out.println("substring: " + userID);
-//                System.out.println("substring: " + wishlistID);
-                //Add Friend's collection
-
-                getCollectionName(userID, wishlistID);
+                addFriendCollection(userID, wishlistID);
 
             }
         });
