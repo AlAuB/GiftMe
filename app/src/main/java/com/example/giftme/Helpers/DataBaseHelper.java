@@ -551,6 +551,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         sqLiteDatabase.execSQL(changeTableNameInCollection);
         sqLiteDatabase.execSQL(changeTableName);
+        fireStore.collection(COLLECTIONS_USERS).document(SessionManager.getUserEmail(context))
+                .collection(COLLECTIONS_WISHLISTS).document(getCollectionId(newName))
+                .update("Collection Name", newName);
     }
 
 
