@@ -82,7 +82,11 @@ public class WishlistFriendCollectionData extends Fragment {
         if(args !=null){
             String userID = args.getString("user_id");
             String wishlistID = args.getString("collection_id");
-            getCollectionName(userID, wishlistID);
+
+            try{
+                getCollectionName(userID, wishlistID);
+            }catch(Exception e){Log.d("error", "Error"); }
+
         }
 
         getAllFriends();
