@@ -2,28 +2,20 @@ package com.example.giftme.Activities;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.giftme.Adapters.TabViewPagerAdapter;
 import com.example.giftme.Fragments.NotificationFragment;
 import com.example.giftme.Fragments.SettingFragment;
 import com.example.giftme.Fragments.WishlistFragment;
-import com.example.giftme.Fragments.WishlistFriendCollectionData;
 import com.example.giftme.Fragments.WishlistMyCollectionData;
 import com.example.giftme.R;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener,
@@ -48,33 +40,30 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
         badgeDrawable.setVisible(true);
         badgeDrawable.setNumber(6);
 
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.wishlist) {
-                    getSupportFragmentManager().beginTransaction().
-                            setCustomAnimations(
-                            R.anim.slide_in,  // enter
-                            R.anim.fade_out). // exit
-                            replace(R.id.frag_view, wishlistFragment).commit();
-                    return true;
-                } else if (item.getItemId() == R.id.notification) {
-                    getSupportFragmentManager().beginTransaction().
-                            setCustomAnimations(
-                            R.anim.slide_in,  // enter
-                            R.anim.fade_out). // exit
-                            replace(R.id.frag_view, notificationFragment).commit();
-                    return true;
-                } else if (item.getItemId() == R.id.setting) {
-                    getSupportFragmentManager().beginTransaction().
-                            setCustomAnimations(
-                            R.anim.slide_in,  // enter
-                            R.anim.fade_out). // exit
-                            replace(R.id.frag_view, settingFragment).commit();
-                    return true;
-                }
-                return false;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.wishlist) {
+                getSupportFragmentManager().beginTransaction().
+                        setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out). // exit
+                        replace(R.id.frag_view, wishlistFragment).commit();
+                return true;
+            } else if (item.getItemId() == R.id.notification) {
+                getSupportFragmentManager().beginTransaction().
+                        setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out). // exit
+                        replace(R.id.frag_view, notificationFragment).commit();
+                return true;
+            } else if (item.getItemId() == R.id.setting) {
+                getSupportFragmentManager().beginTransaction().
+                        setCustomAnimations(
+                        R.anim.slide_in,  // enter
+                        R.anim.fade_out). // exit
+                        replace(R.id.frag_view, settingFragment).commit();
+                return true;
             }
+            return false;
         });
 
         //----RECEIVING DYNAMIC LINKS START---
@@ -104,11 +93,8 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                         .replace(R.id.frag_view, fragmentWishlist)
                         .commit();
             }
-        }).addOnFailureListener(this, e -> Toast.makeText(MainActivity.this, "Cannot get deep link", Toast.LENGTH_SHORT).show());
-    }
-
-    private void getDataFromFireStore(String email, String collection_id) {
-        System.out.println(email + " " + collection_id);
+        }).addOnFailureListener(this, e ->
+                Toast.makeText(MainActivity.this, "Cannot get deep link", Toast.LENGTH_SHORT).show());
     }
 
     @Override

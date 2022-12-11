@@ -85,6 +85,7 @@ public class WishlistMyCollectionData extends Fragment {
         }
         floatingActionButton.setOnClickListener(view -> confirmDialog());
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
+        new ItemTouchHelper(editCallback).attachToRecyclerView(recyclerView);
         return view;
     }
 
@@ -98,8 +99,6 @@ public class WishlistMyCollectionData extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getBindingAdapterPosition();
             dataBaseHelper.deleteCollection(ids.get(position));
-//            dataBaseHelper.deleteData(ids.get(position), "COLLECTIONS");
-//            dataBaseHelper.deleteTable(collections.get(position));
             TextView textView = activity.findViewById(R.id.collectionCount);
             ids.clear();
             collections.clear();
@@ -111,13 +110,36 @@ public class WishlistMyCollectionData extends Fragment {
 
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-            new RecyclerViewSwipeDecorator.Builder(c,recyclerView,viewHolder,dX,dY,actionState,isCurrentlyActive)
-                    .addBackgroundColor(ContextCompat.getColor(context,R.color.pink))
-                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_edit_24)
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
                     .addSwipeLeftLabel("Delete")
-                    .setSwipeLeftLabelColor(ContextCompat.getColor(context,R.color.white))
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(context, R.color.white))
                     .create().decorate();
-            //ic_baseline_edit_24 -> ic_baseline_delete_24
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
+
+    ItemTouchHelper.SimpleCallback editCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getBindingAdapterPosition();
+            editConfirmDialog(collections.get(position), position);
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_orange_light))
+                    .addSwipeRightActionIcon(R.drawable.ic_baseline_edit_icon)
+                    .addSwipeRightLabel("Edit")
+                    .setSwipeRightLabelColor(ContextCompat.getColor(context, R.color.white))
+                    .create().decorate();
             super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
         }
     };
@@ -136,7 +158,6 @@ public class WishlistMyCollectionData extends Fragment {
         recyclerView.setVisibility(View.VISIBLE);
         floatingActionButton.setVisibility(View.VISIBLE);
         collectionCount.setVisibility(View.VISIBLE);
-//        collectionText.setVisibility(View.VISIBLE);
         collectionCount.setText(String.valueOf(collections.size()));
         checkEmptyUI();
     }
@@ -150,7 +171,6 @@ public class WishlistMyCollectionData extends Fragment {
         emptyText.setVisibility(View.VISIBLE);
         emptyText.setText("Please Sign-In");
         collectionCount.setVisibility(View.GONE);
-//        collectionText.setVisibility(View.GONE);
     }
 
     /**
@@ -161,7 +181,7 @@ public class WishlistMyCollectionData extends Fragment {
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
                 //if this isn't the friend's wishlist
-                if(cursor.getBlob(3) == null){
+                if (cursor.getBlob(3) == null) {
                     ids.add(cursor.getString(0));
                     collections.add(cursor.getString(1));
                 }
@@ -184,7 +204,6 @@ public class WishlistMyCollectionData extends Fragment {
                 Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
             } else {
                 //Add collection name to Collection Table
-
                 dataBaseHelper.addNewCollection(null, insert, null);
                 //Create collection-name Table in database
                 dataBaseHelper.createNewTable(insert);
@@ -202,8 +221,30 @@ public class WishlistMyCollectionData extends Fragment {
         builder.create().show();
     }
 
+    private void editConfirmDialog(String oldName, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
+        builder.setTitle("Change Collection Name");
+        View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
+        TextInputEditText input = view.findViewById(R.id.input);
+        builder.setView(view);
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String newName = Objects.requireNonNull(input.getText()).toString().trim();
+            if (collections.contains(newName) || newName.length() == 0 || newName.length() > 30) {
+                Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();
+            } else {
+                dataBaseHelper.changeTableName(oldName, newName);
+                ids.clear();
+                collections.clear();
+                getAllCollection();
+                myWishlistCollectionRecycleAdapter.notifyItemChanged(position);
+            }
+        });
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+        builder.create().show();
+    }
+
     //interface
-    public interface MyFriendCollectionListener{
+    public interface MyFriendCollectionListener {
         void goToFriendCollection();
     }
 }

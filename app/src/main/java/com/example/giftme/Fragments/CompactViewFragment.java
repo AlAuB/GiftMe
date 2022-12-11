@@ -106,7 +106,7 @@ public class CompactViewFragment extends Fragment {
         @Override
         public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .addBackgroundColor(ContextCompat.getColor(context, R.color.pink))
+                    .addBackgroundColor(ContextCompat.getColor(context, android.R.color.holo_red_light))
                     .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
                     .addSwipeLeftLabel("Delete")
                     .setSwipeLeftLabelColor(ContextCompat.getColor(context, R.color.white))

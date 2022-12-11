@@ -13,13 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,19 +20,13 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.lang.reflect.Array;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -65,16 +52,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     private static final String TAG = "DataBaseHelper debug::";
-//    private static final String[] uniqueId = // should be changed to the id of logged in users, this is just for testing
-//            {
-//                    "lesleychen456@gmail.com",
-//                    "lyujin@bu.edu",
-//                    "sj0726@bu.edu",
-//                    "tg757898305@gmail.com",
-//                    "tchen556@gmail.com",
-//                    "wycalex@bu.edu"
-//            };
-//    private static final int random = new Random().nextInt(uniqueId.length);
 
     //for ITEMS
     private static final String ITEM_ID = "ITEM_ID";
@@ -149,17 +126,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         user.put("friends", new ArrayList<String>());
         Log.d(TAG, "createUser: " + email + " " + displayName + " " + photoUrl);
 
-        fireStore.collection("users").document(email).set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d(TAG, "onSuccess: user " + email + " created");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: user " + email + " " + e.getMessage());
-            }
-        });
+        fireStore.collection("users").document(email).set(user, SetOptions.merge()).addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: user " + email + " created")).addOnFailureListener(e -> Log.d(TAG, "onFailure: user " + email + " " + e.getMessage()));
     }
 
     /**
@@ -176,21 +143,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public void checkUserExists(String email, UserExists userExists) {
         DocumentReference docRef = fireStore.collection("users").document(email);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "User exists: " + document.getData());
-                        userExists.onCallback(true);
-                    } else {
-                        Log.d(TAG, "User doesn't exist");
-                        userExists.onCallback(false);
-                    }
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "User exists: " + document.getData());
+                    userExists.onCallback(true);
                 } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+                    Log.d(TAG, "User doesn't exist");
+                    userExists.onCallback(false);
                 }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
             }
         });
     }
@@ -227,8 +191,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
             DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(cursor.getString(0));
             collectionDocIdRef.set(firestoreItem, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {Log.d(TAG, "DocumentSnapshot successfully updated!");})
-                    .addOnFailureListener(e -> {Log.w(TAG, "Error updating document", e);});
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
         }
         cursor.close();
     }
@@ -338,19 +302,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void getFriends() {
         DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         ArrayList<String> friends = new ArrayList<>();
-        userDocIdRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
+        userDocIdRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
-                    Log.d(TAG, "get failed with ", task.getException());
+                    Log.d(TAG, "No such document");
                 }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
             }
         });
     }
@@ -577,26 +538,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DELETE FROM " + "'" + tableName + "'");
     }
 
-    public void deleteItemInCollection(String id, String tableName) {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String tempName = "'" + tableName + "'";
-        long status = sqLiteDatabase.delete(tempName, ITEM_ID + "=?", new String[]{id});
-        if (status == -1) {
-            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     /**
-     * Chnage the collection table name
+     * Change the collection table name
      * @param oldName String
      * @param newName String
      */
     public void changeTableName(String oldName, String newName) {
-        String query = "ALTER TABLE " + "'" + oldName + "'" + " RENAME TO " + "'" + newName + "'";
+        String changeTableName = "ALTER TABLE " + "'" + oldName + "'" + " RENAME TO " + "'" + newName + "'";
+        String changeTableNameInCollection = "UPDATE " + TABLE_NAME + " SET "
+                + COLUMN_NAME + " = " + "'" + newName + "' WHERE " + COLUMN_NAME + " = " + "'" + oldName + "'";
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        sqLiteDatabase.execSQL(query);
+        sqLiteDatabase.execSQL(changeTableNameInCollection);
+        sqLiteDatabase.execSQL(changeTableName);
     }
 
 
