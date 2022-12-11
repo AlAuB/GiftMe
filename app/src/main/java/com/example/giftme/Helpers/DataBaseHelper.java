@@ -412,7 +412,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         wishlist.put("Friend ID", friendID);
         //need to add other fields to firestore
 
-        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
+        DocumentReference userDocIdRef = fireStore.collection("users").document(friendID);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
         wishlistDocIdRef.set(wishlist)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + userEmail + ")"))
