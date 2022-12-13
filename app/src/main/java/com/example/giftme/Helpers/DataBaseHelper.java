@@ -202,6 +202,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Map<String, Object> convertItemIntoMap(Item item){
         Map<String, Object> itemMap = new HashMap<>();
         Map<String, Object> nestedItemMap = new HashMap<>();
+        itemMap.put("url", item.getWebsite());
         itemMap.put("name", item.getName());
         itemMap.put("hearts", item.getHearts());
         itemMap.put("price", item.getPrice());
