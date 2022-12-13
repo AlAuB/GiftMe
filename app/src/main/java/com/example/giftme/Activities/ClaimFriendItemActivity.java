@@ -68,7 +68,8 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
 
         //set the views
         itemNameTV.setText(item.getName());
-        priceTV.setText(String.valueOf(item.getPrice()));
+        String displayPrice = "$" + item.getPrice();
+        priceTV.setText(displayPrice);
         descriptionTV.setText(item.getDescription());
         ratingBar.setRating(item.getHearts());
         dateTV.setText(item.getDate());

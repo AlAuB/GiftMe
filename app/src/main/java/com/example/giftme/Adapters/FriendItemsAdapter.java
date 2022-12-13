@@ -20,6 +20,7 @@ import com.example.giftme.Activities.ClaimFriendItemActivity;
 import com.example.giftme.Activities.DetailedItemViewActivity;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -72,7 +73,7 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
 
         String collectionName = (String) collectionNameTV.getText();
         holder.currentItem = friendItems.get(index);
-        holder.linearLayout.setOnClickListener(view -> {
+        holder.cardView.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, ClaimFriendItemActivity.class);
             //put in name, price description, hearts, and link etc
             intent.putExtra("itemID", item.getId());
@@ -137,14 +138,14 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
         public ImageView claimedPFP;
         public View view;
         public Item currentItem;
-        public LinearLayout linearLayout;
+        public MaterialCardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemNameTV = itemView.findViewById(R.id.friend_item_name);
             ratingBar = itemView.findViewById(R.id.friend_rating);
             claimedPFP = itemView.findViewById(R.id.claimed_pfp);
-            linearLayout = itemView.findViewById(R.id.friend_item_lv);
+            cardView = itemView.findViewById(R.id.friend_item_lv);
         }
     }
 }

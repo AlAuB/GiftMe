@@ -1,88 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/friend_items_row"
+    android:id="@+id/friend_detail_cardView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginBottom="10dp">
+    android:layout_height="150dp"
+    android:layout_margin="5dp"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardElevation="3dp">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/friend_detail_cardView">
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <ImageView
+            android:id="@+id/friend_detail_view_item_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:contentDescription="@string/current_item_s_image" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/friend_detail_view_item_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:contentDescription="@string/current_item_s_image" />
+            <TextView
+                android:id="@+id/friend_detail_view_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="ITEM NAME"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/friend_detail_view_item_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:text="date"
+                android:textSize="10sp"
+                android:textStyle="normal" />
+
+            <RatingBar
+                android:id="@+id/friend_detail_view_item_rating"
+                style="@style/CustomRatingBarStyle"
+                android:layout_width="250dp"
+                android:padding="0dp"
+                android:layout_height="38dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:isIndicator="true"
+                android:progressTint="#F44336"
+                android:scaleX=".4"
+                android:scaleY=".4"
+                android:stepSize="0.5"
+                android:transformPivotX="5dp"
+                android:transformPivotY="10dp" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:weightSum="1">
-
-                <TextView
-                    android:id="@+id/friend_detail_view_item_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/friend_detail_view_item_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="15dp"
-                    android:gravity="center_vertical"
-                    android:text=""
-                    android:textSize="15sp"
-                    android:textStyle="normal" />
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/friend_detail_view_item_price"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="10dp"
                     android:gravity="center_vertical"
-                    android:text=""
-                    android:textSize="20sp"
+                    android:text="PRICE"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <RatingBar
-                    android:id="@+id/friend_detail_view_item_rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:isIndicator="true"
-                    android:progressTint="#F44336"
-                    android:max="5"
-                    android:scaleX=".4"
-                    android:scaleY=".4"
-                    android:stepSize="0.5"
-                    android:transformPivotX="8dp"
-                    android:transformPivotY="15dp"
-                    android:clickable="false"
-                    android:focusableInTouchMode="false"
-                    android:focusable="false"/>
-
+                <ImageView
+                    android:id="@+id/friend_claimed_pfp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="37dp"
+                    android:paddingBottom="2dp"
+                    app:srcCompat="@drawable/anony_user"/>
             </LinearLayout>
-
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>
