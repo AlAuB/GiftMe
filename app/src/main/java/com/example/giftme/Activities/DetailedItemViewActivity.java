@@ -98,7 +98,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
                 shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(shopIntent);
             }
-
         });
 
         backButton = findViewById(R.id.imageButton_backToPrevious);

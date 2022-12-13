@@ -3,9 +3,12 @@ package com.example.giftme.Adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +22,13 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.giftme.Activities.ClaimFriendItemActivity;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,18 +66,91 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         int index = holder.getBindingAdapterPosition();
         Item item = items.get(index);
+        Log.d("ITEMS_ALL", items.toString());
         holder.name.setText(item.getName());
         holder.price.setText("$" + item.getPrice());
         holder.date.setText(item.getDate());
-        if(item.getImg()!=null){
-            File file = new File(item.getImg());
-            Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            holder.imageView.setImageBitmap(getBitMap);
+        Log.d("detailviewadapter", item.toString());
+        Log.d("ITEM_IMAGE", "IMG: " + item.getImg());
+        String imgUrl= item.getImg();
+        Log.d("ITEM_URL", "IMG: " +  imgUrl);
+//        if(!imgUrl.equals("null")) || item.getImg() != null){
+        if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+            Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+        }
+        else{
+            String[] imgUri = new String[1];
+            String path = "images/" + friendID + "/" + imgUrl;
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference mountainsRef = storageRef.child(path);
+            mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                // Got the download URL for 'users/me/profile.png'
+                imgUri[0] = uri.toString();
+                Log.d("insideIf", "URI: " + imgUri[0]);
+                Picasso.get().load(imgUri[0]).into(holder.imageView);
+
+            }).addOnFailureListener(exception -> {
+                // Handle any errors
+                Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+            });
         }
         holder.ratingBar.setRating(item.getHearts());
         if(item.getClaimed() == true){
             holder.cardView.setBackgroundColor(ContextCompat.getColor(this.context, R.color.pink));
         }
+
+        String collectionName = (String) collectionNameTV.getText();
+        //ON CLICK--------------------------------------------------------------------
+        holder.currentItem = items.get(index);
+        holder.linearLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(this.activity, ClaimFriendItemActivity.class);
+            //put in name, price description, hearts, and link etc
+            intent.putExtra("itemID", item.getId());
+            intent.putExtra("itemName", item.getName());
+            intent.putExtra("itemHearts", item.getHearts());
+            intent.putExtra("itemPrice", item.getPrice());
+            if(item.getDescription() != null){
+                intent.putExtra("itemDes", item.getDescription());
+            }
+            else{
+                String noDescription = "Your friend has not set a description.";
+                intent.putExtra("itemDes", noDescription);
+            }
+
+            //get image ------------------------------------------------------------
+            if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+                Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+            }
+            else{
+                String[] imgUri = new String[1];
+                String path = "images/" + friendID + "/" + imgUrl;
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+                StorageReference mountainsRef = storageRef.child(path);
+                mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Got the download URL for 'users/me/profile.png'
+                    imgUri[0] = uri.toString();
+
+                    intent.putExtra("itemImg", imgUri[0]);
+                    intent.putExtra("itemLink", item.getWebsite());
+                    intent.putExtra("itemDate", item.getDate());
+                    intent.putExtra("collectionID", collectionID);
+                    intent.putExtra("collectionName", collectionName);
+
+                    //friend firestore id: email
+                    intent.putExtra("friendID", friendID);
+                    intent.putExtra("itemFsID", item.getFireStoreID());
+
+                    this.activity.startActivity(intent);
+                }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+                });
+            }
+            //get img end --------------------------------------------------------------------
+        });
+
     }
 
     @Override
@@ -83,6 +163,7 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
         ImageView imageView;
         RatingBar ratingBar;
         TextView name, price, date;
+        public Item currentItem;
         public CardView cardView;
         public LinearLayout linearLayout;
 
