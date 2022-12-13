@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
+import com.example.giftme.Activities.FriendCollectionItems;
 import com.example.giftme.Settings.FAQ;
 import com.example.giftme.Settings.PrivacyPolicy;
 import com.example.giftme.R;
@@ -197,6 +198,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 //        dataBaseHelper.deleteTable("COLLECTIONS");
         //clear out local SQLite database end---
         SessionManager.clearSession(getContext());
+
+        Intent intent = new Intent(this.getActivity(), FriendCollectionItems.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+
         signedOutState();
     }
 
@@ -298,10 +304,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                                 }
                             });
 
-                            listener.updateData(true);
+//                            listener.updateData(true);
 
                             if (!SessionManager.getUserPFP(getContext()).equals("")) {
-                                Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
+                                Picasso.get().load(SessionManager.getUserPFP(getContext()))
+                                        .transform(new CropCircleTransformation())
+                                        .into(pfpIV);
                             }
 
                             if (signInButton.getVisibility() == View.VISIBLE) {
