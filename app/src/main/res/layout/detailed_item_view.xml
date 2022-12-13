@@ -18,8 +18,10 @@
             android:background="@color/white"/>
         <ImageView
             android:id="@+id/image_itemImage"
-            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="250dp"
             android:layout_height="250dp"
+            android:layout_marginTop="10dp"
             android:background="@color/cardview_shadow_start_color"/>
 
         <LinearLayout
@@ -35,6 +37,7 @@
                 android:gravity="right|center_vertical"
                 android:text=""
                 android:layout_marginRight="10dp"
+                android:layout_marginTop="2dp"
                 android:textColor="@color/black"
                 />
         </LinearLayout>
@@ -45,7 +48,8 @@
             android:text=""
             android:hint="Item Name Here"
             android:textColor="@color/black"
-            android:textSize="19sp"/>
+            android:textSize="19sp"
+            android:layout_marginStart="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,7 +63,8 @@
                 android:gravity="left|center_vertical"
                 android:textColor="@color/black"
                 android:text=""
-                android:hint="input price"
+                android:hint="item price"
+                android:textSize="19sp"
                 android:layout_marginStart="10dp"/>
 
             <RatingBar
@@ -70,13 +75,20 @@
                 android:gravity="right|center_vertical"
                 android:layout_marginStart="10dp"
                 android:isIndicator="true"
+                android:scaleX=".7"
+                android:scaleY=".7"
+                android:transformPivotX="0dp"
+                android:transformPivotY="15dp"
                 android:progressDrawable="@drawable/custom_rating_bar"/>
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/descriptionTV"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:textSize="19sp"
+            android:padding="10dp"
             android:text="" />
 
         <Button
@@ -86,7 +98,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:backgroundTint="#03A9F4"
+            android:backgroundTint="@color/lightpink"
             android:text="Shop now" />
 
         <Button
@@ -96,7 +108,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:backgroundTint="#FF9800"
+            android:backgroundTint="@color/lightpink"
             android:text="edit" />
 
         <Button
@@ -106,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:backgroundTint="#F44336"
+            android:backgroundTint="@color/lightpink"
             android:text="delete"/>
     </LinearLayout>
 

@@ -74,7 +74,18 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\lesle\AppData\Local\Temp\ic_android_black_24dp.xml" />
+                                                <entry key="imagePath" value="C:\Users\lesle\AppData\Local\Temp\baseline_card_giftcard_24.xml" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                      <entry key="foregroundClipartAsset">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="url" value="file:/$PROJECT_DIR$/../../sdk/icons/material/materialicons/card_giftcard/baseline_card_giftcard_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -115,6 +126,12 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="foregroundAssetType" value="CLIP_ART" />
+                                      <entry key="outputName" value="ic_giftbox" />
                                     </map>
                                   </option>
                                 </PersistentState>

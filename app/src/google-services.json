@@ -1,0 +1,87 @@
+{
+  "project_info": {
+    "project_number": "1018135325914",
+    "project_id": "giftme-d07a0",
+    "storage_bucket": "giftme-d07a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018135325914:android:dd53c340261881c1ca49e3",
+        "android_client_info": {
+          "package_name": "com.example.giftme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018135325914-0tcrjd0rk4f7c8htvov0q016o2u81rrc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.giftme",
+            "certificate_hash": "f087b056f270574446f27aab81bcb4ce636e947e"
+          }
+        },
+        {
+          "client_id": "1018135325914-fot578e66mcfq7ien8rqrdl92husqlhh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.giftme",
+            "certificate_hash": "8fbece723fe9e6d5bd0f0a92329a10d822b5f33c"
+          }
+        },
+        {
+          "client_id": "1018135325914-mb14aqvr5igiqak59gii5av2ojmhenge.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.giftme",
+            "certificate_hash": "7e62cdf3dec4b4f58997143b61a3e7e6be536a2a"
+          }
+        },
+        {
+          "client_id": "1018135325914-mdpanq74l4ebgqe06cigsh0gl90r3cbj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.giftme",
+            "certificate_hash": "aa244d04d75b23f2d0bb2d91a6cd8fc55019b0d1"
+          }
+        },
+        {
+          "client_id": "1018135325914-ppr4ldsa56f3pf7jj4kkaok1vkdi0dqh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.giftme",
+            "certificate_hash": "520a5360383e1826cac57e2474342691561d231b"
+          }
+        },
+        {
+          "client_id": "1018135325914-r9c4jk2d5j4bda0tj90p8mvor884gasn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.giftme",
+            "certificate_hash": "172b7b486b1eb5a04f00025f0ed6cdfe757a74d5"
+          }
+        },
+        {
+          "client_id": "1018135325914-rjio177kep4ijf7ujpqapdce8j15us79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDodWQuqjEK2RszAvpqXo0euw8ulqRkAIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018135325914-rjio177kep4ijf7ujpqapdce8j15us79.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

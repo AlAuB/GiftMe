@@ -20,6 +20,10 @@ import com.example.giftme.Activities.ClaimFriendItemActivity;
 import com.example.giftme.Activities.DetailedItemViewActivity;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
+import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -69,13 +73,23 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
 
         String collectionName = (String) collectionNameTV.getText();
         holder.currentItem = friendItems.get(index);
-        holder.linearLayout.setOnClickListener(view -> {
+        holder.cardView.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, ClaimFriendItemActivity.class);
             //put in name, price description, hearts, and link etc
             intent.putExtra("itemID", item.getId());
             intent.putExtra("itemName", item.getName());
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
+            intent.putExtra("itemLink", item.getWebsite());
+            intent.putExtra("itemDate", item.getDate());
+            intent.putExtra("collectionID", collectionID);
+            intent.putExtra("collectionName", collectionName);
+
+            //friend firestore id: email
+            intent.putExtra("friendID", friendID);
+            intent.putExtra("itemFsID", item.getFireStoreID());
+            //
+
             if(item.getDescription() != null){
                 intent.putExtra("itemDes", item.getDescription());
             }
@@ -84,17 +98,31 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
                 intent.putExtra("itemDes", noDescription);
             }
 
-            intent.putExtra("itemImg", item.getImg());
-            intent.putExtra("collectionID", collectionID);
-            intent.putExtra("collectionName", collectionName);
+            //get image ------------------------------------------------------------
+            String imgUrl= item.getImg();
+            if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+                Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+            }
+            else{
+                String[] imgUri = new String[1];
+                String path = "images/" + friendID + "/" + imgUrl;
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+                StorageReference mountainsRef = storageRef.child(path);
+                mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Got the download URL for 'users/me/profile.png'
+                    imgUri[0] = uri.toString();
 
-            //friend firestore id: email
-            intent.putExtra("friendID", friendID);
-            intent.putExtra("itemFsID", item.getFireStoreID());
-
-
+                    intent.putExtra("itemImg", imgUri[0]);
 //            this.activity.finish();
-            this.activity.startActivity(intent);
+                    this.activity.startActivity(intent);
+                }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+                });
+            }
+            //get img end --------------------------------------------------------------------
+
         });
     }
 
@@ -110,14 +138,14 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
         public ImageView claimedPFP;
         public View view;
         public Item currentItem;
-        public LinearLayout linearLayout;
+        public MaterialCardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             itemNameTV = itemView.findViewById(R.id.friend_item_name);
             ratingBar = itemView.findViewById(R.id.friend_rating);
             claimedPFP = itemView.findViewById(R.id.claimed_pfp);
-            linearLayout = itemView.findViewById(R.id.friend_item_lv);
+            cardView = itemView.findViewById(R.id.friend_item_lv);
         }
     }
 }

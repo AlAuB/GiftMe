@@ -109,7 +109,7 @@ public class AddNewItemManually extends AppCompatActivity {
                     item.setDate(date);
                     item.setName(itemName);
                     item.setDescription(itemExtraInfo);
-                    item.setHearts(ratingBar.getRating());
+                    item.setHearts((int) ratingBar.getRating());
                     item.setPrice(Integer.parseInt(itemPrice));
                     item.setImg(context.getApplicationContext().getFilesDir() + "/" + fileName);
                     Log.d("debug::", "onCreate: " + item.getImg());

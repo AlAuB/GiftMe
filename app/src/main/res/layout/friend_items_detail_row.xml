@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/items_row"
+    android:id="@+id/friend_detail_cardView"
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:layout_margin="5dp"
@@ -19,7 +19,7 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <ImageView
-            android:id="@+id/detail_view_item_image"
+            android:id="@+id/friend_detail_view_item_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:contentDescription="@string/current_item_s_image" />
@@ -27,31 +27,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/detail_view_item_name"
+                android:id="@+id/friend_detail_view_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text=""
+                android:text="ITEM NAME"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/detail_view_item_date"
+                android:id="@+id/friend_detail_view_item_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center_vertical"
-                android:text=""
+                android:text="date"
                 android:textSize="10sp"
                 android:textStyle="normal" />
 
             <RatingBar
-                android:id="@+id/detail_view_item_rating"
+                android:id="@+id/friend_detail_view_item_rating"
                 style="@style/CustomRatingBarStyle"
                 android:layout_width="250dp"
                 android:padding="0dp"
@@ -68,18 +69,33 @@
                 android:stepSize="0.5"
                 android:transformPivotX="5dp"
                 android:transformPivotY="10dp" />
-                    
-            <TextView
-                android:id="@+id/detail_view_item_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center_vertical"
-                android:text=""
-                android:textSize="18sp"
-                android:textStyle="bold" />
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/friend_detail_view_item_price"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_vertical"
+                    android:text="PRICE"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/friend_claimed_pfp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="37dp"
+                    android:paddingBottom="2dp"
+                    app:srcCompat="@drawable/anony_user"/>
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

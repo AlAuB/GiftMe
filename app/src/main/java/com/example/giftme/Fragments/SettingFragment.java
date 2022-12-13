@@ -2,6 +2,7 @@ package com.example.giftme.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
+import com.example.giftme.Activities.FriendCollectionItems;
 import com.example.giftme.Settings.FAQ;
 import com.example.giftme.Settings.PrivacyPolicy;
 import com.example.giftme.R;
@@ -43,6 +45,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class SettingFragment extends Fragment implements View.OnClickListener {
 
     SignInButton signInButton;
@@ -54,6 +60,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     ImageView pfpIV;
     DataBaseHelper dataBaseHelper;
     SignStatusListener listener;
+    ArrayList<String> collectionIds;
 
     public SettingFragment() {
         // Required empty public constructor
@@ -121,6 +128,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         }
 
         dataBaseHelper = new DataBaseHelper(this.getContext());
+        collectionIds = new ArrayList<>();
 
         return view;
     }
@@ -160,13 +168,41 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    private void getAllCollection() {
+        Cursor cursor = dataBaseHelper.readCollectionTableAllData("COLLECTIONS");
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                //if this isn't the friend's wishlist
+                if (cursor.getBlob(3) == null) {
+                    collectionIds.add(cursor.getString(0));
+                }
+            }
+        }
+    }
+
     private void signOut() {
         GoogleSignIn.getClient(
                 requireContext(),
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         ).signOut();
         listener.updateData(false);
+
+        //clear out local SQLite database---start
+        getAllCollection();
+        Log.d("COLLECTIONIDS", String.valueOf(collectionIds));
+        for (String id: collectionIds){
+            dataBaseHelper.deleteCollectionSQL(id);
+        }
+        dataBaseHelper.deleteAll("COLLECTIONS");
+        collectionIds.clear();
+//        dataBaseHelper.deleteTable("COLLECTIONS");
+        //clear out local SQLite database end---
         SessionManager.clearSession(getContext());
+
+        Intent intent = new Intent(this.getActivity(), FriendCollectionItems.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+
         signedOutState();
     }
 
@@ -191,7 +227,9 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         }
         settingUserNameTV.setText(SessionManager.getUserName(getContext()));
         if (SessionManager.getUserStatus(getContext())) {
-            Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
+            Picasso.get().load(SessionManager.getUserPFP(getContext()))
+                    .transform(new CropCircleTransformation())
+                    .into(pfpIV);
         } else {
             pfpIV.setImageResource(R.drawable.anony_user);
         }
@@ -202,6 +240,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     private void signIn() {
         Log.d("debugging::", "signIn");
         Intent intent = googleSignInClient.getSignInIntent();
+        //need to grab collections info from firestore!
         startActivityForResult(intent, 100);
     }
 
@@ -253,6 +292,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                                         Log.d("debugging::", "user exists");
                                         // if the user already exists in the database, then just update the user's email
                                         dataBaseHelper.setUserEmail(user.getEmail());
+
+                                        //gets Collections from User
+                                        dataBaseHelper.getCollectionsFromUser(user.getEmail());
+//                                        getAllCollection();
+                                        listener.updateData(true);
                                     } else {
                                         Log.d("debugging::", "user does not exist");
                                         dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
@@ -261,10 +305,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                                 }
                             });
 
-                            listener.updateData(true);
+//                            listener.updateData(true);
 
                             if (!SessionManager.getUserPFP(getContext()).equals("")) {
-                                Picasso.get().load(SessionManager.getUserPFP(getContext())).into(pfpIV);
+                                Picasso.get().load(SessionManager.getUserPFP(getContext()))
+                                        .transform(new CropCircleTransformation())
+                                        .into(pfpIV);
                             }
 
                             if (signInButton.getVisibility() == View.VISIBLE) {
