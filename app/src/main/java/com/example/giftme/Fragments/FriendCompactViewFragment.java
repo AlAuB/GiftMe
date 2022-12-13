@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.giftme.Adapters.FriendItemsAdapter;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +68,10 @@ public class FriendCompactViewFragment extends Fragment {
             collection_id = getArguments().getString("collection_id");
             friend_id = getArguments().getString("friend_id");
         }
-        getAllItemsFirestore();
+        if(SessionManager.getUserStatus(context) == true){
+            getAllItemsFirestore();
+        }
+
         Log.d("FIRESTORE AFTER ", items.toString());
 
         return view;
