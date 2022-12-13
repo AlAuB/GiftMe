@@ -224,7 +224,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Item convertMapIntoItem(Map<String, Object> map,  String itemID){
         Item item = new Item();
         item.setName(String.valueOf(map.get("name")));
-        item.setHearts((int) ((Double)map.get("hearts")).floatValue());
+        item.setHearts(Math.toIntExact((Long) map.get("hearts")));
+        //        item.setHearts((int) ((Double)map.get("hearts")).floatValue());
         item.setPrice(Math.toIntExact(((Long) map.get("price"))));
         item.setDescription((String) map.get("description"));
         item.setDate((String) map.get("date"));
