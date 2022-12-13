@@ -19,7 +19,8 @@
             android:background="@color/white"/>
         <ImageView
             android:id="@+id/friend_image_itemImage"
-            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="250dp"
             android:layout_height="250dp"
             android:background="@color/cardview_shadow_start_color"/>
 
@@ -33,8 +34,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="right|center_vertical"
-                android:text="Nov 18, 2020"
+                android:text=""
                 android:layout_marginRight="10dp"
+                android:layout_marginTop="2dp"
                 android:textColor="@color/black"
                 />
         </LinearLayout>
@@ -45,12 +47,14 @@
             android:text=""
             android:hint="Item Name Here"
             android:textColor="@color/black"
-            android:textSize="19dp"/>
+            android:textSize="19dp"
+            android:layout_marginStart="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/friend_itemPriceTV"
                 android:layout_width="0dp"
@@ -60,23 +64,28 @@
                 android:textColor="@color/black"
                 android:text=""
                 android:hint="input price"
+                android:textSize="19sp"
                 android:layout_marginLeft="10dp"/>
             <RatingBar
+                style="@style/CustomRatingBarStyle"
                 android:id="@+id/friend_ratingBar"
-                android:layout_width="0dp"
-                android:layout_weight="3"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="right|center_vertical"
-                android:layout_marginLeft="50dp"
-                android:stepSize="0.5"
-                android:numStars="5"
+                android:layout_marginStart="10dp"
                 android:isIndicator="true"
-                />
+                android:scaleX=".7"
+                android:scaleY=".7"
+                android:transformPivotX="0dp"
+                android:transformPivotY="15dp"
+                android:progressDrawable="@drawable/custom_rating_bar" />
         </LinearLayout>
         <TextView
             android:id="@+id/friend_descriptionTV"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:textSize="19sp"
+            android:padding="10dp"
             android:text=""
             />
         <Button
@@ -85,6 +94,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:backgroundTint="@color/lightpink"
             android:text="Shop now"
             />
         <Button
@@ -93,6 +103,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:backgroundTint="@color/lightpink"
             android:text="claim"
             />
         <Button
@@ -101,6 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:backgroundTint="@color/lightpink"
             android:text="cancel"/>
     </LinearLayout>
 

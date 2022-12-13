@@ -96,14 +96,18 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
             });
         }
         holder.ratingBar.setRating(item.getHearts());
+        ImageView claimedImgView = holder.claimedPFP;
         if(item.getClaimed() == true){
-            holder.cardView.setBackgroundColor(ContextCompat.getColor(this.context, R.color.pink));
+            claimedImgView.setVisibility(View.VISIBLE);
+        }
+        else{
+            claimedImgView.setVisibility(View.GONE);
         }
 
         String collectionName = (String) collectionNameTV.getText();
         //ON CLICK--------------------------------------------------------------------
         holder.currentItem = items.get(index);
-        holder.linearLayout.setOnClickListener(view -> {
+        holder.cardView.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, ClaimFriendItemActivity.class);
             //put in name, price description, hearts, and link etc
             intent.putExtra("itemID", item.getId());
@@ -160,12 +164,12 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imageView;
+        ImageView imageView, claimedPFP;
         RatingBar ratingBar;
         TextView name, price, date;
         public Item currentItem;
         public CardView cardView;
-        public LinearLayout linearLayout;
+//        public LinearLayout linearLayout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -174,8 +178,9 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
             price = itemView.findViewById(R.id.friend_detail_view_item_price);
             date = itemView.findViewById(R.id.friend_detail_view_item_date);
             ratingBar = itemView.findViewById(R.id.friend_detail_view_item_rating);
-            linearLayout = itemView.findViewById(R.id.friend_items_row);
+//            linearLayout = itemView.findViewById(R.id.friend_items_row);
             cardView = itemView.findViewById(R.id.friend_detail_cardView);
+            claimedPFP = itemView.findViewById(R.id.friend_claimed_pfp);
         }
     }
 }

@@ -98,7 +98,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:backgroundTint="@color/pink"
+            android:backgroundTint="@color/lightpink"
             android:text="Shop now" />
 
         <Button
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:backgroundTint="@color/cerise"
+            android:backgroundTint="@color/lightpink"
             android:text="delete"/>
     </LinearLayout>
 
