@@ -188,9 +188,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
         //clear out local SQLite database---start
         getAllCollection();
+        Log.d("COLLECTIONIDS", String.valueOf(collectionIds));
         for (String id: collectionIds){
             dataBaseHelper.deleteCollectionSQL(id);
         }
+        dataBaseHelper.deleteAll("COLLECTIONS");
         collectionIds.clear();
 //        dataBaseHelper.deleteTable("COLLECTIONS");
         //clear out local SQLite database end---
@@ -287,7 +289,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
                                         //gets Collections from User
                                         dataBaseHelper.getCollectionsFromUser(user.getEmail());
-                                        getAllCollection();
+//                                        getAllCollection();
                                         listener.updateData(true);
                                     } else {
                                         Log.d("debugging::", "user does not exist");
