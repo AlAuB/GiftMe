@@ -103,7 +103,7 @@ public class FriendDetailViewFragment extends Fragment {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             itemsInWishlist.forEach((key, value) -> {
                                 if( value instanceof HashMap){
-                                    Item currentItem = dataBaseHelper.convertMapIntoItem( (Map<String, Object>) value, key);
+                                    Item currentItem = dataBaseHelper.convertMapIntoItem((Map<String, Object>) value, key);
                                     Log.d("FIRESTORE", currentItem.toString());
                                     items.add(currentItem);
                                 }

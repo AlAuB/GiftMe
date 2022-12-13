@@ -92,13 +92,11 @@ public class EditItemActivity extends AppCompatActivity {
         Log.d("itemDes", item.getDescription());
         priceET.setText(String.valueOf(item.getPrice()));
         Log.d("itemImg", "Img is null" + (img.equals("null")));
+        imgView.setContentDescription("CLICK HERE TO CHOOSE IMAGE");
         if(img.equals("null")){
             File file = new File(img);
             Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
             imgView.setImageBitmap(getBitMap);
-        }
-        else{
-            imgView.setContentDescription("CLICK HERE TO CHOOSE IMAGE");
         }
 
         //get link

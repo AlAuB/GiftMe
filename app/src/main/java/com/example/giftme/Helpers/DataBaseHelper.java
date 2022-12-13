@@ -34,6 +34,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private final Context context;
     private static String userEmail;
+    private static String imgURL;
 
     //other
     private static final String DATABASE_NAME = "WISHLIST_DB";
@@ -113,6 +114,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         userEmail = email;
     }
 
+    public void setImgURL(String url) {
+        imgURL = url;
+    }
+
+    public String getImgURL(){
+        return imgURL;
+    }
     /**
      * Add a new collection to the database
      * @param email the email of the user
@@ -229,7 +237,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         item.setPrice(Math.toIntExact(((Long) map.get("price"))));
         item.setDescription((String) map.get("description"));
         item.setDate((String) map.get("date"));
-        item.setImg((String) map.get("image"));
+        item.setImg((String) map.get("img"));
         item.setClaimed((Boolean) map.get("claimed"));
         item.setKnownFireStoreID(itemID);
         //        item.setKnownTableID(wishlistID);
@@ -433,7 +441,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         wishlist.put("Friend ID", friendID);
         //need to add other fields to firestore OR make firestoreID the same
 
-        DocumentReference userDocIdRef = fireStore.collection("users").document(friendID);
+        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document(fsID);
         wishlistDocIdRef.set(wishlist)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + userEmail + ")"))
@@ -681,16 +689,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }).addOnSuccessListener(taskSnapshot -> {
             // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
             Log.d(TAG, "storeImageFirebase: SUCCESS\nPath: " + taskSnapshot.getMetadata().getPath() + "\nSize (bytes): " + taskSnapshot.getMetadata().getSizeBytes() + "\nContent Type: " + taskSnapshot.getMetadata().getContentType() + "\nCreation Time (ms): " + taskSnapshot.getMetadata().getCreationTimeMillis() + "\nBucket: " + taskSnapshot.getMetadata().getBucket());
-            getDownloadUrlFirebase(name);
+            getDownloadUrlFirebase(userEmail, name);
         });
     }
 
-    public void getDownloadUrlFirebase(String name) {
-        String path = "images/" + userEmail + "/" + name;
+    //can't get info
+    public void getDownloadUrlFirebase(String email, String name) {
+        String path = "images/" + email + "/" + name;
         StorageReference storageRef = storage.getReference();
         StorageReference mountainsRef = storageRef.child(path);
         mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
             Log.d(TAG, "getDownloadUrlFirebase: " + uri.toString());
+            setImgURL(uri.toString());
             // Got the download URL for 'users/me/profile.png'
         }).addOnFailureListener(exception -> {
             // Handle any errors
