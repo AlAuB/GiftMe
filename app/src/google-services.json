@@ -22,14 +22,6 @@
           }
         },
         {
-          "client_id": "1018135325914-fjbvm9007vue9ejqt6svngv58o064ss6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.giftme",
-            "certificate_hash": "b783d71340f552f7ef7fa5af7a1f8007ebabb729"
-          }
-        },
-        {
           "client_id": "1018135325914-fot578e66mcfq7ien8rqrdl92husqlhh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
