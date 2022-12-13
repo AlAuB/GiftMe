@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -28,7 +29,7 @@
             android:weightSum="1">
 
             <TextView
-                android:id="@+id/message_count"
+                android:id="@+id/notification_count"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -40,8 +41,8 @@
                 android:textStyle="bold" />
 
             <TextView
-                style="@style/texts"
                 android:id="@+id/notify_message"
+                style="@style/texts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -50,6 +51,12 @@
                 android:textSize="18sp" />
 
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleViewNotification"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.99" />
 
     </LinearLayout>
 

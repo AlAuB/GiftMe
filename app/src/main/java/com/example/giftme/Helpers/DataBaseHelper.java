@@ -235,6 +235,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         item.setDate((String) map.get("date"));
         item.setImg((String) map.get("image"));
         item.setClaimed((Boolean) map.get("claimed"));
+        item.setWebsite((String) map.get("url"));
         item.setKnownFireStoreID(itemID);
         //        item.setKnownTableID(wishlistID);
         return item;
