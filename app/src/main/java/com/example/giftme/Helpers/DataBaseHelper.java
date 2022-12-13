@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -89,6 +90,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
         userEmail = SessionManager.getUserEmail(context);
+        setDeviceMessagingToken(userEmail);
     }
 
     @Override
@@ -190,6 +192,30 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
             }
+        });
+    }
+
+    public void setDeviceMessagingToken(String email) {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                Log.d(TAG, "getDeviceMessagingToken: failed to get token");
+            }
+            String token = task.getResult();
+            Log.d(TAG, "getDeviceMessagingToken: " + token);
+            Map<String, Object> deviceMessagingToken = new HashMap<>();
+            deviceMessagingToken.put("deviceMessagingToken", token);
+            DocumentReference docRef = fireStore.collection("users").document(email);
+            docRef.set(deviceMessagingToken, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created");
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage());
+                }
+            });
         });
     }
 
@@ -341,6 +367,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void updateById(String collection_name, int id, String name, int price, String description,
                            int hearts, String img, String fireStoreId){
         SQLiteDatabase db = this.getWritableDatabase();
+        Log.d(TAG, "updateById: " + collection_name + " " + id + " " + name + " " + price + " " + description + " " + hearts + " " + img + " " + fireStoreId);
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
                 + " set " + ITEM_NAME + " = '" + name + "', "
