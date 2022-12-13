@@ -269,18 +269,29 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                 String collectionName = (String) document.getData().get("Collection Name");
                                 String friendID = (String) document.getData().get("Friend ID");
                                 String wishlistID = document.getId();
-                                String userName = null;
                                 //if this is user's own wishlist
                                 if(friendID == null || friendID.equalsIgnoreCase("null")){
-                                    //can't use the below method because we need the fire_store id
-//                                    addNewCollection(userName, collectionName, friendID);
-//                                    addNewFriendCollection(null, collectionName, friendID, wishlistID, null);
+                                    addOldCollectionSQL(null, collectionName, friendID, wishlistID, null);
                                 }
                                 else{
                                     //this is user's friend's collections
-//                                    addNewFriendCollection(friendName, collectionName, friendID, fsId, pfp);
+                                    DocumentReference userRefFriend = fireStore.collection("users").document(friendID);
+                                    String displayName = "displayName";
+                                    String photoURL = "photoUrl";
+                                    final String[] friend = new String[2];
+                                    //friend[0] = name; friend[1] = pfp
+                                    userRefFriend.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()){
+                                                DocumentSnapshot user = task.getResult();
+                                                friend[0] = user.getString(displayName);
+                                                friend[1] = user.getString(photoURL);
+                                                addOldCollectionSQL(friend[0], collectionName, friendID, wishlistID, friend[1]);
+                                            }
+                                        }
+                                    });
                                 }
-
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
@@ -374,7 +385,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
 
     public void addNewCollection(String userName, String collectionName, String friendID) {
-    
+
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -442,6 +453,33 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * for adding friend's collections
+     * @param friendName friend's name
+     * @param collectionName name of the collection
+     * @param friendID friend's email
+     * @param fsID firestoreId
+     */
+    public void addOldCollectionSQL(String friendName, String collectionName, String friendID, String fsID, String pfp) {
+        SQLiteDatabase database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(USER_NAME, friendName);
+        values.put(COLUMN_NAME, collectionName);
+        values.put(FIRESTORE_ID, fsID);
+        values.put(FRIEND_ID, friendID);
+        values.put(PROFILE_IMAGE, pfp);
+
+        long status = database.insert(TABLE_NAME, null, values);
+        if (status == -1) {
+            Toast.makeText(context, "Insert failed", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Insert Success", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
     //update Collection Name by FirestoreID
     public void updateCollectionNameById(String fireStoreId, String name){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -502,6 +540,29 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
         }
     }
+
+
+    /**
+     * Delete a collection SQLite only
+     * @param id id for that item in that table
+     */
+    public void deleteCollectionSQL(String id) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        HashMap<String, Object> collectionDetails = getData(id, TABLE_NAME);
+        String firestoreId = (String) collectionDetails.get("firestore_id");
+        String collectionName = (String) collectionDetails.get("name");
+
+        // first delete it from COLLECTIONS table
+        long status = sqLiteDatabase.delete(TABLE_NAME, FIRESTORE_ID + "=?", new String[]{firestoreId});
+        if (status == -1) {
+            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+            // after successfully deleting from COLLECTIONS table, delete the collection's own table
+            deleteTable(collectionName);
+        }
+    }
+
 
     public String getDataItem(String rowId, String tableName) {
         // still using rowId to fetch data.. should be changed to either id or firestore_id

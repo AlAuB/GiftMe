@@ -189,7 +189,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         //clear out local SQLite database---start
         getAllCollection();
         for (String id: collectionIds){
-            dataBaseHelper.deleteCollection(id);
+            dataBaseHelper.deleteCollectionSQL(id);
         }
         collectionIds.clear();
 //        dataBaseHelper.deleteTable("COLLECTIONS");
