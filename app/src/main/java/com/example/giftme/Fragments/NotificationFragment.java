@@ -30,7 +30,7 @@ public class NotificationFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_notification, container, false);
         emptyImage = view.findViewById(R.id.notification_empty_icon);
         emptyText = view.findViewById(R.id.notification_empty_text);
-        messageCountTV = view.findViewById(R.id.message_count);
+        messageCountTV = view.findViewById(R.id.notification_count);
         notifyMessageTV = view.findViewById(R.id.notify_message);
 
         if(SessionManager.getUserStatus(getContext())){
