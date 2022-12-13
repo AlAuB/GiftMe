@@ -288,6 +288,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
                                         //gets Collections from User
                                         dataBaseHelper.getCollectionsFromUser(user.getEmail());
+                                        getAllCollection();
                                     } else {
                                         Log.d("debugging::", "user does not exist");
                                         dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());

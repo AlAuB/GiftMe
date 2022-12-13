@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.giftme.Adapters.FriendItemsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -210,6 +213,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Map<String, Object> convertItemIntoMap(Item item){
         Map<String, Object> itemMap = new HashMap<>();
         Map<String, Object> nestedItemMap = new HashMap<>();
+        itemMap.put("url", item.getWebsite());
         itemMap.put("name", item.getName());
         itemMap.put("hearts", item.getHearts());
         itemMap.put("price", item.getPrice());
@@ -239,13 +243,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         item.setDate((String) map.get("date"));
         item.setImg((String) map.get("img"));
         item.setClaimed((Boolean) map.get("claimed"));
+        item.setWebsite((String) map.get("url"));
         item.setKnownFireStoreID(itemID);
         //        item.setKnownTableID(wishlistID);
         return item;
     }
-
-//    public List<Item> getAllItemsFromDatabase
-//
 
     /**
      * update Claimed status in FireStore for friend items
@@ -277,10 +279,38 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 //                                wishlistIDs.add(document.getId());
                                 String collectionName = (String) document.getData().get("Collection Name");
                                 String friendID = (String) document.getData().get("Friend ID");
-                                String wishlistID = document.getId();
+                                String collectionID = document.getId();
                                 //if this is user's own wishlist
                                 if(friendID == null || friendID.equalsIgnoreCase("null")){
-                                    addOldCollectionSQL(null, collectionName, friendID, wishlistID, null);
+                                    addOldCollectionSQL(null, collectionName, null, collectionID, null);
+                                    createNewTable(collectionName);
+                                    //add items into the collection
+                                    //get fire store collection wishlist items
+                                    DocumentReference collectionRef = userRef.collection("wishlists").document(collectionID);
+                                    collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()){
+                                                DocumentSnapshot doc = task.getResult();
+                                                if (doc.exists()){
+                                                    Map<String, Object> itemsInWishlist = doc.getData();
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                                        itemsInWishlist.forEach((key, value) -> {
+                                                                    if( value instanceof HashMap){
+                                                                        Item currentItem = convertMapIntoItem( (Map<String, Object>) value, key);
+                                                                        Log.d("ITEM", currentItem.toString());
+                                                                        insertItemIntoCollection(collectionName, currentItem);
+                                                                    }
+                                                                }
+                                                        );}
+                                                }
+                                            }else
+                                            {
+                                                Log.d("ToastError", "error");
+                                            }
+                                        }
+                                    });
+
                                 }
                                 else{
                                     //this is user's friend's collections
@@ -296,7 +326,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                                 DocumentSnapshot user = task.getResult();
                                                 friend[0] = user.getString(displayName);
                                                 friend[1] = user.getString(photoURL);
-                                                addOldCollectionSQL(friend[0], collectionName, friendID, wishlistID, friend[1]);
+                                                //add collections
+                                                addOldCollectionSQL(friend[0], collectionName, friendID, collectionID, friend[1]);
                                             }
                                         }
                                     });
@@ -556,6 +587,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * @param id id for that item in that table
      */
     public void deleteCollectionSQL(String id) {
+        Log.d(TAG, "deleteData: " + id + " " + TABLE_NAME);
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         HashMap<String, Object> collectionDetails = getData(id, TABLE_NAME);
         String firestoreId = (String) collectionDetails.get("firestore_id");
@@ -569,6 +601,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
             // after successfully deleting from COLLECTIONS table, delete the collection's own table
             deleteTable(collectionName);
+
         }
     }
 
