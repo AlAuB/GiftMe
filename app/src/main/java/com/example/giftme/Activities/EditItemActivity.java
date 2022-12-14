@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,6 +77,9 @@ public class EditItemActivity extends AppCompatActivity {
         if(Objects.equals(itemDes, "null")){ itemDes = "";}
         String img = intent.getStringExtra("itemImg");
         String itemURL = intent.getStringExtra("itemURL");
+        if(itemURL.equals("null")){
+            itemURL = "";
+        }
         if(Objects.equals(itemURL, "null")){ itemDes = "";}
         String itemDate = intent.getStringExtra("itemDate");
         if(Objects.equals(itemDate, "null")){ itemDate = "";}
@@ -92,13 +96,16 @@ public class EditItemActivity extends AppCompatActivity {
         Log.d("itemDes", item.getDescription());
         priceET.setText(String.valueOf(item.getPrice()));
         Log.d("itemImg", "Img is null" + (img.equals("null")));
-        imgView.setContentDescription("CLICK HERE TO CHOOSE IMAGE");
 
         if(img.equals("null")){
 //            File file = new File(img);
 //            Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
 //            imgView.setImageBitmap(getBitMap);
             imgView.setImageResource(R.drawable.click1);
+        }
+        else{
+            Log.d("itemImage", item.getImg());
+            Picasso.get().load(item.getImg()).into(imgView);
         }
 
         //get link
