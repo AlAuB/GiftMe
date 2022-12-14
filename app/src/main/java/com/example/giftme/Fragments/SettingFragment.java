@@ -1,5 +1,6 @@
 package com.example.giftme.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -40,6 +41,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,12 +77,13 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_setting, container, false);
 
         // initialize switch variable
-        Switch mode_switch = view.findViewById(R.id.switch0);
+        SwitchMaterial mode_switch = view.findViewById(R.id.switch0);
         TextView mode = view.findViewById(R.id.mode);
 //        Objects.requireNonNull(getSupportActionBar()).setTitle("Light/Dark Mode Switch");
 
         // switch
         mode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
