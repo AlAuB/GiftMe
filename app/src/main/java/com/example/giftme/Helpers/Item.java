@@ -24,7 +24,7 @@ public class Item {
         setClaimed(false);
         setFireStoreID();
     }
-    public Item(int newId, String website, String newName, int newHearts, int newPrice, String newDescription, String newDate,
+    public Item(int newId, String website, String newName, int newHearts, double newPrice, String newDescription, String newDate,
                 String newImg){
         setWebsite(website);
         setId( newId);
