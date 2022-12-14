@@ -16,10 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
-import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -88,19 +85,16 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         String imgUrl = item.getImg();
         if( imgUrl == null || imgUrl.toLowerCase() == null) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
-        }
-        else{
+        } else{
             if(imgUrl.contains("/")){
                 //get bitmap
                 File file = new File(imgUrl);
                 Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 itemImageView.setImageBitmap(getBitMap);
-            }
-            else{
+            } else{
                 //use link from firestore storage
                 Picasso.get().load(imgUrl).into(itemImageView);
             }
-
         }
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view ->{
@@ -117,14 +111,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
                 startActivity(shopIntent);
             }
         });
-
-//        backButton = findViewById(R.id.imageButton_backToPrevious);
-//        backButton.setOnClickListener((view -> {
-//            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
-//            myCollectionItemsIntent.putExtra("collection_name", collectionName);
-//            startActivity(myCollectionItemsIntent);
-//            finish();
-//        }));
 
         editButton = findViewById(R.id.button_edit);
         String finalItemFSID = itemFSID;

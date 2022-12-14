@@ -1,18 +1,15 @@
 package com.example.giftme.Activities;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
@@ -23,17 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
-import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -47,7 +38,6 @@ public class EditItemActivity extends AppCompatActivity {
     Button saveButton;
     Button cancelButton;
     DataBaseHelper dataBaseHelper;
-    ImageButton backButton;
     Bitmap bitmap;
     ActivityResultLauncher<Intent> activityResultLauncher;
     Context context;
@@ -75,7 +65,7 @@ public class EditItemActivity extends AppCompatActivity {
         int itemID = intent.getIntExtra("itemID", 1);
         String itemName = intent.getStringExtra("itemName");
         int itemHearts = intent.getIntExtra("itemHearts", 0);
-        int itemPrice = intent.getIntExtra("itemPrice", 0);
+        double itemPrice = intent.getDoubleExtra("itemPrice", 0.0);
         String itemDes = intent.getStringExtra("itemDes");
         if(Objects.equals(itemDes, "null")){ itemDes = "";}
         String img = intent.getStringExtra("itemImg");
@@ -97,15 +87,11 @@ public class EditItemActivity extends AppCompatActivity {
         descriptionET.setText(item.getDescription());
         Log.d("itemDes", item.getDescription());
         priceET.setText(String.valueOf(item.getPrice()));
-        Log.d("itemImg", "Img is null" + (img.equals("null")));
+        Log.d("itemImg", "Img is null");
 
-        if(img.equals("null") || img == null){
-//            File file = new File(img);
-//            Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
-//            imgView.setImageBitmap(getBitMap);
+        if(img == null){
             imgView.setImageResource(R.drawable.click1);
-        }
-        else{
+        } else{
             if(img.contains("/")){
                 //get bitmap
                 File file = new File(img);
@@ -148,15 +134,7 @@ public class EditItemActivity extends AppCompatActivity {
         String finalItemFSID = itemFSID;
         saveButton.setOnClickListener(view -> {
             try{
-                String date;
                 Date dateObj = new Date();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    date = LocalDate.now().toString();
-                } else {
-                    @SuppressLint("SimpleDateFormat") DateFormat dateFormat
-                            = new SimpleDateFormat("yyyy-MM-dd");
-                    date = dateFormat.format(dateObj);
-                }
                 String fileName = dateObj.getTime() + ".jpg";
 
                 FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -187,7 +165,7 @@ public class EditItemActivity extends AppCompatActivity {
                 String newName = String.valueOf(nameET.getText());
                 String newDescription = String.valueOf(descriptionET.getText());
                 Log.d("newDes", newDescription);
-                Double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
+                double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
                 int newRating = (int) ratingBar.getRating();
                 String newLink = String.valueOf(linkET.getText());
 
