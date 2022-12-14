@@ -86,6 +86,7 @@ public class FriendCompactViewFragment extends Fragment {
 //            //get fire store collection wishlist items
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         DocumentReference userRef = fireStore.collection("users").document(friend_id);
+        Log.d("friendCompactView", "friendId " + friend_id);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);
 
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

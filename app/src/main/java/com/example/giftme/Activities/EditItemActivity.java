@@ -150,21 +150,31 @@ public class EditItemActivity extends AppCompatActivity {
                 dataBaseHelper.storeImageFirebase(bitmap, fileName);
 
                 String newName = String.valueOf(nameET.getText());
-                String newDescription = String.valueOf(descriptionET.getText());
-                Log.d("newDes", newDescription);
-                int newPrice = Integer.parseInt(String.valueOf(priceET.getText()));
+                String newDescription = "";
+                if(String.valueOf(descriptionET.getText()).length() > 100){
+                    Toast.makeText(context, "Too much info in description!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    newDescription = String.valueOf(descriptionET.getText());
+                }
+                Log.d("newDes", "NEWDES IN TRY " + newDescription);
+                Log.d("NEWIMG", "TESTING1");
+                double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
+                Log.d("NEWIMG", "TESTING2");
                 int newRating = (int) ratingBar.getRating();
+                Log.d("NEWIMG", "TESTING3");
                 String newLink = String.valueOf(linkET.getText());
+                Log.d("NEWIMG", "TESTING4");
                 if(!newLink.isEmpty()){
+                    Log.d("NEWIMG", "TESTING INSIDE IF");
                     if(!newLink.contains("http")){
+                        Log.d("NEWIMG", "TESTING INSIDE IF 2");
                         Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
                     }
                 }
-                else{
-
-                }
+                Log.d("NEWIMG", "TESTING");
                 String newImg = context.getApplicationContext().getFilesDir() + "/" + fileName;
-
+                Log.d("NEWIMG", newImg);
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
                         newDescription, newRating, newImg, finalItemFsID);
                 Log.d("editItem", "firestoreID of item " + finalItemFsID);
@@ -172,11 +182,17 @@ public class EditItemActivity extends AppCompatActivity {
 
                 Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
                 myCollectionItemsIntent.putExtra("collection_name", collectionName);
-                finish();
                 startActivity(myCollectionItemsIntent);
+                finish();
             }catch(Exception e){
                 String newName = String.valueOf(nameET.getText());
-                String newDescription = String.valueOf(descriptionET.getText());
+                String newDescription = "";
+                if(String.valueOf(descriptionET.getText()).length() > 100){
+                    Toast.makeText(context, "Too much info in description!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    newDescription = String.valueOf(descriptionET.getText());
+                }
                 Log.d("newDes", newDescription);
                 double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
                 int newRating = (int) ratingBar.getRating();
@@ -193,8 +209,8 @@ public class EditItemActivity extends AppCompatActivity {
 
                 Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
                 myCollectionItemsIntent.putExtra("collection_name", collectionName);
-                finish();
                 startActivity(myCollectionItemsIntent);
+                finish();
             }
         });
 
