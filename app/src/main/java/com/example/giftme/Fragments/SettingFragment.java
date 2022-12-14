@@ -10,46 +10,38 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
-import com.example.giftme.Activities.FriendCollectionItems;
-import com.example.giftme.Activities.MainActivity;
+import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Helpers.SessionManager;
+import com.example.giftme.R;
 import com.example.giftme.Settings.FAQ;
 import com.example.giftme.Settings.PrivacyPolicy;
-import com.example.giftme.R;
-import com.example.giftme.Helpers.SessionManager;
-import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Settings.Support;
 import com.example.giftme.Settings.TermsUse;
-import com.example.giftme.Settings.ThemeStore;
-import com.example.giftme.Settings.User_Profile;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -70,6 +62,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,20 +72,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         // initialize switch variable
         SwitchMaterial mode_switch = view.findViewById(R.id.switch0);
         TextView mode = view.findViewById(R.id.mode);
-//        Objects.requireNonNull(getSupportActionBar()).setTitle("Light/Dark Mode Switch");
 
         // switch
-        mode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    mode.setText("Dark Mode");
-                }else{
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    mode.setText("Light Mode");
-                }
+        mode_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                mode.setText("Dark Mode");
+            }else{
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                mode.setText("Light Mode");
             }
         });
 
@@ -179,7 +167,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
                 collectionIds.add(cursor.getString(0));
-//                //if this isn't the friend's wishlist
+                //if this isn't the friend's wishlist
                 if (cursor.getBlob(3) == null) {
                     collectionIds.add(cursor.getString(0));
                 }
@@ -281,60 +269,55 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         Log.d("debugging::", "firebaseAuthWithGoogle: " + authCredential.getProvider());
         firebaseAuth.signInWithCredential(authCredential)
-                .addOnCompleteListener(requireActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("debugging::", "onComplete: " + task.isSuccessful());
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            Log.d("debugging::", "firebaseAuth: " + user.getEmail());
-                            Log.d("debugging::", "firebaseAuth: " + user.getDisplayName());
-                            Log.d("debugging::", "firebaseAuth: " + user.getIdToken(true));
-                            // after connecting the account to firebase, pass the info to the next activity
-                            // navigateToSecondActivity();
+                .addOnCompleteListener(requireActivity(), task -> {
+                    Log.d("debugging::", "onComplete: " + task.isSuccessful());
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        Log.d("debugging::", "firebaseAuth: " + user.getEmail());
+                        Log.d("debugging::", "firebaseAuth: " + user.getDisplayName());
+                        Log.d("debugging::", "firebaseAuth: " + user.getIdToken(true));
+                        // after connecting the account to firebase, pass the info to the next activity
+                        // navigateToSecondActivity();
 
-                            SessionManager.setSession(getContext(), user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
-                            settingUserNameTV.setText(SessionManager.getUserName(getContext()));
-                            
-                            dataBaseHelper.checkUserExists(user.getEmail(), new DataBaseHelper.UserExists() {
-                                public void onCallback(boolean exists) {
-                                    if (exists) {
-                                        Log.d("debugging::", "user exists");
-                                        // if the user already exists in the database, then just update the user's email
-                                        dataBaseHelper.setUserEmail(user.getEmail());
-                                        //gets Collections from User
-                                        dataBaseHelper.getCollectionsFromUser(user.getEmail());
+                        SessionManager.setSession(getContext(), user.getEmail(), user.getDisplayName(), Objects.requireNonNull(user.getPhotoUrl()).toString());
+                        settingUserNameTV.setText(SessionManager.getUserName(getContext()));
 
-                                        getAllMyCollection();
-                                        listener.updateData(true);
+                        dataBaseHelper.checkUserExists(user.getEmail(), exists -> {
+                            if (exists) {
+                                Log.d("debugging::", "user exists");
+                                // if the user already exists in the database, then just update the user's email
+                                dataBaseHelper.setUserEmail(user.getEmail());
+                                //gets Collections from User
+                                dataBaseHelper.getCollectionsFromUser(user.getEmail());
+
+                                getAllMyCollection();
+                                listener.updateData(true);
 
 //                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                                    } else {
-                                        Log.d("debugging::", "user does not exist");
-                                        dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
-                                    }
-                                    dataBaseHelper.setDeviceMessagingToken(user.getEmail());
-                                    getAllCollection();
-                                    listener.updateData(true);
-                                }
-                            });
-
-                            if (!SessionManager.getUserPFP(getContext()).equals("")) {
-                                Picasso.get().load(SessionManager.getUserPFP(getContext()))
-                                        .transform(new CropCircleTransformation())
-                                        .into(pfpIV);
+                            } else {
+                                Log.d("debugging::", "user does not exist");
+                                dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
                             }
+                            dataBaseHelper.setDeviceMessagingToken(user.getEmail());
+                            getAllCollection();
+                            listener.updateData(true);
+                        });
 
-                            if (signInButton.getVisibility() == View.VISIBLE) {
-                                signInButton.setVisibility(View.GONE);
-                            }
-                            if (signOutButton.getVisibility() == View.GONE) {
-                                signOutButton.setVisibility(View.VISIBLE);
-                            }
-
-                        } else {
-                            Log.d("debugging::", "firebaseAuth failed: " + task.getException().getMessage());
+                        if (!SessionManager.getUserPFP(getContext()).equals("")) {
+                            Picasso.get().load(SessionManager.getUserPFP(getContext()))
+                                    .transform(new CropCircleTransformation())
+                                    .into(pfpIV);
                         }
+
+                        if (signInButton.getVisibility() == View.VISIBLE) {
+                            signInButton.setVisibility(View.GONE);
+                        }
+                        if (signOutButton.getVisibility() == View.GONE) {
+                            signOutButton.setVisibility(View.VISIBLE);
+                        }
+
+                    } else {
+                        Log.d("debugging::", "firebaseAuth failed: " + task.getException().getMessage());
                     }
                 });
     }
