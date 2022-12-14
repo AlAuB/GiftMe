@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/items_row"
     android:layout_width="match_parent"
@@ -35,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="5dp"
                 android:text=""
                 android:textSize="20sp" />
 
@@ -47,7 +49,7 @@
                 android:layout_marginBottom="8dp"
                 android:gravity="center_vertical"
                 android:text=""
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:textStyle="normal" />
 
             <RatingBar
@@ -66,7 +68,7 @@
                 android:scaleX=".4"
                 android:scaleY=".4"
                 android:stepSize="0.5"
-                android:transformPivotX="5dp"
+                android:transformPivotX="15dp"
                 android:transformPivotY="10dp" />
                     
             <TextView

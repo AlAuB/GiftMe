@@ -240,7 +240,11 @@ public class WishlistMyCollectionData extends Fragment {
                 myWishlistCollectionRecycleAdapter.notifyItemChanged(position);
             }
         });
-        builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+        builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
+            dialogInterface.cancel();
+            myWishlistCollectionRecycleAdapter.notifyItemChanged(position);
+        });
+        builder.setCancelable(false);
         builder.create().show();
     }
 

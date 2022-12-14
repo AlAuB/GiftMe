@@ -96,7 +96,7 @@ public class EditItemActivity extends AppCompatActivity {
 //            File file = new File(img);
 //            Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
 //            imgView.setImageBitmap(getBitMap);
-            imgView.setImageResource(R.drawable.click1);
+            imgView.setImageResource(R.drawable.black_text);
         }
         else{
             if(!img.contains("/firebasestorage")){
@@ -167,9 +167,7 @@ public class EditItemActivity extends AppCompatActivity {
                 myCollectionItemsIntent.putExtra("collection_name", collectionName);
                 finish();
                 startActivity(myCollectionItemsIntent);
-
             }catch(Exception e){
-
                 String newName = String.valueOf(nameET.getText());
                 String newDescription = String.valueOf(descriptionET.getText());
                 Log.d("newDes", newDescription);

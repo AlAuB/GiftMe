@@ -23,7 +23,6 @@ import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

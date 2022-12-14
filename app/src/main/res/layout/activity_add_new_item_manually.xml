@@ -96,7 +96,7 @@
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
-        app:srcCompat="@drawable/click1"
+        app:srcCompat="@drawable/black_text"
         android:contentDescription="@string/image_for_current_item" />
 
     <RatingBar

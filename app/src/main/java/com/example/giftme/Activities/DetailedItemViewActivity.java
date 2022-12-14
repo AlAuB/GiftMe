@@ -47,19 +47,26 @@ public class DetailedItemViewActivity extends AppCompatActivity {
 
         double itemPrice = intent.getDoubleExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
-        if(itemDes.equals("null")){ itemDes = "";}
+        if (itemDes.equals("null")) {
+            itemDes = "";
+        }
         Log.d("itemDes", "itemDes is null " + itemDes.equals(""));
         Log.d("itemDesDetailed", itemDes);
 
         String img = intent.getStringExtra("itemImg");
         String itemURL = intent.getStringExtra("itemURL");
-        if(Objects.equals(itemURL, "null")){ itemDes = "";}
+        if (Objects.equals(itemURL, "null")) {
+            itemDes = "";
+        }
         String itemDate = intent.getStringExtra("itemDate");
-        if(Objects.equals(itemDate, "null")){ itemDate = "";}
+        if (Objects.equals(itemDate, "null")) {
+            itemDate = "";
+        }
         String collectionName = intent.getStringExtra("collectionName");
-        String itemFsID = intent.getStringExtra("itemFsID");
-        Log.d("detailItem", "firestoreID from intent" + itemFsID);
-        if(Objects.equals(itemFsID, "null")){ itemFsID = "";}
+        String itemFSID = intent.getStringExtra("itemFSID");
+        if (Objects.equals(itemFSID, "null")) {
+            itemFSID = "";
+        }
 
         //(re)create item obj
         Item item = new Item(itemID, itemURL, itemName, itemHearts, itemPrice,
@@ -84,27 +91,27 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         dateTV.setText(itemDate);
 
         String imgUrl = item.getImg();
-        if( imgUrl == null || imgUrl.toLowerCase() == null) {
+        if (imgUrl == null || imgUrl.toLowerCase() == null) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
-        } else{
-            if(imgUrl.contains("/")){
+        } else {
+            if (imgUrl.contains("/")) {
                 //get bitmap
                 File file = new File(imgUrl);
                 Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 itemImageView.setImageBitmap(getBitMap);
-            } else{
+            } else {
                 //use link from firestore storage
                 Picasso.get().load(imgUrl).into(itemImageView);
             }
         }
         shopButton = findViewById(R.id.button_shop);
-        shopButton.setOnClickListener(view ->{
+        shopButton.setOnClickListener(view -> {
             //if there is no link
-            if ((itemURL == null) || (itemURL.equals("null")) || (itemURL.isEmpty())){
-                    Toast.makeText(this, "There is no link", Toast.LENGTH_SHORT).show();
+            if ((itemURL == null) || (itemURL.equals("null")) || (itemURL.isEmpty())) {
+                Toast.makeText(this, "There is no link", Toast.LENGTH_SHORT).show();
             }
             //if there is a link
-            else{
+            else {
                 Log.d("itemURL", itemURL);
 //                Intent shopIntent = new Intent(Intent.ACTION_VIEW);
 //                shopIntent.setData(Uri.parse(itemURL));
@@ -115,7 +122,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         });
 
         editButton = findViewById(R.id.button_edit);
-        String finalItemFsID = itemFsID;
+        String finalItemFSID = itemFSID;
         editButton.setOnClickListener(view -> {
             Intent newIntent = new Intent(this, EditItemActivity.class);
             //put in name, price description, hearts, and link etc
@@ -126,20 +133,19 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("itemURL", item.getWebsite());
             newIntent.putExtra("itemDes", item.getDescription());
             newIntent.putExtra("itemImg", item.getImg());
-            newIntent.putExtra("itemFsID", finalItemFsID);
-            Log.d("detailItem", "firestoreID to pass " + finalItemFsID);
+            newIntent.putExtra("itemFSID", finalItemFSID);
             newIntent.putExtra("collectionName", collectionName);
-            startActivity(newIntent);
             finish();
+            startActivity(newIntent);
         });
         deleteButton = findViewById(R.id.button_delete);
-        deleteButton.setOnClickListener(view->{
+        deleteButton.setOnClickListener(view -> {
             Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
             myCollectionItemsIntent.putExtra("collection_name", collectionName);
             finish();
             startActivity(myCollectionItemsIntent);
             dataBaseHelper = new DataBaseHelper(this);
-            dataBaseHelper.deleteItem(String.valueOf(item.getId()),collectionName);
+            dataBaseHelper.deleteItem(String.valueOf(item.getId()), collectionName);
         });
 
     }
