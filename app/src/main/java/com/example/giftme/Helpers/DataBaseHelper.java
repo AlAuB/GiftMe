@@ -293,7 +293,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             item.setHearts(0);
         }
         if (map.get("price") != null) {
-            item.setPrice(Math.toIntExact(((Long) map.get("price"))));
+            final Object object = map.get("price");
+            final double d = ((Number) object).doubleValue() ;
+            item.setPrice( d );
         } else {
             item.setPrice(0);
         }
