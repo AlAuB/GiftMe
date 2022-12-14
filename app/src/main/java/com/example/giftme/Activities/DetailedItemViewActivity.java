@@ -124,8 +124,8 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         backButton.setOnClickListener((view -> {
             Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
             myCollectionItemsIntent.putExtra("collection_name", collectionName);
-            finish();
             startActivity(myCollectionItemsIntent);
+            finish();
         }));
 
         editButton = findViewById(R.id.button_edit);
