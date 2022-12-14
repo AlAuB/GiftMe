@@ -220,6 +220,55 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "insertItemIntoCollection: " + sqlInsert);
         db.execSQL(sqlInsert);
 
+        String fullImgPath = item.getImg();
+        String imgPathFS;
+        if (fullImgPath != null) {
+            String[] imgPath = fullImgPath.split("/");
+            imgPathFS = imgPath[imgPath.length-1];
+        }
+        else {
+            imgPathFS = null;
+        }
+        item.setImg(imgPathFS);
+        // generate a map object to put into firestore
+        Map<String, Object> firestoreItem = convertItemIntoMap(item);
+
+        String sqlSelect =
+                "select " + FIRESTORE_ID + " from "
+                        + TABLE_NAME + " where "
+                        + COLUMN_NAME + " = '" + collection + "'";
+        Cursor cursor = db.rawQuery(sqlSelect, null);
+        if (cursor.moveToFirst()) {
+            Log.d(TAG, "insertItemIntoCollection: " + cursor.getString(0) + " " + userEmail);
+            DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
+            DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(cursor.getString(0));
+            collectionDocIdRef.set(firestoreItem, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
+        }
+        cursor.close();
+    }
+
+
+    /**
+     * insert (new) item to [Collection] table from FireStore (image path needs to be treated differently)
+     **/
+    public void insertItemIntoCollectionFromFireStore(String collection, Item item) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String sqlInsert = "insert into " + "'" + collection + "'";
+        sqlInsert += " values( null, '" + item.getWebsite()
+                + "', '" + item.getName()
+                + "', '" + item.getHearts()
+                + "', '" + item.getPrice()
+                + "', '" + item.getDescription()
+                + "', '" + item.getDate()
+                + "', '" + item.getImg()
+                + "', '" + item.getClaimed()
+                + "', '" + item.getFireStoreID() + "' )";
+        Log.d(TAG, "insertItemIntoCollection: " + sqlInsert);
+        db.execSQL(sqlInsert);
+
         // generate a map object to put into firestore
         Map<String, Object> firestoreItem = convertItemIntoMap(item);
 
@@ -263,14 +312,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         itemMap.put("description", item.getDescription());
         itemMap.put("date", item.getDate());
         itemMap.put("img", item.getImg());
-        String fullImgPath = item.getImg();
-        if (fullImgPath != null) {
-            String[] imgPath = fullImgPath.split("/");
-            itemMap.put("img", imgPath[imgPath.length - 1]);
-        }
-        else {
-            itemMap.put("img", null);
-        }
         itemMap.put("claimed", item.getClaimed());
         Log.d(TAG, "convertItemIntoMap: " + item.getFireStoreID());
         nestedItemMap.put(item.getFireStoreID(), itemMap);
@@ -349,7 +390,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                                                     if (value instanceof HashMap) {
                                                                         Item currentItem = convertMapIntoItem((Map<String, Object>) value, key);
                                                                         Log.d("ITEM", currentItem.toString());
-                                                                        insertItemIntoCollection(collectionName, currentItem);
+                                                                        insertItemIntoCollectionFromFireStore(collectionName, currentItem);
                                                                     }
                                                                 }
                                                         );

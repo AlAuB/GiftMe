@@ -23,6 +23,7 @@ import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -111,8 +112,7 @@ public class AddNewItemManually extends AppCompatActivity {
                     item.setDescription(itemExtraInfo);
                     item.setHearts((int) ratingBar.getRating());
                     item.setPrice(Integer.parseInt(itemPrice));
-//                    item.setImg(context.getApplicationContext().getFilesDir() + "/" + fileName);
-                    item.setImg(fileName);
+                    item.setImg(context.getApplicationContext().getFilesDir() + "/" + fileName);
                     Log.d("debug::", "onCreate: " + item.getImg());
                     dataBaseHelper.insertItemIntoCollection(collectionName, item);
                     Intent intent = new Intent(context, MyCollectionItems.class);

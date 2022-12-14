@@ -68,21 +68,31 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
         }
         else{
-            String[] imgUri = new String[1];
-            String path = "images/" + SessionManager.getUserEmail(context) + "/" + imgUrl;
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            StorageReference mountainsRef = storageRef.child(path);
-            mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                // Got the download URL for 'users/me/profile.png'
-                imgUri[0] = uri.toString();
-                Log.d("insideIf", "URI: " + imgUri[0]);
-                Picasso.get().load(imgUri[0]).into(holder.imageView);
+            if(imgUrl.contains("/")) {
+                //use bitmap
+                File file = new File(imgUrl);
+                Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                holder.imageView.setImageBitmap(getBitMap);
+            }
+            else{
+                //use the image stored in firestore storage
+                String[] imgUri = new String[1];
+                String path = "images/" + SessionManager.getUserEmail(context) + "/" + imgUrl;
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+                StorageReference mountainsRef = storageRef.child(path);
+                mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Got the download URL for 'users/me/profile.png'
+                    imgUri[0] = uri.toString();
+                    Log.d("insideIf", "URI: " + imgUri[0]);
+                    Picasso.get().load(imgUri[0]).into(holder.imageView);
 
-            }).addOnFailureListener(exception -> {
-                // Handle any errors
-                Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
-            });
+                }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+                });
+
+            }
         }
 
         holder.ratingBar.setRating(item.getHearts());
@@ -94,32 +104,37 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
             intent.putExtra("itemDes", item.getDescription());
+            intent.putExtra("itemLink", item.getWebsite());
+            intent.putExtra("itemDate", item.getDate());
+            intent.putExtra("itemFsID", item.getFireStoreID());
             //get image ------------------------------------------------------------
             if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             }
             else{
-                String[] imgUri = new String[1];
-                String path = "images/" + SessionManager.getUserEmail(context) + "/" + imgUrl;
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference();
-                StorageReference mountainsRef = storageRef.child(path);
-                mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    // Got the download URL for 'users/me/profile.png'
-                    imgUri[0] = uri.toString();
-
-                    intent.putExtra("itemImg", imgUri[0]);
-                    intent.putExtra("itemLink", item.getWebsite());
-                    intent.putExtra("itemDate", item.getDate());
-                    intent.putExtra("itemFsID", item.getFireStoreID());
-
-                    this.activity.startActivity(intent);
-                }).addOnFailureListener(exception -> {
-                    // Handle any errors
-                    Log.d("DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
-                });
+                if(imgUrl.contains("/") ){
+                    //
+                    intent.putExtra("itemImg", imgUrl);
+                }
+                else{
+                    String[] imgUri = new String[1];
+                    String path = "images/" + SessionManager.getUserEmail(context) + "/" + imgUrl;
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReference();
+                    StorageReference mountainsRef = storageRef.child(path);
+                    mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        // Got the download URL for 'users/me/profile.png'
+                        imgUri[0] = uri.toString();
+                        intent.putExtra("itemImg", imgUri[0]);
+                    }).addOnFailureListener(exception -> {
+                        // Handle any errors
+                        Log.d("DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+                    });
+                }
             }
             //get img end --------------------------------------------------------------------
+            this.activity.startActivity(intent);
+
         });
     }
 

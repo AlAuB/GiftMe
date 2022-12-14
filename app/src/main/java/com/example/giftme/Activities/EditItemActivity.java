@@ -23,7 +23,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -77,10 +80,7 @@ public class EditItemActivity extends AppCompatActivity {
         if(Objects.equals(itemDes, "null")){ itemDes = "";}
         String img = intent.getStringExtra("itemImg");
         String itemURL = intent.getStringExtra("itemURL");
-        if(itemURL.equals("null")){
-            itemURL = "";
-        }
-        if(Objects.equals(itemURL, "null")){ itemDes = "";}
+        if(Objects.equals(itemURL, "null")){ itemURL = "";}
         String itemDate = intent.getStringExtra("itemDate");
         if(Objects.equals(itemDate, "null")){ itemDate = "";}
         String itemFSID = intent.getStringExtra("itemFSID");
@@ -106,8 +106,16 @@ public class EditItemActivity extends AppCompatActivity {
             imgView.setImageResource(R.drawable.click1);
         }
         else{
-            Log.d("itemImage", item.getImg());
-            Picasso.get().load(item.getImg()).into(imgView);
+            if(img.contains("/")){
+                //get bitmap
+                File file = new File(img);
+                Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                imgView.setImageBitmap(getBitMap);
+            }
+            else{
+                //use link from firestore storage
+                Picasso.get().load(img).into(imgView);
+            }
         }
 
         //get link

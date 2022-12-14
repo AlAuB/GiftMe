@@ -18,7 +18,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -84,8 +87,23 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         ratingBar.setRating(itemHearts);
         dateTV.setText(itemDate);
 
-        Picasso.get().load(item.getImg()).into(itemImageView);
+        String imgUrl = item.getImg();
+        if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+            Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+        }
+        else{
+            if(imgUrl.contains("/")){
+                //get bitmap
+                File file = new File(imgUrl);
+                Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                itemImageView.setImageBitmap(getBitMap);
+            }
+            else{
+                //use link from firestore storage
+                Picasso.get().load(imgUrl).into(itemImageView);
+            }
 
+        }
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view ->{
             //if there is no link
