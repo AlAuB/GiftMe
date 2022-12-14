@@ -316,7 +316,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                                         Log.d("debugging::", "user does not exist");
                                         dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
                                     }
-//                                    dataBaseHelper.setDeviceMessagingToken(user.getEmail());
+                                    dataBaseHelper.setDeviceMessagingToken(user.getEmail());
                                     getAllMyCollection();
                                     listener.updateData(true);
                                 }

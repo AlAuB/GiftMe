@@ -111,8 +111,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ITEM_URL + " TEXT, " +
                 ITEM_NAME + " TEXT, " +
-                ITEM_HEARTS + " REAL, " +
-                ITEM_PRICE + " INTEGER, " +
+                ITEM_HEARTS + " INTEGER, " +
+                ITEM_PRICE + " REAL, " +
                 ITEM_DESCRIPTION + " TEXT, " +
                 ITEM_DATE + " TEXT, " +
                 ITEM_IMAGE + " INTEGER, " +
@@ -189,10 +189,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, "getDeviceMessagingToken: " + token);
             Map<String, Object> deviceMessagingToken = new HashMap<>();
             deviceMessagingToken.put("deviceMessagingToken", token);
-//            DocumentReference docRef = fireStore.collection("users").document(email);
-//            docRef.set(deviceMessagingToken, SetOptions.merge())
-//                    .addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created"))
-//                    .addOnFailureListener(e -> Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage()));
+            DocumentReference docRef = fireStore.collection("users").document(email);
+            docRef.set(deviceMessagingToken, SetOptions.merge())
+                    .addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created"))
+                    .addOnFailureListener(e -> Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage()));
         });
     }
 
@@ -269,16 +269,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public Item convertMapIntoItem(Map<String, Object> map,  String itemID){
         Item item = new Item();
         item.setName(String.valueOf(map.get("name")));
-        item.setHearts(Math.toIntExact((Long) map.get("hearts")));
-        //        item.setHearts((int) ((Double)map.get("hearts")).floatValue());
-        item.setPrice(Math.toIntExact(((Long) map.get("price"))));
+        if (map.get("hearts") != null) {
+            item.setHearts((Integer) map.get("hearts"));
+        } else {
+            item.setHearts(0);
+        }
+        if (map.get("price") != null) {
+            item.setPrice(Math.toIntExact(((Long) map.get("price"))));
+        } else {
+            item.setPrice(0);
+        }
         item.setDescription((String) map.get("description"));
         item.setDate((String) map.get("date"));
         item.setImg((String) map.get("img"));
         item.setClaimed((Boolean) map.get("claimed"));
         item.setWebsite((String) map.get("url"));
         item.setKnownFireStoreID(itemID);
-        //        item.setKnownTableID(wishlistID);
         return item;
     }
 
@@ -309,7 +315,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-//                                wishlistIDs.add(document.getId());
                                 String collectionName = (String) document.getData().get("Collection Name");
                                 String friendID = (String) document.getData().get("Friend ID");
                                 String collectionID = document.getId();

@@ -47,6 +47,7 @@
     <style name="CustomRatingBarStyle" parent="Widget.AppCompat.RatingBar">
         <item name="android:progressDrawable">@drawable/custom_rating_bar</item>
         <item name="android:numStars">5</item>
+        <item name="android:stepSize">1</item>
     </style>
 
 </resources>
