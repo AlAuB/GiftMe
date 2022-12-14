@@ -48,7 +48,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         String itemName = intent.getStringExtra("itemName");
         int itemHearts = intent.getIntExtra("itemHearts", 0);
 
-        int itemPrice = intent.getIntExtra("itemPrice", 0);
+        double itemPrice = intent.getDoubleExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
         if(itemDes.equals("null")){ itemDes = "";}
         Log.d("itemDes", "itemDes is null " + itemDes.equals(""));
