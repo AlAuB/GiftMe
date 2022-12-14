@@ -76,7 +76,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
         userEmail = SessionManager.getUserEmail(context);
-        setDeviceMessagingToken(userEmail);
+        if (!userEmail.equals("") && userEmail != null) {
+            setDeviceMessagingToken(userEmail);
+        }
     }
 
     @Override
