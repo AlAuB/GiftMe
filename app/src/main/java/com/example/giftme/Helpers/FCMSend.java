@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class FCMSend {
 
-    private static final String SERVER_KEY = "key=AAAAY_8GetM:APA91bHl4FSbF2U5j65sxWZZYv95Jwqm8nPVZgN1PQQrJluSbbcCInhicPDfmvKZ4BenXcsmewIe-I14qj5DcyqFDVzQOylXpq5GUttXzxEE2fvjbNLBVrZf0zd9jeKPLv8uVhtsQ5RP";
+    private static final String SERVER_KEY = "key=AAAA7Q2YLNo:APA91bFirZ40hQq3LWeYQwvR2w5g-7_MeJuvrUGS28YRwdXWHoJojswAdBP_kCo5Rx5-uk8UUWgrZFbFCLAXCXV2HShbdEia4UESM19lgaw_it87_0BFA7DYT-hwerKKVZ5VOlp32z1G";
     private static final String BASE_URL = "https://fcm.googleapis.com/fcm/send";
     private static final String CONTENT_TYPE = "application/json";
 

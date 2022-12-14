@@ -54,7 +54,6 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
             String email = SessionManager.getUserEmail(getApplicationContext());
             String collectionID = dataBaseHelper.getCollectionFireStoreId(collection_name);
             Uri link = Uri.parse(DEEP_LINK_URL + "/?data=" + email + " " + collectionID);
-            System.out.println("collectionID is: " + collectionID);
             shareDeepLink(buildDynamicLink(link).toString());
         });
 

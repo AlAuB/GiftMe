@@ -12,9 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.giftme.Adapters.FriendItemsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -56,7 +54,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String FIRESTORE_ID = "firestore_id";
     private final FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
-    private static final String COLLECTIONS_USERS = "users"; //this should be changed to 'users'
+    private static final String COLLECTIONS_USERS = "users";
     private static final String COLLECTIONS_WISHLISTS = "wishlists";
 
 
@@ -212,7 +210,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (fullImgPath != null) {
             imgPath = fullImgPath.split("/");
         }
-        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length-1]);
+        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length - 1]);
         Log.d("imgURL", "IMGURL: " + imgURL);
 
         String sqlInsert = "insert into " + "'" + collection + "'";
@@ -256,8 +254,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sqlSelect, null);
         if (cursor.moveToFirst()) {
             return cursor.getString(0);
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -296,8 +293,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         if (map.get("price") != null) {
             final Object object = map.get("price");
-            final double d = ((Number) object).doubleValue() ;
-            item.setPrice( d );
+            final double d = ((Number) object).doubleValue();
+            item.setPrice(d);
         } else {
             item.setPrice(0);
         }
@@ -427,7 +424,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (fullImgPath != null) {
             imgPath = fullImgPath.split("/");
         }
-        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length-1]);
+        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length - 1]);
 //        Log.d("imgURL", "Img :" + imgURL);
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
@@ -806,7 +803,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 .collection(COLLECTIONS_WISHLISTS).document(getCollectionId(newName))
                 .update("Collection Name", newName);
     }
-
 
     public void storeImageFirebase(Bitmap bitmap, String name) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
