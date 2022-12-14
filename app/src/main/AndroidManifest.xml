@@ -110,7 +110,6 @@
             android:name=".Activities.ClaimFriendItemActivity"
             android:screenOrientation="portrait" />
 
-
         <service
             android:name=".Helpers.PushNotificationService"
             android:exported="false">

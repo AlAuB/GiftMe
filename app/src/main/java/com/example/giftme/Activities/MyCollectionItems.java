@@ -143,4 +143,11 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
     public void detailedViewUpdateItemNum(String count) {
         itemCount.setText(count);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+    }
 }

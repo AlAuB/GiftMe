@@ -53,8 +53,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:textAlignment="center"
-                />
+                android:textAlignment="center" />
+
             <Button
                 style="@style/settings_topics"
                 android:id="@+id/sign_out_button"
@@ -64,8 +64,7 @@
                 android:layout_marginTop="5dp"
                 android:textAlignment="center"
                 android:text="@string/logout"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
         </LinearLayout>
 
