@@ -41,4 +41,7 @@
     <string name="settings">Settings</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="logout">Logout</string>
+    <string name="image_icon">Image icon</string>
+    <string name="shop_now">Shop now</string>
+    <string name="delete">delete</string>
 </resources>

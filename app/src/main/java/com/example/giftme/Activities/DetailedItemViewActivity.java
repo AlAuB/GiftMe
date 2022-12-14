@@ -6,9 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.LogPrinter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -36,7 +34,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
     Button shopButton;
     Button editButton;
     Button deleteButton;
-    ImageButton backButton;
     ImageView itemImageView;
     DataBaseHelper dataBaseHelper;
 
@@ -79,6 +76,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         dateTV = findViewById(R.id.textView_date);
 
         String displayPrice = "$" + itemPrice;
+        itemDate = "Saved: " + itemDate;
 
         //set the views
         itemNameTV.setText(itemName);
@@ -88,7 +86,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         dateTV.setText(itemDate);
 
         String imgUrl = item.getImg();
-        if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+        if( imgUrl == null || imgUrl.toLowerCase() == null) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
         }
         else{
@@ -107,7 +105,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view ->{
             //if there is no link
-            if ((itemURL.equals(null)) || (itemURL.equals("null")) || (itemURL.equals("")) || (itemURL.isEmpty())){
+            if ((itemURL == null) || (itemURL.equals("null")) || (itemURL.isEmpty())){
                     Toast.makeText(this, "There is no link", Toast.LENGTH_SHORT).show();
             }
             //if there is a link
@@ -120,13 +118,13 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             }
         });
 
-        backButton = findViewById(R.id.imageButton_backToPrevious);
-        backButton.setOnClickListener((view -> {
-            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
-            myCollectionItemsIntent.putExtra("collection_name", collectionName);
-            startActivity(myCollectionItemsIntent);
-            finish();
-        }));
+//        backButton = findViewById(R.id.imageButton_backToPrevious);
+//        backButton.setOnClickListener((view -> {
+//            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
+//            myCollectionItemsIntent.putExtra("collection_name", collectionName);
+//            startActivity(myCollectionItemsIntent);
+//            finish();
+//        }));
 
         editButton = findViewById(R.id.button_edit);
         String finalItemFSID = itemFSID;
