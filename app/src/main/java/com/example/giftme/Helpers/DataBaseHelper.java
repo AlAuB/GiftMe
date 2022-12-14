@@ -223,9 +223,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String imgPathFS;
         if (fullImgPath != null) {
             String[] imgPath = fullImgPath.split("/");
-            imgPathFS = imgPath[imgPath.length-1];
-        }
-        else {
+            imgPathFS = imgPath[imgPath.length - 1];
+        } else {
             imgPathFS = null;
         }
         item.setImg(imgPathFS);
@@ -478,9 +477,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String imgPathFS;
         if (fullImgPath != null) {
             String[] imgPath = fullImgPath.split("/");
-            imgPathFS = imgPath[imgPath.length-1];
-        }
-        else {
+            imgPathFS = imgPath[imgPath.length - 1];
+        } else {
             imgPathFS = null;
         }
 
