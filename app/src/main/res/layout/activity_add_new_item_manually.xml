@@ -107,6 +107,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:stepSize="1"
         android:progressDrawable="@drawable/custom_rating_bar"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout

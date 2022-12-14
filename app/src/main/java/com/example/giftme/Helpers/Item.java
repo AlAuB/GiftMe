@@ -2,8 +2,6 @@ package com.example.giftme.Helpers;
 
 import androidx.annotation.NonNull;
 
-import android.util.Log;
-
 import java.util.UUID;
 
 public class Item {
@@ -12,7 +10,7 @@ public class Item {
     private int id;
     private String name;
     private int hearts;
-    private int price;
+    private double price;
     private String website;
     private String description;
     private String date;
@@ -36,7 +34,6 @@ public class Item {
         setDescription(newDescription);
         setDate(newDate);
         setImg(newImg);
-//        setClaimed(isClaimed);
         setFireStoreID();
     }
 
@@ -45,7 +42,7 @@ public class Item {
     public void setWebsite(String URL) {website = URL;}
     public void setName( String newName){ name = newName; }
     public void setHearts(int newHearts){ hearts = newHearts;}
-    public void setPrice(int newPrice){price = newPrice;}
+    public void setPrice(double newPrice){price = newPrice;}
     public void setDescription( String newDescription){description = newDescription;}
     public void setImg( String newImg){ img = newImg;}
     public void setDate(String newDate){ date = newDate;}
@@ -59,7 +56,7 @@ public class Item {
     public String getWebsite() {return website;}
     public String getName() {return name;}
     public int getHearts() {return hearts;}
-    public int getPrice() {return price;}
+    public double getPrice() {return price;}
     public String getDescription() {return description;}
     public String getDate(){return date;}
     public String getImg(){return img;}

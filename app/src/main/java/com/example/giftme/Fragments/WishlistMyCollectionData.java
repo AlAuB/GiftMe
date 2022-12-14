@@ -72,11 +72,11 @@ public class WishlistMyCollectionData extends Fragment {
         dataBaseHelper = new DataBaseHelper(this.getContext());
         collectionCount.setText(String.valueOf(collections.size()));
         getAllCollection();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerView.setHasFixedSize(true);
         myWishlistCollectionRecycleAdapter
                 = new MyWishlistCollectionRecycleAdapter(activity, this.getContext(), ids, collections);
         recyclerView.setAdapter(myWishlistCollectionRecycleAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerView.setHasFixedSize(true);
         //if user is logged in, then show their collections
         if (SessionManager.getUserStatus(context)) {
             signedInState();
@@ -158,6 +158,7 @@ public class WishlistMyCollectionData extends Fragment {
         recyclerView.setVisibility(View.VISIBLE);
         floatingActionButton.setVisibility(View.VISIBLE);
         collectionCount.setVisibility(View.VISIBLE);
+        emptyText.setText("");
         collectionCount.setText(String.valueOf(collections.size()));
         checkEmptyUI();
     }
