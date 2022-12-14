@@ -51,7 +51,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         String itemDes = intent.getStringExtra("itemDes");
         String img = intent.getStringExtra("itemImg");
         String date = intent.getStringExtra("itemDate");
-        String url = intent.getStringExtra("itemLink");
+        String url = intent.getStringExtra("itemURL");
 
         String friendID = intent.getStringExtra("friendID");
         String itemFsID = intent.getStringExtra("itemFsID");

@@ -106,9 +106,10 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             //if there is a link
             else{
                 Log.d("itemURL", itemURL);
-                Intent shopIntent = new Intent(Intent.ACTION_VIEW);
-                shopIntent.setData(Uri.parse(itemURL));
-                shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                Intent shopIntent = new Intent(Intent.ACTION_VIEW);
+//                shopIntent.setData(Uri.parse(itemURL));
+//                shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent shopIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(itemURL));
                 startActivity(shopIntent);
             }
         });
