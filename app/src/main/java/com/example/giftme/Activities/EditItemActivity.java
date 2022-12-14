@@ -82,12 +82,13 @@ public class EditItemActivity extends AppCompatActivity {
         String itemURL = intent.getStringExtra("itemURL");
         if(Objects.equals(itemURL, "null")){ itemURL = "";}
         String itemDate = intent.getStringExtra("itemDate");
-        if(Objects.equals(itemDate, "null")){ itemDate = "";}
-        String itemFSID = intent.getStringExtra("itemFSID");
-        if(Objects.equals(itemFSID, "null")){ itemFSID = "";}
+//        if(Objects.equals(itemDate, "null")){ itemDate = "";}
+        String itemFsID = intent.getStringExtra("itemFsID");
+        Log.d("editItem", "firestoreID from inten" + itemFsID);
+        if(Objects.equals(itemFsID, "null")){ itemFsID = "";}
 
         String collectionName = intent.getStringExtra("collectionName");
-        Log.d("debug::", "edit item activity: " + collectionName + " " + itemFSID);
+        Log.d("debug::", "edit item activity: " + collectionName + " " + itemFsID);
         //(re)create item obj
         Item item = new Item(itemID, itemURL, itemName, itemHearts, itemPrice,
                 itemDes, itemDate, img);
@@ -97,16 +98,17 @@ public class EditItemActivity extends AppCompatActivity {
         descriptionET.setText(item.getDescription());
         Log.d("itemDes", item.getDescription());
         priceET.setText(String.valueOf(item.getPrice()));
-        Log.d("itemImg", "Img is null" + (img.equals("null")));
+        Log.d("itemImg", "Img is null" + (item.getImg()==null));
 
-        if(img.equals("null") || img == null){
+        Log.d("itemImage", "Img " + img);
+        if(img == null || img.equals("null")){
 //            File file = new File(img);
 //            Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
 //            imgView.setImageBitmap(getBitMap);
             imgView.setImageResource(R.drawable.click1);
         }
         else{
-            if(img.contains("/")){
+            if(!img.contains("/firebasestorage")){
                 //get bitmap
                 File file = new File(img);
                 Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -145,7 +147,7 @@ public class EditItemActivity extends AppCompatActivity {
         imgView.setOnClickListener(view -> openGallery());
         //choose image end --------------
 
-        String finalItemFSID = itemFSID;
+        String finalItemFsID = itemFsID;
         saveButton.setOnClickListener(view -> {
             try{
                 String date;
@@ -174,7 +176,8 @@ public class EditItemActivity extends AppCompatActivity {
                 String newImg = context.getApplicationContext().getFilesDir() + "/" + fileName;
 
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                        newDescription, newRating, newImg, finalItemFSID);
+                        newDescription, newRating, newImg, finalItemFsID);
+                Log.d("editItem", "firestoreID of item " + finalItemFsID);
                 Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
 
                 Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
@@ -192,7 +195,8 @@ public class EditItemActivity extends AppCompatActivity {
                 String newLink = String.valueOf(linkET.getText());
 
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                        newDescription, newRating, item.getImg(), finalItemFSID);
+                        newDescription, newRating, item.getImg(), finalItemFsID);
+                Log.d("editItem", "firestoreID of item " + finalItemFsID);
                 Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
 
                 Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);

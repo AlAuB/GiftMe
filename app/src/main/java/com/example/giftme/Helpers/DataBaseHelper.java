@@ -453,13 +453,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d(TAG, "updateById: " + collection_name + " " + id + " " + name + " " + price + " " + description + " " + hearts + " " + img + " " + fireStoreId);
 
-        String fullImgPath = img;
-        String[] imgPath = new String[1];
-        if (fullImgPath != null) {
-            imgPath = fullImgPath.split("/");
-        }
-        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length - 1]);
-//        Log.d("imgURL", "Img :" + imgURL);
+//        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length - 1]);
+////        Log.d("imgURL", "Img :" + imgURL);
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
                 + " set " + ITEM_NAME + " = '" + name + "', "
@@ -467,7 +462,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + ITEM_URL + "= '" + url + "', "
                 + ITEM_PRICE + "= '" + price + "', "
                 + ITEM_DESCRIPTION + "= '" + description + "', "
-                + ITEM_IMAGE + "= '" + imgURL + "', "
+                + ITEM_IMAGE + "= '" + img + "', "
                 + FIRESTORE_ID + "= '" + fireStoreId + "' "
                 + "where " + ITEM_ID + "= " + id;
 
@@ -478,6 +473,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         + TABLE_NAME + " where "
                         + COLUMN_NAME + " = '" + collection_name + "'";
         Cursor cursor = db.rawQuery(sqlSelect, null);
+
+        String fullImgPath = img;
+        String imgPathFS;
+        if (fullImgPath != null) {
+            String[] imgPath = fullImgPath.split("/");
+            imgPathFS = imgPath[imgPath.length-1];
+        }
+        else {
+            imgPathFS = null;
+        }
+
         if (cursor.moveToFirst()) {
             DocumentReference userDocIdRef = fireStore.collection(COLLECTIONS_USERS).document(userEmail);
             DocumentReference collectionDocIdRef = userDocIdRef.collection(COLLECTIONS_WISHLISTS).document(cursor.getString(0));
@@ -487,7 +493,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             String descriptionField = fireStoreId + ".description";
             String heartsField = fireStoreId + ".hearts";
             String imgField = fireStoreId + ".img";
-            collectionDocIdRef.update(urlField, url, nameField, name, priceField, price, descriptionField, description, heartsField, hearts, imgField, img).addOnSuccessListener(new OnSuccessListener<Void>() {
+            collectionDocIdRef.update(urlField, url, nameField, name, priceField, price, descriptionField, description, heartsField, hearts, imgField, imgPathFS).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Log.d(TAG, "DocumentSnapshot successfully updated! " + cursor.getString(0) + " " + fireStoreId);
