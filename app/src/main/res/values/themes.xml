@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="settings_topics">

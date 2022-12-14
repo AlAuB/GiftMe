@@ -192,10 +192,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
                 collectionIds.add(cursor.getString(0));
-//                //if this isn't the friend's wishlist
-//                if (cursor.getBlob(3) == null) {
-//                    collectionIds.add(cursor.getString(0));
-//                }
             }
         }
     }
@@ -306,11 +302,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                                         Log.d("debugging::", "user exists");
                                         // if the user already exists in the database, then just update the user's email
                                         dataBaseHelper.setUserEmail(user.getEmail());
-
                                         //gets Collections from User
                                         dataBaseHelper.getCollectionsFromUser(user.getEmail());
                                         getAllMyCollection();
-                                        listener.updateData(true);
+//                                        listener.updateData(true);
 //                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                                     } else {
                                         Log.d("debugging::", "user does not exist");

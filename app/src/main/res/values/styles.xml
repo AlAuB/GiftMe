@@ -15,4 +15,9 @@
         <item name="android:paddingTop">2dp</item>
     </style>
 
+    <!-- Developer should create a style -->
+    <style name="noAnimTheme" parent="android:Theme">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
 </resources>

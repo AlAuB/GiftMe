@@ -326,7 +326,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public void getCollectionsFromUser(String userID) {
         DocumentReference userRef = fireStore.collection(COLLECTIONS_USERS).document(userID);
-        ArrayList<String> wishlistIDs = new ArrayList<>();
         userRef.collection(COLLECTIONS_WISHLISTS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
