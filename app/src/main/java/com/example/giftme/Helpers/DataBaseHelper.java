@@ -184,17 +184,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public void setDeviceMessagingToken(String email) {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.d(TAG, "getDeviceMessagingToken: failed to get token");
+            if (SessionManager.getUserStatus(context)) {
+                if (!task.isSuccessful()) {
+                    Log.d(TAG, "getDeviceMessagingToken: failed to get token");
+                }
+                String token = task.getResult();
+                Log.d(TAG, "getDeviceMessagingToken: " + token);
+                Map<String, Object> deviceMessagingToken = new HashMap<>();
+                deviceMessagingToken.put("deviceMessagingToken", token);
+                DocumentReference docRef = fireStore.collection("users").document(email);
+                docRef.set(deviceMessagingToken, SetOptions.merge())
+                        .addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created"))
+                        .addOnFailureListener(e -> Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage()));
             }
-            String token = task.getResult();
-            Log.d(TAG, "getDeviceMessagingToken: " + token);
-            Map<String, Object> deviceMessagingToken = new HashMap<>();
-            deviceMessagingToken.put("deviceMessagingToken", token);
-            DocumentReference docRef = fireStore.collection("users").document(email);
-            docRef.set(deviceMessagingToken, SetOptions.merge())
-                    .addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created"))
-                    .addOnFailureListener(e -> Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage()));
         });
     }
 
