@@ -2,18 +2,22 @@ package com.example.giftme.Fragments;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +37,8 @@ import org.checkerframework.checker.units.qual.A;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
 public class WishlistFriendCollectionData extends Fragment {
 
     View view1;
@@ -50,6 +56,9 @@ public class WishlistFriendCollectionData extends Fragment {
     ArrayList<String> friendImgs;
 
     DataBaseHelper dataBaseHelper;
+
+    ImageView emptyText;
+    TextView emptyImage;
 
     private static final String TABLE_NAME = "COLLECTIONS";
 
@@ -74,6 +83,9 @@ public class WishlistFriendCollectionData extends Fragment {
         friendIds = new ArrayList<>();
         friendNames = new ArrayList<>();
         friendImgs = new ArrayList<>();
+
+        emptyText = view1.findViewById(R.id.empty_text);
+        emptyImage = view1.findViewById(R.id.empty_icon);
 
         floatingActionButton1 = view1.findViewById(R.id.action1);
 
@@ -101,9 +113,41 @@ public class WishlistFriendCollectionData extends Fragment {
         recyclerView1.setHasFixedSize(true);
         FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collectionNames, collectionIDs, friendIds, friendNames, friendImgs);
         recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView1);
 
         return view1;
     }
+
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int position = viewHolder.getBindingAdapterPosition();
+            dataBaseHelper.deleteCollection(ids.get(position));
+            TextView textView = getActivity().findViewById(R.id.collectionCount1);
+            ids.clear();
+            collectionNames.clear();
+            //getAllCollection();
+            textView.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
+            FrWishlistCollectionRecycleAdapter.notifyItemRemoved(position);
+            //checkEmptyUI();
+        }
+
+        @Override
+        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                    .addBackgroundColor(ContextCompat.getColor(context1, android.R.color.holo_red_light))
+                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
+                    .addSwipeLeftLabel("Delete")
+                    .setSwipeLeftLabelColor(ContextCompat.getColor(context1, R.color.white))
+                    .create().decorate();
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+        }
+    };
 
     //getting the collection Name and inserting the collection into the COLLECTIONS table in SQLite
     //MAYBE RENAME TO ADD COLLECTION?
@@ -168,6 +212,32 @@ public class WishlistFriendCollectionData extends Fragment {
                     friendIds.add(cursor.getString(3));
                     friendImgs.add(cursor.getString(4));
                     collectionIDs.add(cursor.getString(5));
+                }
+            }
+        }
+    }
+
+    private void checkEmptyUI() {
+        if (collectionNames.isEmpty()) {
+            emptyImage.setVisibility(View.VISIBLE);
+            emptyText.setVisibility(View.VISIBLE);
+        } else {
+            emptyImage.setVisibility(View.GONE);
+            emptyText.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * Get all rows from database for Collection Table
+     */
+    private void getAllCollection() {
+        Cursor cursor = dataBaseHelper.readCollectionTableAllData(TABLE_NAME);
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                //if this isn't the friend's wishlist
+                if (cursor.getBlob(3) == null) {
+                    ids.add(cursor.getString(0));
+                    collectionNames.add(cursor.getString(1));
                 }
             }
         }
