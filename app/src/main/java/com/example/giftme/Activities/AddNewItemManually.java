@@ -111,7 +111,8 @@ public class AddNewItemManually extends AppCompatActivity {
                     item.setDescription(itemExtraInfo);
                     item.setHearts((int) ratingBar.getRating());
                     item.setPrice(Integer.parseInt(itemPrice));
-                    item.setImg(context.getApplicationContext().getFilesDir() + "/" + fileName);
+//                    item.setImg(context.getApplicationContext().getFilesDir() + "/" + fileName);
+                    item.setImg(fileName);
                     Log.d("debug::", "onCreate: " + item.getImg());
                     dataBaseHelper.insertItemIntoCollection(collectionName, item);
                     Intent intent = new Intent(context, MyCollectionItems.class);
