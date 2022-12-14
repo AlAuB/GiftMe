@@ -213,7 +213,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             imgPath = fullImgPath.split("/");
         }
         getDownloadUrlFirebase(userEmail, imgPath[imgPath.length-1]);
-        Log.d("imgURL", imgURL);
+        Log.d("imgURL", "IMGURL: " + imgURL);
 
         String sqlInsert = "insert into " + "'" + collection + "'";
         sqlInsert += " values( null, '" + item.getWebsite()

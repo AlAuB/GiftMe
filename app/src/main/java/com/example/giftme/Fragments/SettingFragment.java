@@ -304,13 +304,10 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                                         dataBaseHelper.setUserEmail(user.getEmail());
                                         //gets Collections from User
                                         dataBaseHelper.getCollectionsFromUser(user.getEmail());
-<<<<<<< HEAD
+
                                         getAllMyCollection();
-//                                        listener.updateData(true);
-=======
-                                        getAllCollection();
                                         listener.updateData(true);
->>>>>>> 9eab35124039588e11ca41b6229122d707bcbc21
+
 //                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                                     } else {
                                         Log.d("debugging::", "user does not exist");
