@@ -404,21 +404,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 +  "where " + ITEM_ID + "= " + id;
 
         db.execSQL(sqlUpdate);
-        Map<String, Object> firestoreItem = convertItemIntoMapWithDetail(name,price,description,hearts,img,fireStoreId);
-        String collectionID = getCollectionId(collection_name);
 
-        Log.d(TAG, "updateItemIntoCollection: " + collectionID + " " + userEmail);
-        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
-        DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(collectionID);
-        DocumentReference itemDocIdRef = collectionDocIdRef.collection(collectionID).document(fireStoreId);
+//        
+//        Map<String, Object> firestoreItem = convertItemIntoMapWithDetail(name,price,description,hearts,img,fireStoreId);
+//        String collectionID = getCollectionId(collection_name);
+//
+//        Log.d(TAG, "updateItemIntoCollection: " + collectionID + " " + userEmail);
+//        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
+//        DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(collectionID);
+//        DocumentReference itemDocIdRef = collectionDocIdRef.collection(collectionID).document(fireStoreId);
 
-        collectionDocIdRef.set(firestoreItem, SetOptions.merge())
-                .addOnSuccessListener(aVoid -> {
-                    Log.d(TAG, "DocumentSnapshot successfully updated!");
-                })
-                .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error updating document", e);
-                });
+        //collectionDocIdRef.set(firestoreItem, SetOptions.merge())
+        //        .addOnSuccessListener(aVoid -> {
+        //            Log.d(TAG, "DocumentSnapshot successfully updated!");
+        //        })
+        //        .addOnFailureListener(e -> {
+        //            Log.w(TAG, "Error updating document", e);
+        //        });
 
     }
     public Map<String, Object> convertItemIntoMapWithDetail(String name, int price, String description,
