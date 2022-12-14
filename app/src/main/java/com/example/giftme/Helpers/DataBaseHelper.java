@@ -200,7 +200,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         });
     }
 
-
     /**
      * insert (new) item to [Collection] table
      **/
