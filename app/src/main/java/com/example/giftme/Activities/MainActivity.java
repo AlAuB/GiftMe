@@ -1,10 +1,13 @@
 package com.example.giftme.Activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.giftme.Fragments.NotificationFragment;
@@ -39,6 +42,12 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
         BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.notification);
         badgeDrawable.setVisible(true);
         badgeDrawable.setNumber(6);
+
+        if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS}, 44);
+        }
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wishlist) {
