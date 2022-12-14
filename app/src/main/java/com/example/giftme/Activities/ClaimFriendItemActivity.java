@@ -11,8 +11,12 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.giftme.Fragments.FriendCompactViewFragment;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
@@ -73,9 +77,10 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         descriptionTV.setText(item.getDescription());
         ratingBar.setRating(item.getHearts());
         dateTV.setText(item.getDate());
-        Log.d("itemImgClaim", item.getImg());
-        Picasso.get().load(item.getImg()).into(imageView);
-
+        Log.d("itemImgClaim", "IMG: " + item.getImg());
+        if(item.getImg() != null){
+            Picasso.get().load(item.getImg()).into(imageView);
+        }
         backButton = findViewById(R.id.imageButton_backToPrevious);
         backButton.setOnClickListener((view -> {
             finish();
@@ -108,14 +113,10 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
             claimButton.setClickable(true);
         }
         claimButton.setOnClickListener(view -> {
-//            Intent newIntent = new Intent(this, EditItemActivity.class);
-//            //put in name, price description, hearts, and link etc
-//            newIntent.putExtra("itemFSID", item.getTableID());
-            //we have item.getTableID()
-            //call setClaimed with that tableID to firestore
-//            dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFsID, true);
             Log.d("friendClaim", friendID + " " + friendCollectionID + " " + itemFsID);
             dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFsID, true);
+            Intent frCollectionIntent = new Intent(this, FriendCollectionItems.class);
+            startActivity(frCollectionIntent);
             finish();
         });
         cancelButton = findViewById(R.id.button_cancel);

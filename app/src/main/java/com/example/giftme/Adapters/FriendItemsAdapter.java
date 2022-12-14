@@ -115,15 +115,15 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
 
                     intent.putExtra("itemImg", imgUri[0]);
 //            this.activity.finish();
-                    this.activity.startActivity(intent);
                 }).addOnFailureListener(exception -> {
                     // Handle any errors
                     Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
                 });
             }
             //get img end --------------------------------------------------------------------
-
+            this.activity.startActivity(intent);
         });
+
     }
 
     @Override
