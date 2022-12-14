@@ -39,7 +39,8 @@ public class WishlistMyCollectionData extends Fragment {
     Activity activity;
     Context context;
     ImageView emptyImage;
-    TextView collectionCount, emptyText, collectionText;
+    TextView collectionCount;
+    TextView emptyText;
     RecyclerView recyclerView;
     ExtendedFloatingActionButton floatingActionButton;
     MyWishlistCollectionRecycleAdapter myWishlistCollectionRecycleAdapter;
@@ -61,7 +62,6 @@ public class WishlistMyCollectionData extends Fragment {
         view = inflater.inflate(R.layout.fragment_wishlist_my_collection_data, container, false);
         context = this.getContext();
         collectionCount = view.findViewById(R.id.collectionCount);
-//        collectionText = view.findViewById(R.id.collection_text);
         recyclerView = view.findViewById(R.id.recycleView);
         floatingActionButton = view.findViewById(R.id.action);
         emptyText = view.findViewById(R.id.empty_text);
