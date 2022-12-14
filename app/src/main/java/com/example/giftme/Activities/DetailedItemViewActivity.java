@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.Objects;
@@ -82,9 +83,8 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         descriptionTV.setText(itemDes);
         ratingBar.setRating(itemHearts);
         dateTV.setText(itemDate);
-        File file = new File(img);
-        Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
-        itemImageView.setImageBitmap(getBitMap);
+
+        Picasso.get().load(item.getImg()).into(itemImageView);
 
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view ->{

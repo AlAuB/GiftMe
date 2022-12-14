@@ -212,6 +212,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if (fullImgPath != null) {
             imgPath = fullImgPath.split("/");
         }
+        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length-1]);
+        Log.d("imgURL", imgURL);
 
         String sqlInsert = "insert into " + "'" + collection + "'";
         sqlInsert += " values( null, '" + item.getWebsite()
@@ -220,7 +222,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "', '" + item.getPrice()
                 + "', '" + item.getDescription()
                 + "', '" + item.getDate()
-                + "', '" + imgPath
+                + "', '" + imgURL
                 + "', '" + item.getClaimed()
                 + "', '" + item.getFireStoreID() + "' )";
         Log.d(TAG, "insertItemIntoCollection: " + sqlInsert);
@@ -326,7 +328,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      */
     public void getCollectionsFromUser(String userID) {
         DocumentReference userRef = fireStore.collection(COLLECTIONS_USERS).document(userID);
-        ArrayList<String> wishlistIDs = new ArrayList<>();
         userRef.collection(COLLECTIONS_WISHLISTS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -416,10 +417,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * update item in database
      */
     //add link later
-    public void updateById(String collection_name, String url, int id, String name, int price, String description,
+    public void updateById(String collection_name, String url, int id, String name, double price, String description,
                            int hearts, String img, String fireStoreId) {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d(TAG, "updateById: " + collection_name + " " + id + " " + name + " " + price + " " + description + " " + hearts + " " + img + " " + fireStoreId);
+
+        String fullImgPath = img;
+        String[] imgPath = new String[1];
+        if (fullImgPath != null) {
+            imgPath = fullImgPath.split("/");
+        }
+        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length-1]);
+        Log.d("imgURL", "Img :" + imgURL);
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
                 + " set " + ITEM_NAME + " = '" + name + "', "
@@ -427,7 +436,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + ITEM_URL + "= '" + url + "', "
                 + ITEM_PRICE + "= '" + price + "', "
                 + ITEM_DESCRIPTION + "= '" + description + "', "
-                + ITEM_IMAGE + "= '" + img + "', "
+                + ITEM_IMAGE + "= '" + imgURL + "', "
                 + FIRESTORE_ID + "= '" + fireStoreId + "' "
                 + "where " + ITEM_ID + "= " + id;
 

@@ -22,6 +22,7 @@ import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 import com.google.android.material.card.MaterialCardView;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,9 +59,9 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
         holder.name.setText(item.getName());
         holder.price.setText("$" + item.getPrice());
         holder.date.setText(item.getDate());
-        File file = new File(item.getImg());
-        Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
-        holder.imageView.setImageBitmap(getBitMap);
+
+        Picasso.get().load(item.getImg()).into(holder.imageView);
+
         holder.ratingBar.setRating(item.getHearts());
         holder.cardView.setOnClickListener(v -> {
             Intent intent = new Intent(activity, DetailedItemViewActivity.class);

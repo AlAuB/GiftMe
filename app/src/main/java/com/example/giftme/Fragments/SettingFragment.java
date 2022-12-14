@@ -192,10 +192,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
                 collectionIds.add(cursor.getString(0));
-//                //if this isn't the friend's wishlist
-//                if (cursor.getBlob(3) == null) {
-//                    collectionIds.add(cursor.getString(0));
-//                }
             }
         }
     }
@@ -309,7 +305,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
                                         //gets Collections from User
                                         dataBaseHelper.getCollectionsFromUser(user.getEmail());
-                                        getAllMyCollection();
+                                        getAllCollection();
                                         listener.updateData(true);
 //                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                                     } else {
@@ -317,7 +313,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                                         dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
                                     }
                                     dataBaseHelper.setDeviceMessagingToken(user.getEmail());
-                                    getAllMyCollection();
+                                    getAllCollection();
                                     listener.updateData(true);
                                 }
                             });
@@ -334,7 +330,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             if (signOutButton.getVisibility() == View.GONE) {
                                 signOutButton.setVisibility(View.VISIBLE);
                             }
-
 
                         } else {
                             Log.d("debugging::", "firebaseAuth failed: " + task.getException().getMessage());
