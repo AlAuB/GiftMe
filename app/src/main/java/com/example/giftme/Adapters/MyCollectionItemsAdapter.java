@@ -20,8 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.giftme.Activities.DetailedItemViewActivity;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -60,7 +63,27 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
         holder.price.setText("$" + item.getPrice());
         holder.date.setText(item.getDate());
 
-        Picasso.get().load(item.getImg()).into(holder.imageView);
+        String imgUrl = item.getImg();
+        if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+            Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+        }
+        else{
+            String[] imgUri = new String[1];
+            String path = "images/" + SessionManager.getUserEmail(context) + "/" + imgUrl;
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference mountainsRef = storageRef.child(path);
+            mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                // Got the download URL for 'users/me/profile.png'
+                imgUri[0] = uri.toString();
+                Log.d("insideIf", "URI: " + imgUri[0]);
+                Picasso.get().load(imgUri[0]).into(holder.imageView);
+
+            }).addOnFailureListener(exception -> {
+                // Handle any errors
+                Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+            });
+        }
 
         holder.ratingBar.setRating(item.getHearts());
         holder.cardView.setOnClickListener(v -> {
@@ -71,15 +94,32 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
             intent.putExtra("itemDes", item.getDescription());
-            intent.putExtra("itemDate", item.getDate());
-            Log.d("itemDes", item.getDescription());
-            intent.putExtra("itemURL", item.getWebsite());
-            intent.putExtra("itemImg", item.getImg());
-            intent.putExtra("itemFSID", item.getFireStoreID());
-            //firestore ID?
-            intent.putExtra("collectionName", collectionNameTV.getText().toString());
-            activity.finish();
-            activity.startActivity(intent);
+            //get image ------------------------------------------------------------
+            if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+                Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+            }
+            else{
+                String[] imgUri = new String[1];
+                String path = "images/" + SessionManager.getUserEmail(context) + "/" + imgUrl;
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+                StorageReference mountainsRef = storageRef.child(path);
+                mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Got the download URL for 'users/me/profile.png'
+                    imgUri[0] = uri.toString();
+
+                    intent.putExtra("itemImg", imgUri[0]);
+                    intent.putExtra("itemLink", item.getWebsite());
+                    intent.putExtra("itemDate", item.getDate());
+                    intent.putExtra("itemFsID", item.getFireStoreID());
+
+                    this.activity.startActivity(intent);
+                }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    Log.d("DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+                });
+            }
+            //get img end --------------------------------------------------------------------
         });
     }
 

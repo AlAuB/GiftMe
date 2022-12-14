@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -147,8 +148,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         user.put("photoUrl", photoUrl);
         user.put("friends", new ArrayList<String>());
         Log.d(TAG, "createUser: " + email + " " + displayName + " " + photoUrl);
-
-        fireStore.collection("users").document(email).set(user, SetOptions.merge()).addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: user " + email + " created")).addOnFailureListener(e -> Log.d(TAG, "onFailure: user " + email + " " + e.getMessage()));
+        fireStore.collection("users").document(email)
+                .set(user, SetOptions.merge()).addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: user " + email + " created"))
+                .addOnFailureListener(e -> Log.d(TAG, "onFailure: user " + email + " " + e.getMessage()));
     }
 
     /**
@@ -207,14 +209,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void insertItemIntoCollection(String collection, Item item) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String fullImgPath = item.getImg();
-        String[] imgPath = new String[1];
-        if (fullImgPath != null) {
-            imgPath = fullImgPath.split("/");
-        }
-        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length-1]);
-        Log.d("imgURL", "IMGURL: " + imgURL);
-
         String sqlInsert = "insert into " + "'" + collection + "'";
         sqlInsert += " values( null, '" + item.getWebsite()
                 + "', '" + item.getName()
@@ -222,7 +216,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + "', '" + item.getPrice()
                 + "', '" + item.getDescription()
                 + "', '" + item.getDate()
-                + "', '" + imgURL
+                + "', '" + item.getImg()
                 + "', '" + item.getClaimed()
                 + "', '" + item.getFireStoreID() + "' )";
         Log.d(TAG, "insertItemIntoCollection: " + sqlInsert);
