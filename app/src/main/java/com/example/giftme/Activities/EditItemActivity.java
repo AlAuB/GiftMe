@@ -99,7 +99,7 @@ public class EditItemActivity extends AppCompatActivity {
         priceET.setText(String.valueOf(item.getPrice()));
         Log.d("itemImg", "Img is null" + (img.equals("null")));
 
-        if(img.equals("null")){
+        if(img.equals("null") || img == null){
 //            File file = new File(img);
 //            Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
 //            imgView.setImageBitmap(getBitMap);
