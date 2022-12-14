@@ -132,6 +132,7 @@ public class DetailViewFragment extends Fragment {
                         cursor.getString(6),
                         cursor.getString(7)
                 );
+                currentItem.setKnownFireStoreID(cursor.getString(9));
                 items.add(currentItem);
             }
             cursor.close();

@@ -187,10 +187,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, "getDeviceMessagingToken: " + token);
             Map<String, Object> deviceMessagingToken = new HashMap<>();
             deviceMessagingToken.put("deviceMessagingToken", token);
-//            DocumentReference docRef = fireStore.collection("users").document(email);
-//            docRef.set(deviceMessagingToken, SetOptions.merge())
-//                    .addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created"))
-//                    .addOnFailureListener(e -> Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage()));
+            DocumentReference docRef = fireStore.collection("users").document(email);
+            docRef.set(deviceMessagingToken, SetOptions.merge())
+                    .addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created"))
+                    .addOnFailureListener(e -> Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage()));
         });
     }
 
@@ -215,11 +215,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // generate a map object to put into firestore
         Map<String, Object> firestoreItem = convertItemIntoMap(item);
 
-        // find the firestore_id of the collection in sqlite
         String sqlSelect =
                 "select " + FIRESTORE_ID + " from "
-                + TABLE_NAME + " where "
-                + COLUMN_NAME + " = '" + collection + "'";
+                        + TABLE_NAME + " where "
+                        + COLUMN_NAME + " = '" + collection + "'";
         Cursor cursor = db.rawQuery(sqlSelect, null);
         if (cursor.moveToFirst()) {
             Log.d(TAG, "insertItemIntoCollection: " + cursor.getString(0) + " " + userEmail);
@@ -230,6 +229,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
         }
         cursor.close();
+    }
+
+    public String getCollectionFirestoreId(String collectionName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sqlSelect =
+                "select " + FIRESTORE_ID + " from "
+                        + TABLE_NAME + " where "
+                        + COLUMN_NAME + " = '" + collectionName + "'";
+        Cursor cursor = db.rawQuery(sqlSelect, null);
+        if (cursor.moveToFirst()) {
+            return cursor.getString(0);
+        }
+        else {
+            return null;
+        }
     }
 
     public Map<String, Object> convertItemIntoMap(Item item){
@@ -399,36 +413,32 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         db.execSQL(sqlUpdate);
 
-//        
-//        Map<String, Object> firestoreItem = convertItemIntoMapWithDetail(name,price,description,hearts,img,fireStoreId);
-//        String collectionID = getCollectionId(collection_name);
-//
-//        Log.d(TAG, "updateItemIntoCollection: " + collectionID + " " + userEmail);
-//        DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
-//        DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(collectionID);
-//        DocumentReference itemDocIdRef = collectionDocIdRef.collection(collectionID).document(fireStoreId);
-
-        //collectionDocIdRef.set(firestoreItem, SetOptions.merge())
-        //        .addOnSuccessListener(aVoid -> {
-        //            Log.d(TAG, "DocumentSnapshot successfully updated!");
-        //        })
-        //        .addOnFailureListener(e -> {
-        //            Log.w(TAG, "Error updating document", e);
-        //        });
-
-    }
-    public Map<String, Object> convertItemIntoMapWithDetail(String name, int price, String description,
-                                                            int hearts, String img, String fireStoreId){
-        Map<String, Object> itemMap = new HashMap<>();
-        Map<String, Object> nestedItemMap = new HashMap<>();
-        itemMap.put("name", name);
-        itemMap.put("hearts", hearts);
-        itemMap.put("price", price);
-        itemMap.put("description", description);
-        itemMap.put("img", img);
-        Log.d(TAG, "convertItemIntoMap: " + fireStoreId);
-        nestedItemMap.put(fireStoreId, itemMap);
-        return nestedItemMap;
+        String sqlSelect =
+                "select " + FIRESTORE_ID + " from "
+                        + TABLE_NAME + " where "
+                        + COLUMN_NAME + " = '" + collection_name + "'";
+        Cursor cursor = db.rawQuery(sqlSelect, null);
+        if (cursor.moveToFirst()) {
+            DocumentReference userDocIdRef = fireStore.collection(COLLECTIONS_USERS).document(userEmail);
+            DocumentReference collectionDocIdRef = userDocIdRef.collection(COLLECTIONS_WISHLISTS).document(cursor.getString(0));
+            String urlField = fireStoreId + ".url";
+            String nameField = fireStoreId + ".name";
+            String priceField = fireStoreId + ".price";
+            String descriptionField = fireStoreId + ".description";
+            String heartsField = fireStoreId + ".hearts";
+            String imgField = fireStoreId + ".img";
+            collectionDocIdRef.update(urlField, url, nameField, name, priceField, price, descriptionField, description, heartsField, hearts, imgField, img).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d(TAG, "DocumentSnapshot successfully updated! " + cursor.getString(0) + " " + fireStoreId);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(TAG, "Error updating document", e);
+                }
+            });
+        }
     }
 
 
