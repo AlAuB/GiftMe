@@ -74,6 +74,7 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             Log.d("itemDes", item.getDescription());
             intent.putExtra("itemURL", item.getWebsite());
             intent.putExtra("itemImg", item.getImg());
+            intent.putExtra("itemFSID", item.getFireStoreID());
             //firestore ID?
             intent.putExtra("collectionName", collectionNameTV.getText().toString());
             activity.finish();

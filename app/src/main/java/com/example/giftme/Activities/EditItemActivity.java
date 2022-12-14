@@ -83,9 +83,11 @@ public class EditItemActivity extends AppCompatActivity {
         if(Objects.equals(itemURL, "null")){ itemDes = "";}
         String itemDate = intent.getStringExtra("itemDate");
         if(Objects.equals(itemDate, "null")){ itemDate = "";}
+        String itemFSID = intent.getStringExtra("itemFSID");
+        if(Objects.equals(itemFSID, "null")){ itemFSID = "";}
 
         String collectionName = intent.getStringExtra("collectionName");
-
+        Log.d("debug::", "edit item activity: " + collectionName + " " + itemFSID);
         //(re)create item obj
         Item item = new Item(itemID, itemURL, itemName, itemHearts, itemPrice,
                 itemDes, itemDate, img);
@@ -135,6 +137,7 @@ public class EditItemActivity extends AppCompatActivity {
         imgView.setOnClickListener(view -> openGallery());
         //choose image end --------------
 
+        String finalItemFSID = itemFSID;
         saveButton.setOnClickListener(view -> {
             try{
                 String date;
@@ -163,7 +166,7 @@ public class EditItemActivity extends AppCompatActivity {
                 String newImg = context.getApplicationContext().getFilesDir() + "/" + fileName;
 
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                        newDescription, newRating, newImg, item.getFireStoreID());
+                        newDescription, newRating, newImg, finalItemFSID);
                 Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
 
                 Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
@@ -181,7 +184,7 @@ public class EditItemActivity extends AppCompatActivity {
                 String newLink = String.valueOf(linkET.getText());
 
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                        newDescription, newRating, item.getImg(), item.getFireStoreID());
+                        newDescription, newRating, item.getImg(), finalItemFSID);
                 Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
 
                 Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
