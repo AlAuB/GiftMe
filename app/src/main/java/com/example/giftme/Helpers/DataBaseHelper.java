@@ -428,7 +428,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             imgPath = fullImgPath.split("/");
         }
         getDownloadUrlFirebase(userEmail, imgPath[imgPath.length-1]);
-        Log.d("imgURL", "Img :" + imgURL);
+//        Log.d("imgURL", "Img :" + imgURL);
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
                 + " set " + ITEM_NAME + " = '" + name + "', "
