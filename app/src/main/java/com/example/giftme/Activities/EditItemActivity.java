@@ -155,7 +155,14 @@ public class EditItemActivity extends AppCompatActivity {
                 int newPrice = Integer.parseInt(String.valueOf(priceET.getText()));
                 int newRating = (int) ratingBar.getRating();
                 String newLink = String.valueOf(linkET.getText());
+                if(!newLink.isEmpty()){
+                    if(!newLink.contains("http")){
+                        Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
 
+                }
                 String newImg = context.getApplicationContext().getFilesDir() + "/" + fileName;
 
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
@@ -174,7 +181,11 @@ public class EditItemActivity extends AppCompatActivity {
                 double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
                 int newRating = (int) ratingBar.getRating();
                 String newLink = String.valueOf(linkET.getText());
-
+                if(!newLink.isEmpty()){
+                    if(!newLink.contains("http")){
+                        Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
                         newDescription, newRating, item.getImg(), finalItemFsID);
                 Log.d("editItem", "firestoreID of item " + finalItemFsID);
