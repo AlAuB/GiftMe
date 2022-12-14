@@ -71,6 +71,9 @@ public class FriendCompactViewFragment extends Fragment {
         if(SessionManager.getUserStatus(context) == true){
             getAllItemsFirestore();
         }
+        else{
+            items.clear();
+        }
 
         Log.d("FIRESTORE AFTER ", items.toString());
 

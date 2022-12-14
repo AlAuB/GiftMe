@@ -19,8 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.giftme.Activities.FriendCollectionItems;
+import com.example.giftme.Activities.MainActivity;
 import com.example.giftme.Settings.FAQ;
 import com.example.giftme.Settings.PrivacyPolicy;
 import com.example.giftme.R;
@@ -168,14 +170,29 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         super.onViewCreated(view, savedInstanceState);
     }
 
+
+    private void getAllMyCollection() {
+        Cursor cursor = dataBaseHelper.readCollectionTableAllData("COLLECTIONS");
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                collectionIds.add(cursor.getString(0));
+//                //if this isn't the friend's wishlist
+                if (cursor.getBlob(3) == null) {
+                    collectionIds.add(cursor.getString(0));
+                }
+            }
+        }
+    }
+
     private void getAllCollection() {
         Cursor cursor = dataBaseHelper.readCollectionTableAllData("COLLECTIONS");
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
-                //if this isn't the friend's wishlist
-                if (cursor.getBlob(3) == null) {
-                    collectionIds.add(cursor.getString(0));
-                }
+                collectionIds.add(cursor.getString(0));
+//                //if this isn't the friend's wishlist
+//                if (cursor.getBlob(3) == null) {
+//                    collectionIds.add(cursor.getString(0));
+//                }
             }
         }
     }
@@ -185,7 +202,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                 requireContext(),
                 new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
         ).signOut();
-        listener.updateData(false);
 
         //clear out local SQLite database---start
         getAllCollection();
@@ -198,10 +214,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 //        dataBaseHelper.deleteTable("COLLECTIONS");
         //clear out local SQLite database end---
         SessionManager.clearSession(getContext());
-
-        Intent intent = new Intent(this.getActivity(), FriendCollectionItems.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        listener.updateData(false);
 
         signedOutState();
     }
@@ -233,8 +246,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         } else {
             pfpIV.setImageResource(R.drawable.anony_user);
         }
-
-
     }
 
     private void signIn() {
@@ -295,17 +306,18 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
                                         //gets Collections from User
                                         dataBaseHelper.getCollectionsFromUser(user.getEmail());
-//                                        getAllCollection();
+                                        getAllMyCollection();
                                         listener.updateData(true);
+//                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                                     } else {
                                         Log.d("debugging::", "user does not exist");
                                         dataBaseHelper.createUser(user.getEmail(), user.getDisplayName(), user.getPhotoUrl().toString());
                                     }
-                                    dataBaseHelper.setDeviceMessagingToken(user.getEmail());
+//                                    dataBaseHelper.setDeviceMessagingToken(user.getEmail());
+                                    getAllMyCollection();
+                                    listener.updateData(true);
                                 }
                             });
-
-                            listener.updateData(true);
 
                             if (!SessionManager.getUserPFP(getContext()).equals("")) {
                                 Picasso.get().load(SessionManager.getUserPFP(getContext()))
@@ -319,6 +331,8 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             if (signOutButton.getVisibility() == View.GONE) {
                                 signOutButton.setVisibility(View.VISIBLE);
                             }
+
+
                         } else {
                             Log.d("debugging::", "firebaseAuth failed: " + task.getException().getMessage());
                         }

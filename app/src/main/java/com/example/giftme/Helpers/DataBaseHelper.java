@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.giftme.Adapters.FriendItemsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -74,7 +76,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
         userEmail = SessionManager.getUserEmail(context);
-        setDeviceMessagingToken(userEmail);
+//        setDeviceMessagingToken(userEmail);
     }
 
     @Override
@@ -174,29 +176,29 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         });
     }
 
-    public void setDeviceMessagingToken(String email) {
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.d(TAG, "getDeviceMessagingToken: failed to get token");
-            }
-            String token = task.getResult();
-            Log.d(TAG, "getDeviceMessagingToken: " + token);
-            Map<String, Object> deviceMessagingToken = new HashMap<>();
-            deviceMessagingToken.put("deviceMessagingToken", token);
-            DocumentReference docRef = fireStore.collection("users").document(email);
-            docRef.set(deviceMessagingToken, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void unused) {
-                    Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage());
-                }
-            });
-        });
-    }
+//    public void setDeviceMessagingToken(String email) {
+//        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+//            if (!task.isSuccessful()) {
+//                Log.d(TAG, "getDeviceMessagingToken: failed to get token");
+//            }
+//            String token = task.getResult();
+//            Log.d(TAG, "getDeviceMessagingToken: " + token);
+//            Map<String, Object> deviceMessagingToken = new HashMap<>();
+//            deviceMessagingToken.put("deviceMessagingToken", token);
+//            DocumentReference docRef = fireStore.collection("users").document(email);
+//            docRef.set(deviceMessagingToken, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                @Override
+//                public void onSuccess(Void unused) {
+//                    Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created");
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage());
+//                }
+//            });
+//        });
+//    }
 
     /**
      * insert (new) item to [Collection] table
