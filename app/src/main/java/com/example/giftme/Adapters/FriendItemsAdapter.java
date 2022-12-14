@@ -112,7 +112,6 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
                 mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     // Got the download URL for 'users/me/profile.png'
                     imgUri[0] = uri.toString();
-
                     intent.putExtra("itemImg", imgUri[0]);
 //            this.activity.finish();
                 }).addOnFailureListener(exception -> {
