@@ -37,5 +37,5 @@ Zizhuang Guo (Tim),
 
 **Problems of Use:**
 * Edit Item Price shows $0.0 so user can't directly type into it.
-* The image preference in image view in Edit Item is not preserved. Image is not visible when rotating screen. (fix portrait)
+* The image preference in image view in Add Item is not preserved. Image is not visible when rotating screen. (fix portrait)
 * 
