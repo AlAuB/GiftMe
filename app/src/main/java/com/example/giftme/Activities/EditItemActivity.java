@@ -179,7 +179,7 @@ public class EditItemActivity extends AppCompatActivity {
                 String newName = String.valueOf(nameET.getText());
                 String newDescription = String.valueOf(descriptionET.getText());
                 Log.d("newDes", newDescription);
-                int newPrice = Integer.parseInt(String.valueOf(priceET.getText()));
+                Double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
                 int newRating = (int) ratingBar.getRating();
                 String newLink = String.valueOf(linkET.getText());
 
