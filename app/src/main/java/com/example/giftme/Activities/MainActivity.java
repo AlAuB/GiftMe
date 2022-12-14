@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_view, wishlistFragment).commit();
 
-        BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.notification);
-        badgeDrawable.setVisible(true);
-        badgeDrawable.setNumber(6);
+//        BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.notification);
+//        badgeDrawable.setVisible(true);
+//        badgeDrawable.setNumber(6);
 
         if (ActivityCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {

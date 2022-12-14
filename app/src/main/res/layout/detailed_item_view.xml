@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:text="Saved: 2022-12-12"
+        android:text=""
         android:textSize="15sp" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:text="iPhone 14 Pro Max"
+        android:text=""
         android:textColor="@color/black"
         android:textSize="25sp" />
 
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:text="$999"
+        android:text=""
         android:textSize="20sp" />
 
     <RatingBar
@@ -57,11 +57,11 @@
     <TextView
         android:id="@+id/descriptionTV"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:text="128GB"
+        android:text=""
         android:textSize="17sp" />
 
     <Button
