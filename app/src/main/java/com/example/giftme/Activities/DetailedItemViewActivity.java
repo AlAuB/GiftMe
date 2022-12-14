@@ -63,9 +63,9 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             itemDate = "";
         }
         String collectionName = intent.getStringExtra("collectionName");
-        String itemFSID = intent.getStringExtra("itemFSID");
-        if (Objects.equals(itemFSID, "null")) {
-            itemFSID = "";
+        String itemFsID = intent.getStringExtra("itemFSID");
+        if (Objects.equals(itemFsID, "null")) {
+            itemFsID = "";
         }
 
         //(re)create item obj
@@ -113,15 +113,16 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             //if there is a link
             else {
                 Log.d("itemURL", itemURL);
-                Intent shopIntent = new Intent(Intent.ACTION_VIEW);
-                shopIntent.setData(Uri.parse(itemURL));
-                shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                Intent shopIntent = new Intent(Intent.ACTION_VIEW);
+//                shopIntent.setData(Uri.parse(itemURL));
+//                shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent shopIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(itemURL));
                 startActivity(shopIntent);
             }
         });
 
         editButton = findViewById(R.id.button_edit);
-        String finalItemFSID = itemFSID;
+        String finalItemFsID = itemFsID;
         editButton.setOnClickListener(view -> {
             Intent newIntent = new Intent(this, EditItemActivity.class);
             //put in name, price description, hearts, and link etc
@@ -132,7 +133,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("itemURL", item.getWebsite());
             newIntent.putExtra("itemDes", item.getDescription());
             newIntent.putExtra("itemImg", item.getImg());
-            newIntent.putExtra("itemFSID", finalItemFSID);
+            newIntent.putExtra("itemFsID", finalItemFsID);
             newIntent.putExtra("collectionName", collectionName);
             finish();
             startActivity(newIntent);

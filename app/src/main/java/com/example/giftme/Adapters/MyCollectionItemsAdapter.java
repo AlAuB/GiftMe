@@ -104,7 +104,7 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
             intent.putExtra("itemDes", item.getDescription());
-            intent.putExtra("itemLink", item.getWebsite());
+            intent.putExtra("itemURL", item.getWebsite());
             intent.putExtra("itemDate", item.getDate());
             intent.putExtra("itemFsID", item.getFireStoreID());
             //get image ------------------------------------------------------------
