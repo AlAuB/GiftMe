@@ -197,14 +197,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         .addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created"))
                         .addOnFailureListener(e -> Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage()));
             }
-            String token = task.getResult();
-            Log.d(TAG, "getDeviceMessagingToken: " + token);
-            Map<String, Object> deviceMessagingToken = new HashMap<>();
-            deviceMessagingToken.put("deviceMessagingToken", token);
-            DocumentReference docRef = fireStore.collection("users").document(email);
-            docRef.set(deviceMessagingToken, SetOptions.merge())
-                    .addOnSuccessListener(unused -> Log.d(TAG, "onSuccess: deviceMessagingToken " + token + " created"))
-                    .addOnFailureListener(e -> Log.d(TAG, "onFailure: deviceMessagingToken " + token + " " + e.getMessage()));
         });
     }
 
@@ -296,7 +288,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Item item = new Item();
         item.setName(String.valueOf(map.get("name")));
         if (map.get("hearts") != null) {
-            item.setHearts((Integer) map.get("hearts"));
+            item.setHearts(Math.toIntExact(((Long) map.get("hearts"))));
         } else {
             item.setHearts(0);
         }
