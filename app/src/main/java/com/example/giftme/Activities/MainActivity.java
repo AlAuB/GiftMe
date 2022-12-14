@@ -16,6 +16,7 @@ import com.example.giftme.Fragments.NotificationFragment;
 import com.example.giftme.Fragments.SettingFragment;
 import com.example.giftme.Fragments.WishlistFragment;
 import com.example.giftme.Fragments.WishlistMyCollectionData;
+import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.FCMSend;
 import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
@@ -101,7 +102,8 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                 String userID = subString.substring(1, indexPlus);
                 String collectionID = subString.substring(indexPlus + 1);
 
-                sendNotification(userID);
+                DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
+                dataBaseHelper.sendNotification(userID, "Your friend get your collection", SessionManager.getUserName(getApplicationContext()) + " adds your collection");
 
                 Fragment fragmentWishlist = WishlistFragment.newInstance(userID, collectionID);
                 getSupportFragmentManager().beginTransaction()
@@ -110,23 +112,6 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
             }
         }).addOnFailureListener(this, e ->
                 Toast.makeText(MainActivity.this, "Cannot get deep link", Toast.LENGTH_SHORT).show());
-    }
-
-    private void sendNotification(String friendEmail) {
-        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
-        DocumentReference reference = fireStore.collection("users").document(friendEmail);
-        reference.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot snapshot = task.getResult();
-                if (snapshot != null) {
-                    String token = Objects.requireNonNull(snapshot.getString("deviceMessagingToken")).trim();
-                    String title = "Your friend get your collection";
-                    String body = SessionManager.getUserName(getApplicationContext()) + " adds your collection";
-                    System.out.println("Reach here");
-                    FCMSend.pushNotification(getApplicationContext(), token, title, body);
-                }
-            }
-        }).addOnFailureListener(e -> System.out.println("Cannot get Token from Firestore."));
     }
 
     @Override

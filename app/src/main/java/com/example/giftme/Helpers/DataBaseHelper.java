@@ -34,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -238,7 +239,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sqlSelect, null);
         if (cursor.moveToFirst()) {
             Log.d(TAG, "insertItemIntoCollection: " + cursor.getString(0) + " " + userEmail);
-            DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
+            DocumentReference userDocIdRef = fireStore.collection(COLLECTIONS_USERS).document(userEmail);
             DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(cursor.getString(0));
             collectionDocIdRef.set(firestoreItem, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
@@ -247,6 +248,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
+    public void sendNotification(String friendEmail, String InputTitle, String InputBody) {
+        DocumentReference reference = fireStore.collection(COLLECTIONS_USERS).document(friendEmail);
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot snapshot = task.getResult();
+                if (snapshot != null) {
+                    String token = Objects.requireNonNull(snapshot.getString("deviceMessagingToken")).trim();
+                    FCMSend.pushNotification(context, token, InputTitle, InputBody);
+                }
+            }
+        }).addOnFailureListener(e -> System.out.println("Cannot get Token from Firestore."));
+    }
 
     /**
      * insert (new) item to [Collection] table from FireStore (image path needs to be treated differently)
