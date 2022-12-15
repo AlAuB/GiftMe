@@ -79,7 +79,7 @@ public class EditItemActivity extends AppCompatActivity {
         }
         String img = intent.getStringExtra("itemImg");
         String itemURL = intent.getStringExtra("itemURL");
-        if (Objects.equals(itemURL, null)) {
+        if (Objects.equals(itemURL, "null")) {
             itemURL = "";
         }
         String itemDate = intent.getStringExtra("itemDate");

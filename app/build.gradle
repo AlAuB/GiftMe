@@ -7,6 +7,13 @@ android {
     namespace 'com.example.giftme'
     compileSdk 33
 
+    lintOptions {
+        checkReleaseBuilds false
+        // Or continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "com.example.giftme"
         minSdk 22

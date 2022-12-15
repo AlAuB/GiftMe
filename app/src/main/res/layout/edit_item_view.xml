@@ -12,7 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
+        android:layout_weight="8"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="5dp"
             android:scaleX=".7"
             android:scaleY=".7"
             android:stepSize="1"
@@ -119,6 +119,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:padding="0dp"
+        android:layout_margin="0dp"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
@@ -127,8 +129,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
->
+            android:gravity="center_horizontal">
 
             <Button
                 style="@style/texts"
@@ -136,13 +137,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#F44336"
-
                 android:text="@string/cancel" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight=".5"
             android:layout_height="match_parent"
             android:gravity="center_horizontal">
             <Button
