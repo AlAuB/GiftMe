@@ -20,11 +20,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
 
@@ -41,6 +45,8 @@ public class EditItemActivity extends AppCompatActivity {
     Bitmap bitmap;
     ActivityResultLauncher<Intent> activityResultLauncher;
     Context context;
+    Item item;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,32 +61,38 @@ public class EditItemActivity extends AppCompatActivity {
         priceET = findViewById(R.id.itemPriceET);
         ratingBar = findViewById(R.id.ratingBar);
         context = getApplicationContext();
+        item = new Item();
 
         cancelButton = findViewById(R.id.cancel);
         saveButton = findViewById(R.id.save);
         dataBaseHelper = new DataBaseHelper(this);
 
         //get information from intent
-        Intent intent = getIntent();
+        intent = getIntent();
         int itemID = intent.getIntExtra("itemID", 1);
         String itemName = intent.getStringExtra("itemName");
         int itemHearts = intent.getIntExtra("itemHearts", 0);
         double itemPrice = intent.getDoubleExtra("itemPrice", 0.0);
         String itemDes = intent.getStringExtra("itemDes");
-        if(Objects.equals(itemDes, "null")){ itemDes = "";}
+        if (Objects.equals(itemDes, "null")) {
+            itemDes = "";
+        }
         String img = intent.getStringExtra("itemImg");
         String itemURL = intent.getStringExtra("itemURL");
-        if(Objects.equals(itemURL, "null")){ itemURL = "";}
+        if (Objects.equals(itemURL, "null")) {
+            itemURL = "";
+        }
         String itemDate = intent.getStringExtra("itemDate");
-//        if(Objects.equals(itemDate, "null")){ itemDate = "";}
         String itemFsID = intent.getStringExtra("itemFsID");
         Log.d("editItem", "firestoreID from inten" + itemFsID);
-        if(Objects.equals(itemFsID, "null")){ itemFsID = "";}
+        if (Objects.equals(itemFsID, "null")) {
+            itemFsID = "";
+        }
 
         String collectionName = intent.getStringExtra("collectionName");
         Log.d("debug::", "edit item activity: " + collectionName + " " + itemFsID);
         //(re)create item obj
-        Item item = new Item(itemID, itemURL, itemName, itemHearts, itemPrice,
+        item = new Item(itemID, itemURL, itemName, itemHearts, itemPrice,
                 itemDes, itemDate, img);
 
         //set views
@@ -89,21 +101,33 @@ public class EditItemActivity extends AppCompatActivity {
         Log.d("itemDes", item.getDescription());
         priceET.setText(String.valueOf(item.getPrice()));
 
-        Log.d("itemImg", "Img is null" + (item.getImg()==null));
+        Log.d("itemImg", "Img is null" + (item.getImg() == null));
 
         Log.d("itemImage", "Img " + img);
-        if(img == null || img.equals("null")){
+        if (img == null || img.equals("null")) {
             imgView.setImageResource(R.drawable.black_text);
-        } else{
-            if(!img.contains("/firebasestorage")){
-                //get bitmap
-                File file = new File(img);
+        } else {
+            String tempPath = getApplicationContext().getFilesDir() + "/" + img;
+            File file = new File(tempPath);
+            if (file.exists()) {
                 Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 imgView.setImageBitmap(getBitMap);
-            }
-            else{
-                //use link from firestore storage
-                Picasso.get().load(img).into(imgView);
+            } else {
+                //use the image stored in firestore storage
+                String[] imgUri = new String[1];
+                String path = "images/" + SessionManager.getUserEmail(context) + "/" + img;
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+                StorageReference mountainsRef = storageRef.child(path);
+                mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Got the download URL for 'users/me/profile.png'
+                    imgUri[0] = uri.toString();
+                    Log.d("insideIf", "URI: " + imgUri[0]);
+                    Picasso.get().load(imgUri[0]).into(imgView);
+                }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+                });
             }
         }
 
@@ -132,25 +156,27 @@ public class EditItemActivity extends AppCompatActivity {
                 });
 
         imgView.setOnClickListener(view -> openGallery());
-        //choose image end --------------
 
         String finalItemFsID = itemFsID;
         saveButton.setOnClickListener(view -> {
-            try{
-                Date dateObj = new Date();
-                String fileName = dateObj.getTime() + ".jpg";
-
-                FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                fileOutputStream.close();
-                dataBaseHelper.storeImageFirebase(bitmap, fileName);
+            try {
+                String fileName;
+                if (bitmap != null) {
+                    Date dateObj = new Date();
+                    fileName = dateObj.getTime() + ".jpg";
+                    FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                    fileOutputStream.close();
+                    dataBaseHelper.storeImageFirebase(bitmap, fileName);
+                } else {
+                    fileName = intent.getStringExtra("itemImg");
+                }
 
                 String newName = String.valueOf(nameET.getText());
                 String newDescription = "";
-                if(String.valueOf(descriptionET.getText()).length() > 100){
+                if (String.valueOf(descriptionET.getText()).length() > 100) {
                     Toast.makeText(context, "Too much info in description!", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
                     newDescription = String.valueOf(descriptionET.getText());
                 }
                 Log.d("newDes", "NEWDES IN TRY " + newDescription);
@@ -161,71 +187,51 @@ public class EditItemActivity extends AppCompatActivity {
                 Log.d("NEWIMG", "TESTING3");
                 String newLink = String.valueOf(linkET.getText());
                 Log.d("NEWIMG", "TESTING4");
-                if(!newLink.isEmpty()){
+                if (!newLink.isEmpty()) {
                     Log.d("NEWIMG", "TESTING INSIDE IF");
-                    if(!newLink.contains("http")){
+                    if (!newLink.contains("http")) {
                         Log.d("NEWIMG", "TESTING INSIDE IF 2");
                         Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
                     }
                 }
                 Log.d("NEWIMG", "TESTING");
-                String newImg = context.getApplicationContext().getFilesDir() + "/" + fileName;
-                Log.d("NEWIMG", newImg);
+                Log.d("NEWIMG", fileName);
+                item.setImg(fileName);
+                item.setHearts(newRating);
+                item.setDescription(newDescription);
+                item.setName(newName);
+                item.setWebsite(newLink);
+                item.setPrice(newPrice);
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                        newDescription, newRating, newImg, finalItemFsID);
+                        newDescription, newRating, fileName, finalItemFsID);
                 Log.d("editItem", "firestoreID of item " + finalItemFsID);
                 Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
-
-                Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
-                myCollectionItemsIntent.putExtra("collection_name", collectionName);
-                startActivity(myCollectionItemsIntent);
-                finish();
-            }catch(Exception e){
-                String newName = String.valueOf(nameET.getText());
-                String newDescription = "";
-                if(String.valueOf(descriptionET.getText()).length() > 100){
-                    Toast.makeText(context, "Too much info in description!", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    newDescription = String.valueOf(descriptionET.getText());
-                }
-                Log.d("newDes", newDescription);
-                double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
-                int newRating = (int) ratingBar.getRating();
-                String newLink = String.valueOf(linkET.getText());
-                if(!newLink.isEmpty()){
-                    if(!newLink.contains("http")){
-                        Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                        newDescription, newRating, item.getImg(), finalItemFsID);
-                Log.d("editItem", "firestoreID of item " + finalItemFsID);
-                Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
-
-                Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
-                myCollectionItemsIntent.putExtra("collection_name", collectionName);
-                startActivity(myCollectionItemsIntent);
-                finish();
+                getBack(collectionName);
+            } catch (IOException e) {
+                System.out.println("Cannot get New Image in edit Activity");
             }
         });
 
-        cancelButton.setOnClickListener(view -> {
-            //edit flow later: this --> detaileditemview -> mycollectionitems
-            Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
-            if (collectionName == null) {
-                System.out.println("Collection name is NULL at edit activity");
-            } else {
-                System.out.println("Collection name is NOT NULL at edit activity");
-            }
-            myCollectionItemsIntent.putExtra("collection_name", collectionName);
-            startActivity(myCollectionItemsIntent);
-        });
+        cancelButton.setOnClickListener(view -> getBack(collectionName));
+    }
+
+    private void getBack(String collectionName) {
+        Intent myCollectionItemsIntent = new Intent(this, DetailedItemViewActivity.class);
+        myCollectionItemsIntent.putExtra("itemImg", item.getImg());
+        myCollectionItemsIntent.putExtra("itemID", item.getId());
+        myCollectionItemsIntent.putExtra("itemName", item.getName());
+        myCollectionItemsIntent.putExtra("itemHearts", item.getHearts());
+        myCollectionItemsIntent.putExtra("itemPrice", item.getPrice());
+        myCollectionItemsIntent.putExtra("itemDes", item.getDescription());
+        myCollectionItemsIntent.putExtra("itemURL", item.getWebsite());
+        myCollectionItemsIntent.putExtra("itemDate", item.getDate());
+        myCollectionItemsIntent.putExtra("itemFsID", item.getFireStoreID());
+        myCollectionItemsIntent.putExtra("collectionName", collectionName);
+        startActivity(myCollectionItemsIntent);
     }
 
     private void openGallery() {
         Intent imgIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         activityResultLauncher.launch(imgIntent);
     }
-
 }
