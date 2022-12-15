@@ -102,7 +102,6 @@ public class WishlistFriendCollectionData extends Fragment {
             }
 
         }
-
         getAllFriends();
         //TESTING START
         floatingActionButton1.setOnClickListener(view -> {
@@ -177,21 +176,25 @@ public class WishlistFriendCollectionData extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()){
-                                DocumentSnapshot collection = task.getResult();
-                                collectionName[0] = collection.getString(collection_name);
-                                Log.d("friendCollectionName", "Name: " + collectionName[0]);
-                                Log.d("friendName2", "Name: " + friend[0]);
-                                dataBaseHelper.addNewFriendCollection(friend[0], collectionName[0], userID, collectionID, friend[1]);
-                                ids.clear();
-                                collectionNames.clear();
-                                collectionIDs.clear();
-                                friendNames.clear();
-                                friendIds.clear();
-                                friendImgs.clear();
-                                getAllFriends();
-                                FrWishlistCollectionRecycleAdapter.notifyItemInserted(collectionNames.size() - 1);
-                                //Update collection count
-                                collectionCount1.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
+                                DocumentSnapshot document = task.getResult();
+                                if(document.exists()) {
+                                    //collection exists
+                                    DocumentSnapshot collection = task.getResult();
+                                    collectionName[0] = collection.getString(collection_name);
+                                    Log.d("friendCollectionName", "Name: " + collectionName[0]);
+                                    Log.d("friendName2", "Name: " + friend[0]);
+                                    dataBaseHelper.addNewFriendCollection(friend[0], collectionName[0], userID, collectionID, friend[1]);
+                                    //Update collection count
+                                    ids.clear();
+                                    collectionNames.clear();
+                                    collectionIDs.clear();
+                                    friendNames.clear();
+                                    friendIds.clear();
+                                    friendImgs.clear();
+                                    getAllFriends();
+                                    FrWishlistCollectionRecycleAdapter.notifyItemInserted(collectionNames.size() - 1);
+                                    collectionCount1.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
+                                }
                             }
                         }
                     });

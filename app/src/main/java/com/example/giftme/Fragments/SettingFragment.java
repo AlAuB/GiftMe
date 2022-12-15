@@ -201,7 +201,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 //        dataBaseHelper.deleteTable("COLLECTIONS");
         //clear out local SQLite database end---
         SessionManager.clearSession(getContext());
-        listener.updateData(false);
+        listener.updateData(true);
 
         signedOutState();
     }

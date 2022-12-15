@@ -724,6 +724,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Delete friend's collection
+     *
+     * @param id id for that item in that table
+     */
+    public void deleteCollectionFriend(String id) {
+        Log.d(TAG, "deleteData: " + id + " " + TABLE_NAME);
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        // first delete it from COLLECTIONS table
+        long status = sqLiteDatabase.delete(TABLE_NAME, FIRESTORE_ID + "=?", new String[]{id});
+        if (status == -1) {
+            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+            // after successful delete in local db, delete in firestore as well
+            DocumentReference wishlistRef = fireStore.collection("users").document(userEmail).collection("wishlists").document(id);
+            wishlistRef.delete()
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted! (ID: " + id + ", user:" + userEmail + ")"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+        }
+    }
 
     /**
      * Delete a collection SQLite only
