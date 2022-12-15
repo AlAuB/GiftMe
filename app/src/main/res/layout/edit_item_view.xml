@@ -105,10 +105,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:scaleX=".8"
-            android:scaleY=".8"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="7dp"
+            android:scaleX=".7"
+            android:scaleY=".7"
             android:stepSize="1"
             android:progressDrawable="@drawable/custom_rating_bar"/>
 
