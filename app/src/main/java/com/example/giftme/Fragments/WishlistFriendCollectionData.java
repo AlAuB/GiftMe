@@ -1,5 +1,6 @@
 package com.example.giftme.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Adapters.FrWishlistCollectionRecycleAdapter;
 import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -57,8 +59,8 @@ public class WishlistFriendCollectionData extends Fragment {
 
     DataBaseHelper dataBaseHelper;
 
-    ImageView emptyText;
-    TextView emptyImage;
+//    ImageView emptyImage;
+//    TextView emptyText;
 
     private static final String TABLE_NAME = "COLLECTIONS";
 
@@ -84,8 +86,8 @@ public class WishlistFriendCollectionData extends Fragment {
         friendNames = new ArrayList<>();
         friendImgs = new ArrayList<>();
 
-        emptyText = view1.findViewById(R.id.empty_text);
-        emptyImage = view1.findViewById(R.id.empty_icon);
+//        emptyText = view1.findViewById(R.id.empty_text);
+//        emptyImage = view1.findViewById(R.id.empty_icon);
 
         floatingActionButton1 = view1.findViewById(R.id.action1);
 
@@ -96,13 +98,17 @@ public class WishlistFriendCollectionData extends Fragment {
                 String wishlistID = args.getString("collection_id");
 
                 addFriendCollection(userID, wishlistID);
-
             }catch(Exception e){
                 System.out.println("Error");
             }
-
         }
-        getAllFriends();
+        //if user is logged in, then show their FRIEND collections
+        if (SessionManager.getUserStatus(context1)) {
+            getAllFriends();
+        }
+        collectionCount1.setText(String.valueOf(collectionNames.size()));
+        Log.d("friendCollectionCount", "num collections " + collectionNames.size());
+        
         //TESTING START
         floatingActionButton1.setOnClickListener(view -> {
             confirmDialog();
@@ -112,6 +118,7 @@ public class WishlistFriendCollectionData extends Fragment {
         recyclerView1.setHasFixedSize(true);
         FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collectionNames, collectionIDs, friendIds, friendNames, friendImgs);
         recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
+
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView1);
 
         return view1;
@@ -217,16 +224,6 @@ public class WishlistFriendCollectionData extends Fragment {
                     collectionIDs.add(cursor.getString(5));
                 }
             }
-        }
-    }
-
-    private void checkEmptyUI() {
-        if (collectionNames.isEmpty()) {
-            emptyImage.setVisibility(View.VISIBLE);
-            emptyText.setVisibility(View.VISIBLE);
-        } else {
-            emptyImage.setVisibility(View.GONE);
-            emptyText.setVisibility(View.GONE);
         }
     }
 

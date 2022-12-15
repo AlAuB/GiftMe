@@ -1,6 +1,7 @@
 package com.example.giftme.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.SessionManager;
@@ -196,12 +199,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         for (String id: collectionIds){
             dataBaseHelper.deleteCollectionSQL(id);
         }
-        dataBaseHelper.deleteAll("COLLECTIONS");
         collectionIds.clear();
+        dataBaseHelper.deleteAll("COLLECTIONS");
 //        dataBaseHelper.deleteTable("COLLECTIONS");
         //clear out local SQLite database end---
         SessionManager.clearSession(getContext());
         listener.updateData(true);
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();
 
         signedOutState();
     }
@@ -292,7 +298,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
                                 getAllMyCollection();
                                 listener.updateData(true);
-
 //                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                             } else {
                                 Log.d("debugging::", "user does not exist");
@@ -301,6 +306,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
                             dataBaseHelper.setDeviceMessagingToken(user.getEmail());
                             getAllCollection();
                             listener.updateData(true);
+
                         });
 
                         if (!SessionManager.getUserPFP(getContext()).equals("")) {
