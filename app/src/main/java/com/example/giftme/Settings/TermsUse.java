@@ -7,6 +7,7 @@ import android.webkit.WebView;
 
 import com.example.giftme.R;
 
+// terms of use page
 public class TermsUse extends AppCompatActivity {
 
     @Override

@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.example.giftme.R;
 
+// user profile page
 public class User_Profile extends AppCompatActivity {
 
     @Override

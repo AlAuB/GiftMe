@@ -81,25 +81,18 @@ public class FriendDetailViewFragment extends Fragment {
 
     //get all items from firestore with collectionID
     private void getAllItemsFirestore() {
-
-//            //TEST FIRE STORE START
-//            //get fire store collection wishlist items
-
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         DocumentReference userRef = fireStore.collection("users").document(friend_id);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);
 
-
+        // fetch documents
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
-
                     if (doc.exists()){
-                        //doc.get("field name")
                         Map<String, Object> itemsInWishlist = doc.getData();
-
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             itemsInWishlist.forEach((key, value) -> {
                                 if( value instanceof HashMap){
@@ -114,9 +107,6 @@ public class FriendDetailViewFragment extends Fragment {
                         recyclerView.setLayoutManager(new LinearLayoutManager(context));
                         recyclerView.setHasFixedSize(true);
                         recyclerView.setAdapter(friendItemsDetailAdapter);
-//        itemNumListener.updateItemNum(String.valueOf(friendItemAdapter.getItemCount()));
-
-                        // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
                     }
                 }else
                 {

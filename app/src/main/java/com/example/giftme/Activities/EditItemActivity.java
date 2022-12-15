@@ -84,7 +84,6 @@ public class EditItemActivity extends AppCompatActivity {
         }
         String itemDate = intent.getStringExtra("itemDate");
         String itemFSID = intent.getStringExtra("itemFSID");
-        Log.d("editItem", "firestoreID from inten" + itemFSID);
         if(Objects.equals(itemFSID, "null")){ itemFSID = "";}
 
         String collectionName = intent.getStringExtra("collectionName");
@@ -100,18 +99,18 @@ public class EditItemActivity extends AppCompatActivity {
         priceET.setText(String.valueOf(item.getPrice()));
 
         Log.d("itemImg", "Img is null" + (item.getImg() == null));
-
         Log.d("itemImage", "Img " + img);
+        // if the item didn't have any image before, show a default image
         if (img == null || img.equals("null")) {
             imgView.setImageResource(R.drawable.surprise);
-        } else {
+        } else { // else grab the image from SQLite
             String tempPath = getApplicationContext().getFilesDir() + "/" + img;
             File file = new File(tempPath);
             if (file.exists()) {
                 Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 imgView.setImageBitmap(getBitMap);
             } else {
-                //use the image stored in firestore storage
+                // if it's not in SQLite, grab the image stored in firebase storage
                 String[] imgUri = new String[1];
                 String path = "images/" + SessionManager.getUserEmail(context) + "/" + img;
                 FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -156,11 +155,12 @@ public class EditItemActivity extends AppCompatActivity {
         imgView.setOnClickListener(view -> openGallery());
         //choose image end --------------
 
+        // save button clicked
         String finalItemFSID = itemFSID;
         saveButton.setOnClickListener(view -> {
             try {
                 String fileName;
-                if (bitmap != null) {
+                if (bitmap != null) { // if user uploaded a new image
                     Date dateObj = new Date();
                     fileName = dateObj.getTime() + ".jpg";
                     FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -170,10 +170,11 @@ public class EditItemActivity extends AppCompatActivity {
                     dataBaseHelper.removeImageFirebase(item.getImg());
                     // then upload it to storage
                     dataBaseHelper.storeImageFirebase(bitmap, fileName);
-                } else {
+                } else { // else use the old image
                     fileName = intent.getStringExtra("itemImg");
                 }
 
+                // update other details
                 String newName = String.valueOf(nameET.getText());
                 String newDescription = "";
                 if (String.valueOf(descriptionET.getText()).length() > 100) {
@@ -181,23 +182,18 @@ public class EditItemActivity extends AppCompatActivity {
                 } else {
                     newDescription = String.valueOf(descriptionET.getText());
                 }
+
                 Log.d("newDes", "NEWDES IN TRY " + newDescription);
-                Log.d("NEWIMG", "TESTING1");
                 double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
-                Log.d("NEWIMG", "TESTING2");
                 int newRating = (int) ratingBar.getRating();
-                Log.d("NEWIMG", "TESTING3");
                 String newLink = String.valueOf(linkET.getText());
-                Log.d("NEWIMG", "TESTING4");
+
+                // setting the update item
                 if (!newLink.isEmpty()) {
-                    Log.d("NEWIMG", "TESTING INSIDE IF");
                     if (!newLink.contains("http")) {
-                        Log.d("NEWIMG", "TESTING INSIDE IF 2");
                         Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
                     }
                     else{//link is valid
-                        Log.d("NEWIMG", "TESTING");
-                        Log.d("NEWIMG", fileName);
                         item.setImg(fileName);
                         item.setHearts(newRating);
                         item.setDescription(newDescription);
@@ -212,8 +208,6 @@ public class EditItemActivity extends AppCompatActivity {
                     }
                 }
                 else{
-                    Log.d("NEWIMG", "TESTING");
-                    Log.d("NEWIMG", fileName);
                     item.setImg(fileName);
                     item.setHearts(newRating);
                     item.setDescription(newDescription);
@@ -227,13 +221,14 @@ public class EditItemActivity extends AppCompatActivity {
                     getBack(collectionName);
                 }
             } catch (IOException e) {
-                System.out.println("Cannot get New Image in edit Activity");
+                Log.d("editItem", "Cannot get New Image in edit Activity");
             }
         });
 
         cancelButton.setOnClickListener(view -> getBack(collectionName));
     }
 
+    // fetch item details and send it to MyCollectionsItems
     private void getBack(String collectionName) {
         Intent myCollectionItemsIntent = new Intent(this, DetailedItemViewActivity.class);
         myCollectionItemsIntent.putExtra("itemImg", item.getImg());

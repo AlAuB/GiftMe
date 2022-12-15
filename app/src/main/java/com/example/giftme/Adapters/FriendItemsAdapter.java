@@ -89,7 +89,6 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
             intent.putExtra("friendID", friendID);
             Log.d("FRIENDID_ITEMSADAPTER", "friendID: " + friendID);
             intent.putExtra("itemFSID", item.getFireStoreID());
-            //
 
             if(item.getDescription() != null){
                 intent.putExtra("itemDes", item.getDescription());
@@ -114,7 +113,6 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
                     // Got the download URL for 'users/me/profile.png'
                     imgUri[0] = uri.toString();
                     intent.putExtra("itemImg", imgUri[0]);
-//            this.activity.finish();
                 }).addOnFailureListener(exception -> {
                     // Handle any errors
                     Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
