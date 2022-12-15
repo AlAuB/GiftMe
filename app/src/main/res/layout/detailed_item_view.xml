@@ -66,6 +66,7 @@
             android:transformPivotY="50dp" />
 
         <TextView
+            style="@style/texts"
             android:id="@+id/descriptionTV"
             android:layout_width="match_parent"
             android:layout_height="200dp"
