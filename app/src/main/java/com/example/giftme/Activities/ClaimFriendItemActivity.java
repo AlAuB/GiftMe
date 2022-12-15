@@ -43,7 +43,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         int itemID = intent.getIntExtra("itemID", 1);
         String itemName = intent.getStringExtra("itemName");
         int itemHearts = intent.getIntExtra("itemHearts", 0);
-        int itemPrice = intent.getIntExtra("itemPrice", 0);
+        double itemPrice = intent.getDoubleExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
         String img = intent.getStringExtra("itemImg");
         String date = intent.getStringExtra("itemDate");
