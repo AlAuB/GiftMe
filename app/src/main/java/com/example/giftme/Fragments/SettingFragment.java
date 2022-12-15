@@ -1,7 +1,6 @@
 package com.example.giftme.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,11 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.giftme.Activities.EditItemActivity;
-import com.example.giftme.Activities.MainActivity;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
@@ -61,7 +57,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     ImageView pfpIV;
     DataBaseHelper dataBaseHelper;
     SignStatusListener listener;
-    changeMenuPosition darkModeListener;
     ArrayList<String> collectionIds;
 
     public SettingFragment() {
@@ -331,23 +326,16 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         void updateData(boolean status);
     }
 
-    public interface changeMenuPosition {
-        void changePosition();
-    }
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof SignStatusListener)
             listener = (SignStatusListener) context;
-        if (context instanceof changeMenuPosition)
-            darkModeListener = (changeMenuPosition) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         listener = null;
-        darkModeListener = null;
     }
 }

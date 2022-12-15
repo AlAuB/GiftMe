@@ -23,7 +23,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener, SettingFragment.changeMenuPosition {
+public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener {
 
     BottomNavigationView bottomNavigationView;
 
@@ -110,10 +110,5 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                 ((WishlistMyCollectionData) fragment).signedOutState();
             }
         }
-    }
-
-    @Override
-    public void changePosition() {
-        bottomNavigationView.getMenu().getItem(0).setChecked(true);
     }
 }

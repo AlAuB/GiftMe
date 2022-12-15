@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,6 +54,15 @@ public class EditItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_item_view);
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         //set everything
         nameET = findViewById(R.id.itemNameET);
         descriptionET = findViewById(R.id.descriptionET);
@@ -84,7 +94,9 @@ public class EditItemActivity extends AppCompatActivity {
         }
         String itemDate = intent.getStringExtra("itemDate");
         String itemFSID = intent.getStringExtra("itemFSID");
-        if(Objects.equals(itemFSID, "null")){ itemFSID = "";}
+        if (Objects.equals(itemFSID, "null")) {
+            itemFSID = "";
+        }
 
         String collectionName = intent.getStringExtra("collectionName");
         Log.d("debug::", "edit item activity: " + collectionName + " " + itemFSID + " " + img);
@@ -192,8 +204,7 @@ public class EditItemActivity extends AppCompatActivity {
                 if (!newLink.isEmpty()) {
                     if (!newLink.contains("http")) {
                         Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
-                    }
-                    else{//link is valid
+                    } else {//link is valid
                         item.setImg(fileName);
                         item.setHearts(newRating);
                         item.setDescription(newDescription);
@@ -206,8 +217,7 @@ public class EditItemActivity extends AppCompatActivity {
                         Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
                         getBack(collectionName);
                     }
-                }
-                else{
+                } else {
                     item.setImg(fileName);
                     item.setHearts(newRating);
                     item.setDescription(newDescription);
@@ -249,4 +259,10 @@ public class EditItemActivity extends AppCompatActivity {
         activityResultLauncher.launch(imgIntent);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        super.onBackPressed();
+    }
 }
