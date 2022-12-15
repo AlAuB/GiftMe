@@ -100,7 +100,7 @@ public class AddNewItemManually extends AppCompatActivity {
                 String itemName = Objects.requireNonNull(name.getText()).toString();
                 String itemPrice = Objects.requireNonNull(price.getText()).toString();
                 String itemExtraInfo = Objects.requireNonNull(extraInfo.getText()).toString();
-                if (itemName.length() > 30 || itemPrice.length() > 10 || itemExtraInfo.length() > 100) {
+                if (itemName.length() > 30 || itemPrice.length() > 8 || itemExtraInfo.length() > 100) {
                     Toast.makeText(context, "Invalid Input", Toast.LENGTH_SHORT).show();
                 } else {
                     Item item = new Item();

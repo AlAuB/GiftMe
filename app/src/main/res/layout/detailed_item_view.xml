@@ -66,14 +66,13 @@
             android:transformPivotY="50dp" />
 
         <TextView
+            style="@style/texts"
             android:id="@+id/descriptionTV"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:background="#cde7f7"
-            android:padding="15dp"
             android:text="HELLO I WANT A CUTE CAT"
             android:textSize="17sp" />
 
