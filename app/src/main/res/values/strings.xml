@@ -45,4 +45,24 @@
     <string name="shop_now">Shop now</string>
     <string name="delete">delete</string>
     <string name="deep_link">Paste Link Here</string>
+    <string name="required">Required</string>
+
+    <string name="item_name">NAME</string>
+    <string name="item_price">PRICE</string>
+    <string name="item_des">DESCRIPTION</string>
+
+    <string name="customize">Customization</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="about">About</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="about_us">About us</string>
+    <string name="support">Support</string>
+    <string name="faq">FAQs</string>
+    <string name="help_support">Help and Support</string>
+
+    <string name="input_name">Item Name Here</string>
+    <string name="input_price">Input Price</string>
+    <string name="claim">claim</string>
+    <string name="date">date</string>
+
 </resources>

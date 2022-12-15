@@ -41,7 +41,7 @@
             app:counterEnabled="true"
             app:counterMaxLength="30"
             app:endIconMode="clear_text"
-            app:helperText="Required"
+            app:helperText="@string/required"
             app:helperTextTextColor="#F44336">
 
             <com.google.android.material.textfield.TextInputEditText

@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text=""
-            android:hint="Item Name Here"
+            android:hint="@string/input_name"
             android:textColor="@color/black"
             android:textSize="19dp"
             android:layout_marginStart="10dp"/>
@@ -63,7 +63,7 @@
                 android:gravity="left|center_vertical"
                 android:textColor="@color/black"
                 android:text=""
-                android:hint="input price"
+                android:hint="@string/input_price"
                 android:textSize="19sp"
                 android:layout_marginLeft="10dp"/>
             <RatingBar
@@ -95,7 +95,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="@color/lightpink"
-            android:text="Shop now"
+            android:text="@string/shop_now"
             />
         <Button
             android:id="@+id/button_claim"
@@ -104,7 +104,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="@color/lightpink"
-            android:text="claim"
+            android:text="@string/claim"
             />
         <Button
             android:id="@+id/button_cancel"
@@ -113,7 +113,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:backgroundTint="@color/lightpink"
-            android:text="cancel"/>
+            android:text="@string/cancel"/>
     </LinearLayout>
 
 </FrameLayout>
