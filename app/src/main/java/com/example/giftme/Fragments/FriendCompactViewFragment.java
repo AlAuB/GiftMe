@@ -2,7 +2,6 @@ package com.example.giftme.Fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,18 +19,13 @@ import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
-import com.google.firestore.v1.Value;
 
 public class FriendCompactViewFragment extends Fragment {
 
@@ -44,7 +38,7 @@ public class FriendCompactViewFragment extends Fragment {
     String collection_name;
     itemNumListener itemNumListener;
     Activity activity;
-    String friendName, friend_id;
+    String friend_id;
     String collection_id;
 
 
@@ -64,14 +58,13 @@ public class FriendCompactViewFragment extends Fragment {
         items = new ArrayList<>();
 
         if (getArguments() != null) {
-            collection_name = getArguments().getString("collection_name");
-            collection_id = getArguments().getString("collection_id");
-            friend_id = getArguments().getString("friend_id");
+            collection_name = getArguments().getString("collection_name").trim();
+            collection_id = getArguments().getString("collection_id").trim();
+            friend_id = getArguments().getString("friend_id").trim();
         }
-        if(SessionManager.getUserStatus(context) == true){
+        if (SessionManager.getUserStatus(context)) {
             getAllItemsFirestore();
-        }
-        else{
+        } else {
             items.clear();
         }
 
@@ -82,46 +75,38 @@ public class FriendCompactViewFragment extends Fragment {
 
     //get all items from firestore with collectionID
     private void getAllItemsFirestore() {
-//            //TEST FIRE STORE START
-//            //get fire store collection wishlist items
+        //TEST FIRE STORE START
+        //get fire store collection wishlist items
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         DocumentReference userRef = fireStore.collection("users").document(friend_id);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);
 
-        collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    DocumentSnapshot doc = task.getResult();
-
-                    if (doc.exists()){
-                        //doc.get("field name")
-                        Map<String, Object> itemsInWishlist = doc.getData();
-
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        collectionRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot doc = task.getResult();
+                if (doc.exists()) {
+                    //doc.get("field name")
+                    Map<String, Object> itemsInWishlist = doc.getData();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        if (itemsInWishlist != null) {
                             itemsInWishlist.forEach((key, value) -> {
-                                        if( value instanceof HashMap){
-                                            Item currentItem = dataBaseHelper.convertMapIntoItem( (Map<String, Object>) value, key);
+                                        if (value instanceof HashMap) {
+                                            Item currentItem = dataBaseHelper.convertMapIntoItem((Map<String, Object>) value, key);
                                             Log.d("FIRESTORE", currentItem.toString());
                                             items.add(currentItem);
-
                                         }
                                     }
                             );
                         }
-                        // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
-                        friendItemAdapter = new FriendItemsAdapter(activity, context, items, friend_id, collection_id);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                        recyclerView.setHasFixedSize(true);
-                        recyclerView.setAdapter(friendItemAdapter);
-//        itemNumListener.updateItemNum(String.valueOf(friendItemAdapter.getItemCount()));
-
-                        // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
                     }
-                }else
-                {
-                    Log.d("ToastError", "error");
+                    // DISPLAYING THE ITEMS FROM FRIEND WISHLIST
+                    friendItemAdapter = new FriendItemsAdapter(activity, context, items, friend_id, collection_id);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setAdapter(friendItemAdapter);
                 }
+            } else {
+                Log.d("ToastError", "error");
             }
         });
 

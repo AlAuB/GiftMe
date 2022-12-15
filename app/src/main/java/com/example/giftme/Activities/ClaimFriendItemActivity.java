@@ -54,7 +54,6 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         String itemFsID = intent.getStringExtra("itemFsID");
         String friendCollectionID = intent.getStringExtra("collectionID");
         collectionName = intent.getStringExtra("collectionName");
-        //
 
         //(re)create item obj
         Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,

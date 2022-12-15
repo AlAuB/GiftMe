@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                 String collectionID = subString.substring(indexPlus + 1);
 
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
-                dataBaseHelper.sendNotification(userID, "Your friend get your collection", SessionManager.getUserName(getApplicationContext()) + " adds your collection");
+                dataBaseHelper.sendNotification(userID, "Got it!", SessionManager.getUserName(getApplicationContext()) + " adds your collection");
 
                 Fragment fragmentWishlist = WishlistFragment.newInstance(userID, collectionID);
                 getSupportFragmentManager().beginTransaction()
