@@ -67,8 +67,7 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
         Log.d("ITEM_IMAGE", "IMG: " + item.getImg());
         String imgUrl = item.getImg();
         Log.d("ITEM_URL", "IMG: " + imgUrl);
-//        if(!imgUrl.equals("null")) || item.getImg() != null){
-        if (imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+        if (imgUrl == null || imgUrl.equals("null")) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             holder.imageView.setImageResource(R.drawable.surprise);
         } else {
@@ -82,12 +81,12 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
                 imgUri[0] = uri.toString();
                 Log.d("insideIf", "URI: " + imgUri[0]);
                 Picasso.get().load(imgUri[0]).into(holder.imageView);
-
             }).addOnFailureListener(exception -> {
                 // Handle any errors
                 Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
             });
         }
+
         holder.ratingBar.setRating(item.getHearts());
         ImageView claimedImgView = holder.claimedPFP;
         if (item.getClaimed()) {
@@ -114,7 +113,7 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
             }
 
             //get image ------------------------------------------------------------
-            if (imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+            if (imgUrl == null || imgUrl.equals("null")) {
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             } else {
                 String[] imgUri = new String[1];
@@ -125,26 +124,22 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
                 mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     // Got the download URL for 'users/me/profile.png'
                     imgUri[0] = uri.toString();
-
                     intent.putExtra("itemImg", imgUri[0]);
-                    intent.putExtra("itemURL", item.getWebsite());
-                    intent.putExtra("itemDate", item.getDate());
-                    intent.putExtra("collectionID", collectionID);
-                    intent.putExtra("collectionName", collectionName);
-
-                    //friend firestore id: email
-                    intent.putExtra("friendID", friendID);
-                    intent.putExtra("itemFSID", item.getFireStoreID());
-
-                    this.activity.startActivity(intent);
                 }).addOnFailureListener(exception -> {
                     // Handle any errors
                     Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
                 });
             }
             //get img end --------------------------------------------------------------------
+            intent.putExtra("itemURL", item.getWebsite());
+            intent.putExtra("itemDate", item.getDate());
+            intent.putExtra("collectionID", collectionID);
+            intent.putExtra("collectionName", collectionName);
+            //friend firestore id: email
+            intent.putExtra("friendID", friendID);
+            intent.putExtra("itemFSID", item.getFireStoreID());
+            this.activity.startActivity(intent);
         });
-
     }
 
     @Override

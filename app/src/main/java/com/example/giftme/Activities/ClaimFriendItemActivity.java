@@ -3,7 +3,6 @@ package com.example.giftme.Activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -44,14 +43,13 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         int itemID = intent.getIntExtra("itemID", 1);
         String itemName = intent.getStringExtra("itemName");
         int itemHearts = intent.getIntExtra("itemHearts", 0);
-        int itemPrice = intent.getIntExtra("itemPrice", 0);
+        double itemPrice = intent.getDoubleExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
         String img = intent.getStringExtra("itemImg");
         String date = intent.getStringExtra("itemDate");
         String url = intent.getStringExtra("itemURL");
 
         String friendID = intent.getStringExtra("friendID");
-        Log.d("FRIENDID_CLAIM", "friendID: " + friendID);
         String itemFSID = intent.getStringExtra("itemFSID");
         String friendCollectionID = intent.getStringExtra("collectionID");
         collectionName = intent.getStringExtra("collectionName");
@@ -74,7 +72,6 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         descriptionTV.setText(item.getDescription());
         ratingBar.setRating(item.getHearts());
         dateTV.setText(item.getDate());
-        Log.d("itemImgClaim", "IMG: " + item.getImg());
         if(item.getImg() != null){
             Picasso.get().load(item.getImg()).into(imageView);
         }
@@ -82,7 +79,6 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view -> {
             //if there is no link
-            Log.d("claimLink", "URL is :" + url);
             if ((url == null) || (url.equals("null")) || (url.isEmpty())){
                 Toast.makeText(this, "There is no link", Toast.LENGTH_SHORT).show();
             } else{
@@ -99,7 +95,6 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         //set anony pfp too
         claimButton.setClickable(!item.getClaimed());
         claimButton.setOnClickListener(view -> {
-            Log.d("friendClaim", friendID + " " + friendCollectionID + " " + itemFSID);
             dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFSID, true);
             dataBaseHelper.sendNotification(friendID, "Claimed!", "Someone claims one of your items in " + collectionName);
 
