@@ -166,6 +166,9 @@ public class EditItemActivity extends AppCompatActivity {
                     FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                     fileOutputStream.close();
+                    // first remove old image from storage
+                    dataBaseHelper.removeImageFirebase(item.getImg());
+                    // then upload it to storage
                     dataBaseHelper.storeImageFirebase(bitmap, fileName);
                 } else {
                     fileName = intent.getStringExtra("itemImg");
@@ -202,8 +205,8 @@ public class EditItemActivity extends AppCompatActivity {
                         item.setWebsite(newLink);
                         item.setPrice(newPrice);
                         dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                                newDescription, newRating, fileName, finalItemFsID);
-                        Log.d("editItem", "firestoreID of item " + finalItemFsID);
+                                newDescription, newRating, fileName, finalItemFSID);
+                        Log.d("editItem", "firestoreID of item " + finalItemFSID);
                         Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
                         getBack(collectionName);
                     }
@@ -218,8 +221,8 @@ public class EditItemActivity extends AppCompatActivity {
                     item.setWebsite("");
                     item.setPrice(newPrice);
                     dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                            newDescription, newRating, fileName, finalItemFsID);
-                    Log.d("editItem", "firestoreID of item " + finalItemFsID);
+                            newDescription, newRating, fileName, finalItemFSID);
+                    Log.d("editItem", "firestoreID of item " + finalItemFSID);
                     Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
                     getBack(collectionName);
                 }
