@@ -98,6 +98,7 @@
             app:srcCompat="@drawable/black_text"
             android:contentDescription="@string/image_for_current_item" />
 
+
         <RatingBar
             style="@style/CustomRatingBarStyle"
             android:id="@+id/ratingBar"
