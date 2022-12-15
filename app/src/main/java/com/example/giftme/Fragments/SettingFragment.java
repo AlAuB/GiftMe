@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.giftme.Activities.EditItemActivity;
+import com.example.giftme.Activities.MainActivity;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
@@ -81,6 +83,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             if (isChecked){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 mode.setText("Dark Mode");
+
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 mode.setText("Light Mode");

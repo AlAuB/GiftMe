@@ -37,9 +37,8 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_nav);
-
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_view, wishlistFragment).commit();
-
+    
         if (ActivityCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this,
@@ -113,3 +112,4 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
         }
     }
 }
+//bottomNavigationView.getMenu().getItem(0).setChecked(true);
