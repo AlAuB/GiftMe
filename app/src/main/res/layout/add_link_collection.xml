@@ -14,7 +14,7 @@
         android:layout_marginBottom="5dp"
         android:hint="@string/deep_link"
         app:endIconMode="clear_text"
-        app:helperText="Required"
+        app:helperText="@string/required"
         app:helperTextTextColor="#F44336">
 
         <com.google.android.material.textfield.TextInputEditText

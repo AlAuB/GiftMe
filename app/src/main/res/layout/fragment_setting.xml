@@ -88,7 +88,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="Customization"
+                android:text="@string/customize"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.95"
                     android:padding="5dp"
-                    android:text="Light Mode"
+                    android:text="@string/light_mode"
                     android:textSize="18sp" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
@@ -127,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="About"
+                android:text="@string/about"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -137,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="Privacy Policy"
+                android:text="@string/privacy_policy"
                 android:textSize="18sp" />
 
             <TextView
@@ -146,7 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="About Us"
+                android:text="@string/about_us"
                 android:textSize="18sp" />
 
             <!--ABOUT END-->
@@ -157,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="Support"
+                android:text="@string/support"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -167,7 +167,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="FAQs"
+                android:text="@string/faq"
                 android:textSize="18sp" />
 
             <TextView
@@ -176,7 +176,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="Help and Support"
+                android:text="@string/help_support"
                 android:textSize="18sp" />
             <!--SUPPORT END-->
         </LinearLayout>
