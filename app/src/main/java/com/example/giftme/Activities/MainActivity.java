@@ -61,11 +61,12 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wishlist) {
+                WishlistFragment newWishlistFragment = new WishlistFragment();
                 getSupportFragmentManager().beginTransaction().
                         setCustomAnimations(
                                 R.anim.slide_in,  // enter
                                 R.anim.fade_out). // exit
-                        replace(R.id.frag_view, wishlistFragment).commit();
+                        replace(R.id.frag_view, newWishlistFragment).commit();
                 return true;
             } else if (item.getItemId() == R.id.notification) {
                 getSupportFragmentManager().beginTransaction().
