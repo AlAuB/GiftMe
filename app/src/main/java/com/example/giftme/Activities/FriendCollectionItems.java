@@ -27,6 +27,7 @@ public class FriendCollectionItems extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_collection_items);
 
+        //set the view
         collectionName = findViewById(R.id.collection_name);
         detailedViewButton = findViewById(R.id.detail_view);
         compactViewButton = findViewById(R.id.compact_view);
@@ -62,6 +63,7 @@ public class FriendCollectionItems extends AppCompatActivity {
                     setReorderingAllowed(true).commit();
         }
 
+        //change to detail view
         detailedViewButton.setOnClickListener(view -> {
             setButtonsAlpha(0);
             friendDetailViewFragment = new FriendDetailViewFragment();
@@ -71,6 +73,7 @@ public class FriendCollectionItems extends AppCompatActivity {
                     setReorderingAllowed(true).commit();
         });
 
+        //change to compact view
         compactViewButton.setOnClickListener(view -> {
             setButtonsAlpha(1);
             friendCompactViewFragment = new FriendCompactViewFragment();
