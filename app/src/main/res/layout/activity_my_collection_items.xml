@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="#F44336"
+                android:textColor="@color/textbox_red"
                 android:textSize="18sp" />
 
             <TextView

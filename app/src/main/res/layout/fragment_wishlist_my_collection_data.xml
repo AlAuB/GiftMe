@@ -39,7 +39,7 @@
                 android:layout_weight="0.1"
                 android:gravity="center_horizontal"
                 android:text="0"
-                android:textColor="#FF5722"
+                android:textColor="@color/textbox_red"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
