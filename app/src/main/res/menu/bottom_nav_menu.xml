@@ -6,11 +6,6 @@
         android:title="@string/wishlist" />
 
     <item
-        android:id="@+id/notification"
-        android:icon="@drawable/ic_textsms"
-        android:title="@string/notification" />
-
-    <item
         android:id="@+id/setting"
         android:icon="@drawable/ic_settings"
         android:title="@string/setting" />

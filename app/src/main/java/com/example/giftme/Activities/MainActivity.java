@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.giftme.Fragments.NotificationFragment;
 import com.example.giftme.Fragments.SettingFragment;
 import com.example.giftme.Fragments.WishlistFragment;
 import com.example.giftme.Fragments.WishlistMyCollectionData;
@@ -29,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
     BottomNavigationView bottomNavigationView;
 
     WishlistFragment wishlistFragment = new WishlistFragment();
-    NotificationFragment notificationFragment = new NotificationFragment();
     SettingFragment settingFragment = new SettingFragment();
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
@@ -41,10 +39,6 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
         bottomNavigationView = findViewById(R.id.bottom_nav);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.frag_view, wishlistFragment).commit();
-
-//        BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.notification);
-//        badgeDrawable.setVisible(true);
-//        badgeDrawable.setNumber(6);
 
         if (ActivityCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -60,13 +54,6 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                                 R.anim.slide_in,  // enter
                                 R.anim.fade_out). // exit
                         replace(R.id.frag_view, newWishlistFragment).commit();
-                return true;
-            } else if (item.getItemId() == R.id.notification) {
-                getSupportFragmentManager().beginTransaction().
-                        setCustomAnimations(
-                                R.anim.slide_in,  // enter
-                                R.anim.fade_out). // exit
-                        replace(R.id.frag_view, notificationFragment).commit();
                 return true;
             } else if (item.getItemId() == R.id.setting) {
                 getSupportFragmentManager().beginTransaction().
