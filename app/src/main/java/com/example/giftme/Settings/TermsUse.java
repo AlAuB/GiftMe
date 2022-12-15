@@ -15,6 +15,6 @@ public class TermsUse extends AppCompatActivity {
         setContentView(R.layout.activity_terms_use);
 
         WebView page2 = findViewById(R.id.page2);
-        page2.loadUrl("file:///android_asset/TermsUse.html");
+        page2.loadUrl("file:///android_asset/AboutUs.html");
     }
 }
