@@ -10,6 +10,8 @@
 
 
     <!--FOR THIS APP-->
+    <color name ="GiftMe_pink">#FF6392</color>
+    <color name= "GiftMe_blue">#5AA9E6</color>
     <color name="lightblue">#7FC8F8</color>
     <color name="pink">#FF6392</color>
     <color name="lightpink">#FFB6C1</color>

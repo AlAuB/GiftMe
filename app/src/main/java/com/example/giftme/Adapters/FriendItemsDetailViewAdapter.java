@@ -77,6 +77,7 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
 //        if(!imgUrl.equals("null")) || item.getImg() != null){
         if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+            holder.imageView.setImageResource(R.drawable.surprise);
         }
         else{
             String[] imgUri = new String[1];

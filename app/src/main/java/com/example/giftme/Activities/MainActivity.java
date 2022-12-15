@@ -17,21 +17,14 @@ import com.example.giftme.Fragments.SettingFragment;
 import com.example.giftme.Fragments.WishlistFragment;
 import com.example.giftme.Fragments.WishlistMyCollectionData;
 import com.example.giftme.Helpers.DataBaseHelper;
-import com.example.giftme.Helpers.FCMSend;
 import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
-import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
-import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener,
-        WishlistMyCollectionData.MyFriendCollectionListener {
+public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener {
 
     BottomNavigationView bottomNavigationView;
 
@@ -61,11 +54,12 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.wishlist) {
+                WishlistFragment newWishlistFragment = new WishlistFragment();
                 getSupportFragmentManager().beginTransaction().
                         setCustomAnimations(
                                 R.anim.slide_in,  // enter
                                 R.anim.fade_out). // exit
-                        replace(R.id.frag_view, wishlistFragment).commit();
+                        replace(R.id.frag_view, newWishlistFragment).commit();
                 return true;
             } else if (item.getItemId() == R.id.notification) {
                 getSupportFragmentManager().beginTransaction().
@@ -130,11 +124,5 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
                 ((WishlistMyCollectionData) fragment).signedOutState();
             }
         }
-    }
-
-
-    @Override
-    public void goToFriendCollection() {
-        //WISHLISTFRIENDCOLLECTIONDATA FRAGMENT
     }
 }

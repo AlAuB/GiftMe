@@ -1,5 +1,6 @@
 package com.example.giftme.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
@@ -23,9 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Adapters.FrWishlistCollectionRecycleAdapter;
 import com.example.giftme.Helpers.DataBaseHelper;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentReference;
@@ -45,7 +48,7 @@ public class WishlistFriendCollectionData extends Fragment {
     Context context1;
     TextView collectionCount1;
     RecyclerView recyclerView1;
-    FloatingActionButton floatingActionButton1;
+    ExtendedFloatingActionButton extendedFloatingActionButton;
     com.example.giftme.Adapters.FrWishlistCollectionRecycleAdapter FrWishlistCollectionRecycleAdapter;
 
     ArrayList<String> ids;
@@ -57,8 +60,8 @@ public class WishlistFriendCollectionData extends Fragment {
 
     DataBaseHelper dataBaseHelper;
 
-    ImageView emptyText;
-    TextView emptyImage;
+//    ImageView emptyImage;
+//    TextView emptyText;
 
     private static final String TABLE_NAME = "COLLECTIONS";
 
@@ -84,10 +87,10 @@ public class WishlistFriendCollectionData extends Fragment {
         friendNames = new ArrayList<>();
         friendImgs = new ArrayList<>();
 
-        emptyText = view1.findViewById(R.id.empty_text);
-        emptyImage = view1.findViewById(R.id.empty_icon);
+//        emptyText = view1.findViewById(R.id.empty_text);
+//        emptyImage = view1.findViewById(R.id.empty_icon);
 
-        floatingActionButton1 = view1.findViewById(R.id.action1);
+        extendedFloatingActionButton = view1.findViewById(R.id.action1);
 
         final Bundle args = getArguments();
         if(args !=null){
@@ -96,16 +99,19 @@ public class WishlistFriendCollectionData extends Fragment {
                 String wishlistID = args.getString("collection_id");
 
                 addFriendCollection(userID, wishlistID);
-
             }catch(Exception e){
                 System.out.println("Error");
             }
-
         }
-
-        getAllFriends();
+        //if user is logged in, then show their FRIEND collections
+        if (SessionManager.getUserStatus(context1)) {
+            getAllFriends();
+        }
+        collectionCount1.setText(String.valueOf(collectionNames.size()));
+        Log.d("friendCollectionCount", "num collections " + collectionNames.size());
+        
         //TESTING START
-        floatingActionButton1.setOnClickListener(view -> {
+        extendedFloatingActionButton.setOnClickListener(view -> {
             confirmDialog();
         });
         //TESTING END
@@ -113,6 +119,7 @@ public class WishlistFriendCollectionData extends Fragment {
         recyclerView1.setHasFixedSize(true);
         FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collectionNames, collectionIDs, friendIds, friendNames, friendImgs);
         recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
+
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView1);
 
         return view1;
@@ -177,21 +184,25 @@ public class WishlistFriendCollectionData extends Fragment {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()){
-                                DocumentSnapshot collection = task.getResult();
-                                collectionName[0] = collection.getString(collection_name);
-                                Log.d("friendCollectionName", "Name: " + collectionName[0]);
-                                Log.d("friendName2", "Name: " + friend[0]);
-                                dataBaseHelper.addNewFriendCollection(friend[0], collectionName[0], userID, collectionID, friend[1]);
-                                ids.clear();
-                                collectionNames.clear();
-                                collectionIDs.clear();
-                                friendNames.clear();
-                                friendIds.clear();
-                                friendImgs.clear();
-                                getAllFriends();
-                                FrWishlistCollectionRecycleAdapter.notifyItemInserted(collectionNames.size() - 1);
-                                //Update collection count
-                                collectionCount1.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
+                                DocumentSnapshot document = task.getResult();
+                                if(document.exists()) {
+                                    //collection exists
+                                    DocumentSnapshot collection = task.getResult();
+                                    collectionName[0] = collection.getString(collection_name);
+                                    Log.d("friendCollectionName", "Name: " + collectionName[0]);
+                                    Log.d("friendName2", "Name: " + friend[0]);
+                                    dataBaseHelper.addNewFriendCollection(friend[0], collectionName[0], userID, collectionID, friend[1]);
+                                    //Update collection count
+                                    ids.clear();
+                                    collectionNames.clear();
+                                    collectionIDs.clear();
+                                    friendNames.clear();
+                                    friendIds.clear();
+                                    friendImgs.clear();
+                                    getAllFriends();
+                                    FrWishlistCollectionRecycleAdapter.notifyItemInserted(collectionNames.size() - 1);
+                                    collectionCount1.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
+                                }
                             }
                         }
                     });
@@ -217,16 +228,6 @@ public class WishlistFriendCollectionData extends Fragment {
         }
     }
 
-    private void checkEmptyUI() {
-        if (collectionNames.isEmpty()) {
-            emptyImage.setVisibility(View.VISIBLE);
-            emptyText.setVisibility(View.VISIBLE);
-        } else {
-            emptyImage.setVisibility(View.GONE);
-            emptyText.setVisibility(View.GONE);
-        }
-    }
-
     /**
      * Get all rows from database for Collection Table
      */
@@ -249,7 +250,7 @@ public class WishlistFriendCollectionData extends Fragment {
     private void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
         builder.setTitle("Add Friend's Collection");
-        View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.add_link_collection, null);
         TextInputEditText input = view.findViewById(R.id.input);
         builder.setView(view);
         builder.setPositiveButton("OK", (dialogInterface, i) -> {

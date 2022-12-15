@@ -86,6 +86,7 @@ public class FriendCompactViewFragment extends Fragment {
         Log.d("friendCompactView", "friendId " + friend_id);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);
 
+
         collectionRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot doc = task.getResult();

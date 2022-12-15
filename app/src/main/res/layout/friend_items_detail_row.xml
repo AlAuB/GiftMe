@@ -31,12 +31,12 @@
             android:orientation="vertical">
 
             <TextView
+                style="@style/texts"
                 android:id="@+id/friend_detail_view_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="ITEM NAME"
-                android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <TextView

@@ -16,8 +16,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/friend_user_avatar"
@@ -32,7 +31,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:textSize="20sp"
-                android:textColor="@color/black"
                 android:gravity="center"
                 android:layout_gravity="center_vertical"
                 android:singleLine="false"/>

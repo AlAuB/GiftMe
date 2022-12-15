@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference:1.2.0'
+    implementation "androidx.activity:activity:1.7.0-alpha02"
 
     //For image display
     implementation 'com.squareup.picasso:picasso:2.8'
@@ -71,6 +72,7 @@ dependencies {
     // Add the dependency for the Cloud Storage library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-storage'
+
     //FireStore
     implementation 'com.google.firebase:firebase-firestore:24.4.1'
 }

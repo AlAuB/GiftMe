@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,7 +23,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
@@ -374,74 +372,62 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         DocumentReference userRef = fireStore.collection(COLLECTIONS_USERS).document(userID);
         userRef.collection(COLLECTIONS_WISHLISTS)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                String collectionName = (String) document.getData().get("Collection Name");
-                                String friendID = (String) document.getData().get("Friend ID");
-                                String collectionID = document.getId();
-                                //if this is user's own wishlist
-                                if (friendID == null || friendID.equalsIgnoreCase("null")) {
-                                    addOldCollectionSQL(null, collectionName, null, collectionID, null);
-                                    createNewTable(collectionName);
-                                    //add items into the collection
-                                    //get fire store collection wishlist items
-                                    DocumentReference collectionRef = userRef.collection("wishlists").document(collectionID);
-                                    collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                DocumentSnapshot doc = task.getResult();
-                                                if (doc.exists()) {
-                                                    Map<String, Object> itemsInWishlist = doc.getData();
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                                        itemsInWishlist.forEach((key, value) -> {
-                                                                    if (value instanceof HashMap) {
-                                                                        Item currentItem = convertMapIntoItem((Map<String, Object>) value, key);
-                                                                        Log.d("ITEM", currentItem.toString());
-                                                                        insertItemIntoCollectionFromFireStore(collectionName, currentItem);
-                                                                    }
-                                                                }
-                                                        );
-                                                    }
-                                                }
-                                            } else {
-                                                Log.d("ToastError", "error");
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            String collectionName = (String) document.getData().get("Collection Name");
+                            String friendID = (String) document.getData().get("Friend ID");
+                            String collectionID = document.getId();
+                            //if this is user's own wishlist
+                            if (friendID == null || friendID.equalsIgnoreCase("null")) {
+                                addOldCollectionSQL(null, collectionName, null, collectionID, null);
+                                createNewTable(collectionName);
+                                //add items into the collection
+                                //get fire store collection wishlist items
+                                DocumentReference collectionRef = userRef.collection("wishlists").document(collectionID);
+                                collectionRef.get().addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        DocumentSnapshot doc = task1.getResult();
+                                        if (doc.exists()) {
+                                            Map<String, Object> itemsInWishlist = doc.getData();
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                                itemsInWishlist.forEach((key, value) -> {
+                                                            if (value instanceof HashMap) {
+                                                                Item currentItem = convertMapIntoItem((Map<String, Object>) value, key);
+                                                                Log.d("ITEM", currentItem.toString());
+                                                                insertItemIntoCollectionFromFireStore(collectionName, currentItem);
+                                                            }
+                                                        }
+                                                );
                                             }
                                         }
-                                    });
-
-                                } else {
-                                    //this is user's friend's collections
-                                    DocumentReference userRefFriend = fireStore.collection("users").document(friendID);
-                                    String displayName = "displayName";
-                                    String photoURL = "photoUrl";
-                                    final String[] friend = new String[2];
-                                    //friend[0] = name; friend[1] = pfp
-                                    userRefFriend.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                DocumentSnapshot user = task.getResult();
-                                                friend[0] = user.getString(displayName);
-                                                friend[1] = user.getString(photoURL);
-                                                //add collections
-                                                addOldCollectionSQL(friend[0], collectionName, friendID, collectionID, friend[1]);
-                                            }
-                                        }
-                                    });
-                                }
+                                    } else {
+                                        Log.d("ToastError", "error");
+                                    }
+                                });
+                            } else {
+                                //this is user's friend's collections
+                                DocumentReference userRefFriend = fireStore.collection("users").document(friendID);
+                                String displayName = "displayName";
+                                String photoURL = "photoUrl";
+                                final String[] friend = new String[2];
+                                //friend[0] = name; friend[1] = pfp
+                                userRefFriend.get().addOnCompleteListener(task12 -> {
+                                    if (task12.isSuccessful()) {
+                                        DocumentSnapshot user = task12.getResult();
+                                        friend[0] = user.getString(displayName);
+                                        friend[1] = user.getString(photoURL);
+                                        //add collections
+                                        addOldCollectionSQL(friend[0], collectionName, friendID, collectionID, friend[1]);
+                                    }
+                                });
                             }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
                 });
-
-
     }
 
     /**
@@ -724,6 +710,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Delete friend's collection
+     *
+     * @param id id for that item in that table
+     */
+    public void deleteCollectionFriend(String id) {
+        Log.d(TAG, "deleteData: " + id + " " + TABLE_NAME);
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        // first delete it from COLLECTIONS table
+        long status = sqLiteDatabase.delete(TABLE_NAME, FIRESTORE_ID + "=?", new String[]{id});
+        if (status == -1) {
+            Toast.makeText(context, "Cannot delete", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Delete success", Toast.LENGTH_SHORT).show();
+            // after successful delete in local db, delete in firestore as well
+            DocumentReference wishlistRef = fireStore.collection("users").document(userEmail).collection("wishlists").document(id);
+            wishlistRef.delete()
+                    .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully deleted! (ID: " + id + ", user:" + userEmail + ")"))
+                    .addOnFailureListener(e -> Log.w(TAG, "Error deleting document", e));
+        }
+    }
 
     /**
      * Delete a collection SQLite only
@@ -905,13 +913,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
         });
     }
-
-//    public void downloadFileFirebase(String name) {
-//        String path = "images/" + userEmail + "/" + name;
-//        StorageReference storageRef = storage.getReference();
-//        StorageReference mountainsRef = storageRef.child(path);
-//        File localFile = new File(context.getFilesDir(), name);
-//    }
 
     public String getCollectionFireStoreId(String collectionName) {
         String query = "SELECT * FROM COLLECTIONS WHERE COLLECTION_NAME = " + "'" + collectionName + "' AND USER_NAME IS NULL AND FRIEND_ID IS NULL";

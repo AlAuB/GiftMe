@@ -12,11 +12,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
+import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -33,6 +37,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
     Button deleteButton;
     ImageView itemImageView;
     DataBaseHelper dataBaseHelper;
+    String collectionName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         if (Objects.equals(itemDate, "null")) {
             itemDate = "";
         }
-        String collectionName = intent.getStringExtra("collectionName");
+        collectionName = intent.getStringExtra("collectionName");
         String itemFSID = intent.getStringExtra("itemFSID");
         if (Objects.equals(itemFSID, "null")) {
             itemFSID = "";
@@ -91,17 +96,31 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         dateTV.setText(itemDate);
 
         String imgUrl = item.getImg();
-        if (imgUrl == null || imgUrl.toLowerCase() == null) {
+        if (imgUrl == null) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
         } else {
-            if (imgUrl.contains("/")) {
-                //get bitmap
-                File file = new File(imgUrl);
+            String tempPath = getApplicationContext().getFilesDir() + "/" + imgUrl;
+            System.out.println("The path is: " + tempPath);
+            File file = new File(tempPath);
+            if (file.exists()) {
                 Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 itemImageView.setImageBitmap(getBitMap);
             } else {
-                //use link from firestore storage
-                Picasso.get().load(imgUrl).into(itemImageView);
+                //use the image stored in firestore storage
+                String[] imgUri = new String[1];
+                String path = "images/" + SessionManager.getUserEmail(getApplicationContext()) + "/" + imgUrl;
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+                StorageReference mountainsRef = storageRef.child(path);
+                mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    // Got the download URL for 'users/me/profile.png'
+                    imgUri[0] = uri.toString();
+                    Log.d("insideIf", "URI: " + imgUri[0]);
+                    Picasso.get().load(imgUri[0]).into(itemImageView);
+                }).addOnFailureListener(exception -> {
+                    // Handle any errors
+                    Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+                });
             }
         }
         shopButton = findViewById(R.id.button_shop);
@@ -130,6 +149,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("itemDes", item.getDescription());
             newIntent.putExtra("itemImg", item.getImg());
             newIntent.putExtra("itemFSID", finalItemFSID);
+            newIntent.putExtra("itemDate", item.getDate());
             newIntent.putExtra("collectionName", collectionName);
             startActivity(newIntent);
         });
@@ -143,5 +163,22 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             dataBaseHelper.deleteItem(String.valueOf(item.getId()), collectionName);
         });
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(getApplicationContext(), MyCollectionItems.class);
+                intent.putExtra("collection_name", collectionName);
+                startActivity(intent);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MyCollectionItems.class);
+        intent.putExtra("collection_name", collectionName);
+        startActivity(intent);
+        super.onBackPressed();
     }
 }

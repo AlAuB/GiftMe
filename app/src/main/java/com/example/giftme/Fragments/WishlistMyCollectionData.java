@@ -161,6 +161,10 @@ public class WishlistMyCollectionData extends Fragment {
         emptyText.setText("");
         collectionCount.setText(String.valueOf(collections.size()));
         checkEmptyUI();
+        ids.clear();
+        collections.clear();
+        getAllCollection();
+        myWishlistCollectionRecycleAdapter.notifyItemChanged(myWishlistCollectionRecycleAdapter.getItemCount());
     }
 
     @SuppressLint("SetTextI18n")
@@ -171,7 +175,7 @@ public class WishlistMyCollectionData extends Fragment {
         emptyImage.setVisibility(View.VISIBLE);
         emptyText.setVisibility(View.VISIBLE);
         emptyText.setText("Please Sign-In");
-        collectionCount.setVisibility(View.GONE);
+//        collectionCount.setVisibility(View.GONE);
     }
 
     /**
@@ -246,10 +250,5 @@ public class WishlistMyCollectionData extends Fragment {
         });
         builder.setCancelable(false);
         builder.create().show();
-    }
-
-    //interface
-    public interface MyFriendCollectionListener {
-        void goToFriendCollection();
     }
 }

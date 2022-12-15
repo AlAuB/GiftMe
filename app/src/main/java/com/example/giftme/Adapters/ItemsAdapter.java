@@ -72,10 +72,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             Log.d("itemDes", item.getDescription());
             String imgUrl = item.getImg();
             //get image ------------------------------------------------------------
-            if (imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+            if (imgUrl == null) {
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             } else {
-                if (imgUrl.contains("/")) {
+                if (!imgUrl.contains("/")) {
                     intent.putExtra("itemImg", imgUrl);
                 } else {
                     String[] imgUri = new String[1];
