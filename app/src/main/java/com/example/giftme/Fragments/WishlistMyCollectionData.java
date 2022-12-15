@@ -175,7 +175,7 @@ public class WishlistMyCollectionData extends Fragment {
         emptyImage.setVisibility(View.VISIBLE);
         emptyText.setVisibility(View.VISIBLE);
         emptyText.setText("Please Sign-In");
-        collectionCount.setVisibility(View.GONE);
+//        collectionCount.setVisibility(View.GONE);
     }
 
     /**
