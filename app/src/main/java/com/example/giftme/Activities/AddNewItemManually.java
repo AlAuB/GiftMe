@@ -105,11 +105,13 @@ public class AddNewItemManually extends AppCompatActivity {
                 } else {
                     Item item = new Item();
                     Log.d("debug::", "onCreate: " + item.getClaimed());
-                    if(!website.getText().toString().contains("http")){
-                        Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        item.setWebsite(Objects.requireNonNull(website.getText()).toString());
+                    String url = "";
+                    if (website.getText() != null)
+                        url = website.getText().toString();
+                    if (url.length() != 0 && !url.contains("http")) {
+                        Toast.makeText(context, "Link must include http", Toast.LENGTH_SHORT).show();
+                    } else {
+                        item.setWebsite(url);
                         item.setDate(date);
                         item.setName(itemName);
                         item.setDescription(itemExtraInfo);
@@ -123,7 +125,6 @@ public class AddNewItemManually extends AppCompatActivity {
                         intent.putExtra("collection_name", collectionName);
                         startActivity(intent);
                     }
-
                 }
             } catch (Exception e) {
                 Toast.makeText(AddNewItemManually.this, "Save image NOT success", Toast.LENGTH_SHORT).show();
@@ -134,6 +135,7 @@ public class AddNewItemManually extends AppCompatActivity {
         cancel.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), MyCollectionItems.class);
             intent.putExtra("collection_name", collectionName);
+            intent.putExtra("view", "Detailed");
             startActivity(intent);
         });
     }

@@ -68,7 +68,7 @@ public class DetailViewFragment extends Fragment {
             startActivity(intent);
         });
         getAllItems();
-        myCollectionItemsAdapter = new MyCollectionItemsAdapter(getActivity(), context, items);
+        myCollectionItemsAdapter = new MyCollectionItemsAdapter(getActivity(), context, items, collection_name);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(myCollectionItemsAdapter);

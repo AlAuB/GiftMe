@@ -2,30 +2,22 @@ package com.example.giftme.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.giftme.Activities.ClaimFriendItemActivity;
-import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
-
-import java.util.List;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.ViewHolder> {
 
     Context context;
     Activity activity;
     TextView notificationCountTV;
-
 
     public NotificationsAdapter(Activity activity, Context context) {
         this.context = context;
@@ -47,7 +39,6 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         //set views
         TextView notif = holder.notifTV;
         notif.setText("Notif");
-
     }
 
     @Override

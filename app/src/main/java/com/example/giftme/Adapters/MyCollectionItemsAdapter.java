@@ -35,14 +35,14 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
     Activity activity;
     Context context;
     ArrayList<Item> items;
-    TextView collectionNameTV;
     DataBaseHelper dataBaseHelper;
+    String collectionName;
 
-    public MyCollectionItemsAdapter(Activity activity, Context context, ArrayList<Item> items) {
+    public MyCollectionItemsAdapter(Activity activity, Context context, ArrayList<Item> items, String collectionName) {
         this.activity = activity;
         this.context = context;
         this.items = items;
-        collectionNameTV = ((Activity) context).findViewById(R.id.collection_name);
+        this.collectionName = collectionName;
     }
 
     @NonNull
@@ -66,15 +66,13 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
         String imgUrl = item.getImg();
         if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
-        }
-        else{
+        } else{
             if(imgUrl.contains("/")) {
                 //use bitmap
                 File file = new File(imgUrl);
                 Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 holder.imageView.setImageBitmap(getBitMap);
-            }
-            else{
+            } else{
                 //use the image stored in firestore storage
                 String[] imgUri = new String[1];
                 String path = "images/" + SessionManager.getUserEmail(context) + "/" + imgUrl;
@@ -107,16 +105,15 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             intent.putExtra("itemURL", item.getWebsite());
             intent.putExtra("itemDate", item.getDate());
             intent.putExtra("itemFSID", item.getFireStoreID());
+            intent.putExtra("collectionName", collectionName);
             //get image ------------------------------------------------------------
             if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             }
             else{
                 if(imgUrl.contains("/") ){
-                    //
                     intent.putExtra("itemImg", imgUrl);
-                }
-                else{
+                } else{
                     String[] imgUri = new String[1];
                     String path = "images/" + SessionManager.getUserEmail(context) + "/" + imgUrl;
                     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -134,7 +131,6 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             }
             //get img end --------------------------------------------------------------------
             this.activity.startActivity(intent);
-
         });
     }
 
