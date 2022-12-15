@@ -79,7 +79,7 @@ public class EditItemActivity extends AppCompatActivity {
         }
         String img = intent.getStringExtra("itemImg");
         String itemURL = intent.getStringExtra("itemURL");
-        if (Objects.equals(itemURL, "null")) {
+        if (Objects.equals(itemURL, null)) {
             itemURL = "";
         }
         String itemDate = intent.getStringExtra("itemDate");
@@ -105,7 +105,7 @@ public class EditItemActivity extends AppCompatActivity {
 
         Log.d("itemImage", "Img " + img);
         if (img == null || img.equals("null")) {
-            imgView.setImageResource(R.drawable.click_img);
+            imgView.setImageResource(R.drawable.surprise);
         } else {
             String tempPath = getApplicationContext().getFilesDir() + "/" + img;
             File file = new File(tempPath);
