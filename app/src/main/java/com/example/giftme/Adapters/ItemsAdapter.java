@@ -27,14 +27,14 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
     Context context;
     Activity activity;
-    TextView collectionNameTV;
     List<Item> myItems;
+    String collectionName;
 
-    public ItemsAdapter(Activity activity, Context context, List<Item> items) {
+    public ItemsAdapter(Activity activity, Context context, List<Item> items, String collectionName) {
         this.context = context;
         this.activity = activity;
         this.myItems = items;
-        collectionNameTV = ((Activity) context).findViewById(R.id.collection_name);
+        this.collectionName = collectionName;
     }
 
     @NonNull
@@ -66,20 +66,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemDate", item.getDate());
             intent.putExtra("itemURL", item.getWebsite());
             intent.putExtra("itemFsID", item.getFireStoreID());
+            intent.putExtra("collectionName", collectionName);
             Log.d("itemsAdapter", "put in intent" + item.getFireStoreID());
             Log.d("itemDes", item.getDescription());
-
             String imgUrl = item.getImg();
             //get image ------------------------------------------------------------
-            if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+            if (imgUrl == null || imgUrl.toLowerCase().equals(null)) {
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
-            }
-            else{
-                if(imgUrl.contains("/") ){
-                    //
+            } else {
+                if (imgUrl.contains("/")) {
                     intent.putExtra("itemImg", imgUrl);
-                }
-                else{
+                } else {
                     String[] imgUri = new String[1];
                     String path = "images/" + SessionManager.getUserEmail(context) + "/" + imgUrl;
                     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -96,9 +93,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 }
             }
             //get img end --------------------------------------------------------------------
-            intent.putExtra("collectionName", collectionNameTV.getText().toString());
             this.activity.startActivity(intent);
-            this.activity.finish();
         });
     }
 

@@ -23,7 +23,8 @@
             android:id="@+id/website_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textWebEmailAddress" />
+            android:inputType="textWebEmailAddress"
+            android:text="" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -45,7 +46,8 @@
             android:id="@+id/item_name_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:text="" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,7 +88,8 @@
             android:id="@+id/extraInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:text="" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,22 +99,22 @@
         android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="5dp"
-        app:srcCompat="@drawable/black_text"
-        android:contentDescription="@string/image_for_current_item" />
+        android:contentDescription="@string/image_for_current_item"
+        app:srcCompat="@drawable/black_text" />
 
     <RatingBar
-        style="@style/CustomRatingBarStyle"
         android:id="@+id/item_rating"
+        style="@style/CustomRatingBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:progressDrawable="@drawable/custom_rating_bar"
         android:scaleX=".8"
         android:scaleY=".8"
-        android:stepSize="1"
-        android:progressDrawable="@drawable/custom_rating_bar"/>
+        android:stepSize="1" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -119,8 +122,8 @@
         android:layout_marginTop="5dp">
 
         <Button
-            style="@style/texts"
             android:id="@+id/button_cancel"
+            style="@style/texts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#F44336"
@@ -131,8 +134,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            style="@style/texts"
             android:id="@+id/button_save"
+            style="@style/texts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save"

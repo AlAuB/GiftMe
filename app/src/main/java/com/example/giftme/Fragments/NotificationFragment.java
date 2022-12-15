@@ -63,7 +63,6 @@ public class NotificationFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(notificationsAdapter);
-//        itemNumListener.compactViewUpdateItemNum(String.valueOf(itemAdapter.getItemCount()));
 
         if(SessionManager.getUserStatus(getContext())){
             //if user is logged in

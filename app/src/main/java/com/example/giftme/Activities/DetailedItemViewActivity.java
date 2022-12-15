@@ -109,13 +109,9 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             //if there is no link
             if ((itemURL == null) || (itemURL.equals("null")) || (itemURL.isEmpty())) {
                 Toast.makeText(this, "There is no link", Toast.LENGTH_SHORT).show();
-            }
-            //if there is a link
-            else {
+            } else {
+                //if there is a link
                 Log.d("itemURL", itemURL);
-//                Intent shopIntent = new Intent(Intent.ACTION_VIEW);
-//                shopIntent.setData(Uri.parse(itemURL));
-//                shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Intent shopIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(itemURL));
                 startActivity(shopIntent);
             }
@@ -135,7 +131,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("itemImg", item.getImg());
             newIntent.putExtra("itemFsID", finalItemFsID);
             newIntent.putExtra("collectionName", collectionName);
-            finish();
             startActivity(newIntent);
         });
         deleteButton = findViewById(R.id.button_delete);

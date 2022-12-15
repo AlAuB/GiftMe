@@ -74,7 +74,7 @@ public class CompactViewFragment extends Fragment {
         }
         actionButton.setOnClickListener(view -> confirmDialog());
         getAllItems();
-        itemAdapter = new ItemsAdapter(getActivity(), context, items);
+        itemAdapter = new ItemsAdapter(getActivity(), context, items, collection_name);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(itemAdapter);

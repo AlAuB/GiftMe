@@ -93,12 +93,8 @@ public class EditItemActivity extends AppCompatActivity {
 
         Log.d("itemImage", "Img " + img);
         if(img == null || img.equals("null")){
-//            File file = new File(img);
-//            Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
-//            imgView.setImageBitmap(getBitMap);
             imgView.setImageResource(R.drawable.black_text);
-        }
-        else{
+        } else{
             if(!img.contains("/firebasestorage")){
                 //get bitmap
                 File file = new File(img);
@@ -217,8 +213,12 @@ public class EditItemActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(view -> {
             //edit flow later: this --> detaileditemview -> mycollectionitems
             Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
+            if (collectionName == null) {
+                System.out.println("Collection name is NULL at edit activity");
+            } else {
+                System.out.println("Collection name is NOT NULL at edit activity");
+            }
             myCollectionItemsIntent.putExtra("collection_name", collectionName);
-            finish();
             startActivity(myCollectionItemsIntent);
         });
     }

@@ -1,5 +1,6 @@
 package com.example.giftme.Helpers;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -465,9 +466,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d(TAG, "updateById: " + collection_name + " " + id + " " + name + " " + price + " " + description + " " + hearts + " " + img + " " + fireStoreId);
 
-//        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length - 1]);
-////        Log.d("imgURL", "Img :" + imgURL);
-
         String sqlUpdate = "update " + "'" + collection_name + "'"
                 + " set " + ITEM_NAME + " = '" + name + "', "
                 + ITEM_HEARTS + "= '" + hearts + "', "
@@ -484,12 +482,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 "select " + FIRESTORE_ID + " from "
                         + TABLE_NAME + " where "
                         + COLUMN_NAME + " = '" + collection_name + "'";
-        Cursor cursor = db.rawQuery(sqlSelect, null);
 
-        String fullImgPath = img;
+        @SuppressLint("Recycle") Cursor cursor = db.rawQuery(sqlSelect, null);
+
         String imgPathFS;
-        if (fullImgPath != null) {
-            String[] imgPath = fullImgPath.split("/");
+        if (img != null) {
+            String[] imgPath = img.split("/");
             imgPathFS = imgPath[imgPath.length - 1];
         } else {
             imgPathFS = null;
