@@ -54,6 +54,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         String url = intent.getStringExtra("itemURL");
 
         String friendID = intent.getStringExtra("friendID");
+        Log.d("FRIENDID_CLAIM", "friendID: " + friendID);
         String itemFsID = intent.getStringExtra("itemFsID");
         String friendCollectionID = intent.getStringExtra("collectionID");
         String collectionName = intent.getStringExtra("collectionName");
@@ -115,8 +116,6 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         claimButton.setOnClickListener(view -> {
             Log.d("friendClaim", friendID + " " + friendCollectionID + " " + itemFsID);
             dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFsID, true);
-            Intent frCollectionIntent = new Intent(this, FriendCollectionItems.class);
-            startActivity(frCollectionIntent);
             finish();
         });
         cancelButton = findViewById(R.id.button_cancel);

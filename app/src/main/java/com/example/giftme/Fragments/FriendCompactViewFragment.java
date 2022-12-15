@@ -69,7 +69,10 @@ public class FriendCompactViewFragment extends Fragment {
             friend_id = getArguments().getString("friend_id");
         }
         if(SessionManager.getUserStatus(context) == true){
-            getAllItemsFirestore();
+            if(friend_id != null){
+                getAllItemsFirestore();
+            }
+
         }
         else{
             items.clear();
