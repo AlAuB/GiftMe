@@ -28,6 +28,7 @@ import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentReference;
@@ -47,7 +48,7 @@ public class WishlistFriendCollectionData extends Fragment {
     Context context1;
     TextView collectionCount1;
     RecyclerView recyclerView1;
-    FloatingActionButton floatingActionButton1;
+    ExtendedFloatingActionButton extendedFloatingActionButton;
     com.example.giftme.Adapters.FrWishlistCollectionRecycleAdapter FrWishlistCollectionRecycleAdapter;
 
     ArrayList<String> ids;
@@ -89,7 +90,7 @@ public class WishlistFriendCollectionData extends Fragment {
 //        emptyText = view1.findViewById(R.id.empty_text);
 //        emptyImage = view1.findViewById(R.id.empty_icon);
 
-        floatingActionButton1 = view1.findViewById(R.id.action1);
+        extendedFloatingActionButton = view1.findViewById(R.id.action1);
 
         final Bundle args = getArguments();
         if(args !=null){
@@ -110,7 +111,7 @@ public class WishlistFriendCollectionData extends Fragment {
         Log.d("friendCollectionCount", "num collections " + collectionNames.size());
         
         //TESTING START
-        floatingActionButton1.setOnClickListener(view -> {
+        extendedFloatingActionButton.setOnClickListener(view -> {
             confirmDialog();
         });
         //TESTING END
@@ -249,7 +250,7 @@ public class WishlistFriendCollectionData extends Fragment {
     private void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.requireContext());
         builder.setTitle("Add Friend's Collection");
-        View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.add_link_collection, null);
         TextInputEditText input = view.findViewById(R.id.input);
         builder.setView(view);
         builder.setPositiveButton("OK", (dialogInterface, i) -> {
