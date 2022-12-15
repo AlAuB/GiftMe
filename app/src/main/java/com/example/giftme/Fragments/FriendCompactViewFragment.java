@@ -62,9 +62,13 @@ public class FriendCompactViewFragment extends Fragment {
             collection_id = getArguments().getString("collection_id").trim();
             friend_id = getArguments().getString("friend_id").trim();
         }
-        if (SessionManager.getUserStatus(context)) {
-            getAllItemsFirestore();
-        } else {
+        if(SessionManager.getUserStatus(context) == true){
+            if(friend_id != null){
+                getAllItemsFirestore();
+            }
+
+        }
+        else{
             items.clear();
         }
 
@@ -79,6 +83,7 @@ public class FriendCompactViewFragment extends Fragment {
         //get fire store collection wishlist items
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         DocumentReference userRef = fireStore.collection("users").document(friend_id);
+        Log.d("friendCompactView", "friendId " + friend_id);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);
 
         collectionRef.get().addOnCompleteListener(task -> {

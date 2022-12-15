@@ -63,7 +63,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             itemDate = "";
         }
         String collectionName = intent.getStringExtra("collectionName");
-        String itemFsID = intent.getStringExtra("itemFSID");
+        String itemFsID = intent.getStringExtra("itemFsID");
         if (Objects.equals(itemFsID, "null")) {
             itemFsID = "";
         }
