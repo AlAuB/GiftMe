@@ -3,14 +3,12 @@ package com.example.giftme.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +19,7 @@ import com.example.giftme.Activities.MainActivity;
 import com.example.giftme.Fragments.WishlistFragment;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -69,7 +66,7 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
     @Override
     public void onBindViewHolder(@NonNull FrWishlistCollectionRecycleAdapter.MyViewHolder holder, int position) {
         //populate
-        int index = holder.getAdapterPosition();
+        int index = holder.getBindingAdapterPosition();
         String wishlistName = collectionNames.get(index);
         String wishlistID = collectionIDs.get(index);
         String friendID = friendIds.get(index);
@@ -82,46 +79,38 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
         DocumentReference userRef = fireStore.collection("users").document(friendID);
         DocumentReference collectionRef = userRef.collection("wishlists").document(wishlistID);
 
-        collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    DocumentSnapshot document = task.getResult();
-                    if(! document.exists()) {
-                        Log.d("COLLECTION_NOT_EXIST", "COLLECTIONID; " + wishlistName);
-                        dataBaseHelper.deleteCollectionFriend(wishlistID);
+        collectionRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (!document.exists()) {
+                    Log.d("COLLECTION_NOT_EXIST", "COLLECTIONID; " + wishlistName);
+                    dataBaseHelper.deleteCollectionFriend(wishlistID);
 
-                        //---UPDATE VIEW WHEN WISHLIST IS DELETED (a little slow) START---
-                        WishlistFragment newWishlistFragment = new WishlistFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("refreshFriend", "refreshFriend");
-                        newWishlistFragment.setArguments(bundle);
-                        ((MainActivity) context).getSupportFragmentManager().beginTransaction().
-                                setCustomAnimations(
-                                        0,  // enter
-                                        R.anim.fade_out). // exit
-                                replace(R.id.frag_view, newWishlistFragment).commit();
-                        //---UPDATE VIEW WHEN WISHLIST IS DELETED (a little slow) END---
-                    }
+                    //---UPDATE VIEW WHEN WISHLIST IS DELETED (a little slow) START---
+                    WishlistFragment newWishlistFragment = new WishlistFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("refreshFriend", "refreshFriend");
+                    newWishlistFragment.setArguments(bundle);
+                    ((MainActivity) context).getSupportFragmentManager().beginTransaction().
+                            setCustomAnimations(
+                                    0,  // enter
+                                    R.anim.fade_out). // exit
+                            replace(R.id.frag_view, newWishlistFragment).commit();
+                    //---UPDATE VIEW WHEN WISHLIST IS DELETED (a little slow) END---
                 }
             }
         });
 
         //CHECK IF FRIEND WISHLIST STILL EXISTS END--------------
 
-
-
         String title = friendName + "'s " + wishlistName + " Wishlist";
         holder.wlTitleTV.setText(title);
-//        holder.imgView.setImageURI(Uri.parse(friendPFP));
 
         Picasso.get().load(friendPFP)
                 .transform(new CropCircleTransformation())
                 .into(holder.imgView);
 
-
-        holder.linearLayout.setOnClickListener(view -> {
-            int index1 = holder.getAdapterPosition();
+        holder.cardView.setOnClickListener(view -> {
             Intent intent = new Intent(context, FriendCollectionItems.class);
             intent.putExtra("collection_name", wishlistName);
             intent.putExtra("friend_name", friendName);
@@ -139,13 +128,13 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView wlTitleTV;
-        LinearLayout linearLayout;
+        MaterialCardView cardView;
         ImageView imgView;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             wlTitleTV = itemView.findViewById(R.id.friend_wishlist_title);
-            linearLayout = itemView.findViewById(R.id.friend_card);
+            cardView = itemView.findViewById(R.id.friend_card);
             imgView = itemView.findViewById((R.id.friend_user_avatar));
         }
     }

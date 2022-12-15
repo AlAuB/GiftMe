@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/friend_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/friend_card">
+    android:layout_margin="5dp"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardElevation="3dp">
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:cardElevation="3dp">
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/friend_user_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:contentDescription="@string/user_icon"
+            app:srcCompat="@drawable/anony_user" />
+
+        <TextView
+            android:id="@+id/friend_wishlist_title"
+            style="@style/texts"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="5dp"
+            android:gravity="center"
+            android:singleLine="false"
+            android:textSize="20sp" />
 
-            <ImageView
-                android:id="@+id/friend_user_avatar"
-                android:layout_height="80dp"
-                android:layout_width="80dp"
-                app:srcCompat = "@drawable/anony_user"/>
+    </LinearLayout>
 
-            <TextView
-                style="@style/texts"
-                android:id="@+id/friend_wishlist_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:textSize="20sp"
-                android:gravity="center"
-                android:layout_gravity="center_vertical"
-                android:singleLine="false"/>
-
-        </LinearLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>
