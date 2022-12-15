@@ -1,119 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp">
+    android:orientation="vertical"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        >
-        <ImageButton
-            android:id="@+id/imageButton_backToPrevious"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/backward_icon"
-            android:background="@color/white"/>
+        android:layout_weight="3"
+        android:layout_marginBottom="10dp">
+
         <ImageView
             android:id="@+id/friend_image_itemImage"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:background="@color/cardview_shadow_start_color"/>
-
-        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:orientation="horizontal">
+            android:layout_height="250dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:contentDescription="@string/image_icon"
+            android:src="@drawable/surprise" />
 
-            <TextView
-                android:id="@+id/friend_textView_date"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="right|center_vertical"
-                android:text=""
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="2dp"
-                android:textColor="@color/black"
-                />
-        </LinearLayout>
         <TextView
+            android:id="@+id/friend_textView_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="@string/date"
+            android:textSize="15sp" />
+
+        <TextView
+            style="@style/texts"
             android:id="@+id/friend_itemNameTV"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text=""
             android:hint="@string/input_name"
             android:textColor="@color/black"
-            android:textSize="19dp"
-            android:layout_marginStart="10dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/friend_itemPriceTV"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/price"
+            android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/friend_itemPriceTV"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="left|center_vertical"
-                android:textColor="@color/black"
-                android:text=""
-                android:hint="@string/input_price"
-                android:textSize="19sp"
-                android:layout_marginLeft="10dp"/>
-            <RatingBar
-                style="@style/CustomRatingBarStyle"
-                android:id="@+id/friend_ratingBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="right|center_vertical"
-                android:layout_marginStart="10dp"
-                android:isIndicator="true"
-                android:scaleX=".7"
-                android:scaleY=".7"
-                android:transformPivotX="0dp"
-                android:transformPivotY="15dp"
-                android:progressDrawable="@drawable/custom_rating_bar" />
-        </LinearLayout>
+        <RatingBar
+            android:id="@+id/friend_ratingBar"
+            style="@style/CustomRatingBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:isIndicator="true"
+            android:progressDrawable="@drawable/custom_rating_bar"
+            android:scaleX=".7"
+            android:scaleY=".7"
+            android:transformPivotX="0dp"
+            android:transformPivotY="50dp" />
+
         <TextView
             android:id="@+id/friend_descriptionTV"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:textSize="19sp"
-            android:padding="10dp"
+            android:layout_height="196dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#cde7f7"
+            android:padding="15dp"
             android:text=""
-            />
-        <Button
-            android:id="@+id/button_shop"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:backgroundTint="@color/lightpink"
-            android:text="@string/shop_now"
-            />
-        <Button
-            android:id="@+id/button_claim"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:backgroundTint="@color/lightpink"
-            android:text="@string/claim"
-            />
-        <Button
-            android:id="@+id/button_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:backgroundTint="@color/lightpink"
-            android:text="@string/cancel"/>
+            android:textSize="17sp" />
+
     </LinearLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/button_shop"
+            style="@style/texts"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/pink"
+            android:text="@string/shop_now" />
+      
+        <Button
+            android:id="@+id/button_claim"
+            style="@style/texts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@android:color/holo_orange_light"
+            android:text="@string/claim" />
+
+        <Button
+            android:id="@+id/button_cancel"
+            style="@style/texts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:text="@string/cancel" />
+    </LinearLayout>
+
+</LinearLayout>

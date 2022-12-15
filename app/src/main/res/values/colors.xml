@@ -24,6 +24,9 @@
     <color name="layout_pink">#E9B9B5</color>
     <color name="layout_gold">#EDD3B0</color>
 
+    <!-- Random Colors Used in this App -->
+    <color name="textbox_red">#F44336</color>
+
 </resources>
 
 

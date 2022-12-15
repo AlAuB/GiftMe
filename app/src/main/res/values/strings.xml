@@ -50,7 +50,6 @@
     <string name="deep_link">Paste Link Here</string>
     <string name="required">Required</string>
 
-    <string name="item_name">NAME</string>
     <string name="item_price">PRICE</string>
     <string name="item_des">DESCRIPTION</string>
 
@@ -67,5 +66,12 @@
     <string name="input_price">Input Price</string>
     <string name="claim">claim</string>
     <string name="date">date</string>
+
+    <string name="user_icon">User icon</string>
+    <string name="claim">claim</string>
+    <string name="date">date</string>
+    <string name="name">NAME</string>
+    <string name="price">PRICE</string>
+    <string name="item_name">ITEM NAME</string>
 
 </resources>

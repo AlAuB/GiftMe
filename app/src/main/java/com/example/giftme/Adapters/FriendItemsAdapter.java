@@ -3,13 +3,11 @@ package com.example.giftme.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -17,13 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Activities.ClaimFriendItemActivity;
-import com.example.giftme.Activities.DetailedItemViewActivity;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -64,10 +60,29 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
         RatingBar ratingBar = holder.ratingBar;
         ratingBar.setRating(item.getHearts());
         ImageView claimedImgView = holder.claimedPFP;
-        if(item.getClaimed() == true){
-            claimedImgView.setVisibility(View.VISIBLE);
+
+        String imgUrl = item.getImg();
+        if (imgUrl == null || imgUrl.equals("null")) {
+            Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+        } else {
+            String[] imgUri = new String[1];
+            String path = "images/" + friendID + "/" + imgUrl;
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference mountainsRef = storageRef.child(path);
+            mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                // Got the download URL for 'users/me/profile.png'
+                imgUri[0] = uri.toString();
+                item.setImg(imgUri[0]);
+            }).addOnFailureListener(exception -> {
+                // Handle any errors
+                Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
+            });
         }
-        else{
+
+        if (item.getClaimed()) {
+            claimedImgView.setVisibility(View.VISIBLE);
+        } else {
             claimedImgView.setVisibility(View.GONE);
         }
 
@@ -76,6 +91,7 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
         holder.cardView.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, ClaimFriendItemActivity.class);
             //put in name, price description, hearts, and link etc
+            intent.putExtra("itemClaimed", item.getClaimed());
             intent.putExtra("itemID", item.getId());
             intent.putExtra("itemName", item.getName());
             intent.putExtra("itemHearts", item.getHearts());
@@ -89,41 +105,22 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
             intent.putExtra("friendID", friendID);
             Log.d("FRIENDID_ITEMSADAPTER", "friendID: " + friendID);
             intent.putExtra("itemFSID", item.getFireStoreID());
-            //
 
-            if(item.getDescription() != null){
+            if (item.getDescription() != null) {
                 intent.putExtra("itemDes", item.getDescription());
-            }
-            else{
+            } else {
                 String noDescription = "Your friend has not set a description.";
                 intent.putExtra("itemDes", noDescription);
             }
 
-            //get image ------------------------------------------------------------
-            String imgUrl= item.getImg();
-            if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+            if (imgUrl == null || imgUrl.equals("null")) {
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+            } else {
+                intent.putExtra("itemImg", item.getImg());
             }
-            else{
-                String[] imgUri = new String[1];
-                String path = "images/" + friendID + "/" + imgUrl;
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference();
-                StorageReference mountainsRef = storageRef.child(path);
-                mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    // Got the download URL for 'users/me/profile.png'
-                    imgUri[0] = uri.toString();
-                    intent.putExtra("itemImg", imgUri[0]);
-//            this.activity.finish();
-                }).addOnFailureListener(exception -> {
-                    // Handle any errors
-                    Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
-                });
-            }
-            //get img end --------------------------------------------------------------------
+
             this.activity.startActivity(intent);
         });
-
     }
 
     @Override

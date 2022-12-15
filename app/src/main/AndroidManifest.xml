@@ -22,20 +22,6 @@
             android:resource="@mipmap/ic_launcher_round" />
 
         <activity
-            android:name=".Settings.User_Profile"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".Settings.ThemeStore"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".Settings.PrivacyPolicy"
             android:exported="false">
             <meta-data

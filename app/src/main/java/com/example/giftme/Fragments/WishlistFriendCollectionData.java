@@ -1,16 +1,13 @@
 package com.example.giftme.Fragments;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Canvas;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,16 +23,11 @@ import com.example.giftme.Adapters.FrWishlistCollectionRecycleAdapter;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.SessionManager;
 import com.example.giftme.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -49,7 +41,7 @@ public class WishlistFriendCollectionData extends Fragment {
     TextView collectionCount1;
     RecyclerView recyclerView1;
     ExtendedFloatingActionButton extendedFloatingActionButton;
-    com.example.giftme.Adapters.FrWishlistCollectionRecycleAdapter FrWishlistCollectionRecycleAdapter;
+    FrWishlistCollectionRecycleAdapter FrWishlistCollectionRecycleAdapter;
 
     ArrayList<String> ids;
     ArrayList<String> collectionNames;
@@ -59,9 +51,6 @@ public class WishlistFriendCollectionData extends Fragment {
     ArrayList<String> friendImgs;
 
     DataBaseHelper dataBaseHelper;
-
-//    ImageView emptyImage;
-//    TextView emptyText;
 
     private static final String TABLE_NAME = "COLLECTIONS";
 
@@ -87,19 +76,16 @@ public class WishlistFriendCollectionData extends Fragment {
         friendNames = new ArrayList<>();
         friendImgs = new ArrayList<>();
 
-//        emptyText = view1.findViewById(R.id.empty_text);
-//        emptyImage = view1.findViewById(R.id.empty_icon);
-
         extendedFloatingActionButton = view1.findViewById(R.id.action1);
 
         final Bundle args = getArguments();
-        if(args !=null){
+        if (args != null) {
             try {
                 String userID = args.getString("user_id");
                 String wishlistID = args.getString("collection_id");
 
                 addFriendCollection(userID, wishlistID);
-            }catch(Exception e){
+            } catch (Exception e) {
                 System.out.println("Error");
             }
         }
@@ -109,11 +95,9 @@ public class WishlistFriendCollectionData extends Fragment {
         }
         collectionCount1.setText(String.valueOf(collectionNames.size()));
         Log.d("friendCollectionCount", "num collections " + collectionNames.size());
-        
+
         //TESTING START
-        extendedFloatingActionButton.setOnClickListener(view -> {
-            confirmDialog();
-        });
+        extendedFloatingActionButton.setOnClickListener(view -> confirmDialog());
         //TESTING END
         recyclerView1.setLayoutManager(new LinearLayoutManager(context1));
         recyclerView1.setHasFixedSize(true);
@@ -135,13 +119,11 @@ public class WishlistFriendCollectionData extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getBindingAdapterPosition();
             dataBaseHelper.deleteCollection(ids.get(position));
-            TextView textView = getActivity().findViewById(R.id.collectionCount1);
+            TextView textView = requireActivity().findViewById(R.id.collectionCount1);
             ids.clear();
             collectionNames.clear();
-            //getAllCollection();
             textView.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
             FrWishlistCollectionRecycleAdapter.notifyItemRemoved(position);
-            //checkEmptyUI();
         }
 
         @Override
@@ -158,7 +140,7 @@ public class WishlistFriendCollectionData extends Fragment {
 
     //getting the collection Name and inserting the collection into the COLLECTIONS table in SQLite
     //MAYBE RENAME TO ADD COLLECTION?
-    public void addFriendCollection(String userID, String collectionID){
+    public void addFriendCollection(String userID, String collectionID) {
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         DocumentReference userRef = fireStore.collection("users").document(userID);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collectionID);
@@ -167,78 +149,55 @@ public class WishlistFriendCollectionData extends Fragment {
         String displayName = "displayName";
         String photoURL = "photoUrl";
         final String[] friend = new String[2];
-        //friend[0] = name; friend[1] = pfp
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    DocumentSnapshot user = task.getResult();
-                    friend[0] = user.getString(displayName);
-                    friend[1] = user.getString(photoURL);
+        userRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot user = task.getResult();
+                friend[0] = user.getString(displayName);
+                friend[1] = user.getString(photoURL);
 
-                    Log.d("friend", "Name: " + friend[0]);
+                Log.d("friend", "Name: " + friend[0]);
 
-                    final String[] collectionName= new String[1];
+                final String[] collectionName = new String[1];
 
-                    collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()){
-                                DocumentSnapshot document = task.getResult();
-                                if(document.exists()) {
-                                    //collection exists
-                                    DocumentSnapshot collection = task.getResult();
-                                    collectionName[0] = collection.getString(collection_name);
-                                    Log.d("friendCollectionName", "Name: " + collectionName[0]);
-                                    Log.d("friendName2", "Name: " + friend[0]);
-                                    dataBaseHelper.addNewFriendCollection(friend[0], collectionName[0], userID, collectionID, friend[1]);
-                                    //Update collection count
-                                    ids.clear();
-                                    collectionNames.clear();
-                                    collectionIDs.clear();
-                                    friendNames.clear();
-                                    friendIds.clear();
-                                    friendImgs.clear();
-                                    getAllFriends();
-                                    FrWishlistCollectionRecycleAdapter.notifyItemInserted(collectionNames.size() - 1);
-                                    collectionCount1.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
-                                }
-                            }
+                collectionRef.get().addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
+                        DocumentSnapshot document = task1.getResult();
+                        if (document.exists()) {
+                            //collection exists
+                            DocumentSnapshot collection = task1.getResult();
+                            collectionName[0] = collection.getString(collection_name);
+                            Log.d("friendCollectionName", "Name: " + collectionName[0]);
+                            Log.d("friendName2", "Name: " + friend[0]);
+                            dataBaseHelper.addNewFriendCollection(friend[0], collectionName[0], userID, collectionID, friend[1]);
+                            //Update collection count
+                            ids.clear();
+                            collectionNames.clear();
+                            collectionIDs.clear();
+                            friendNames.clear();
+                            friendIds.clear();
+                            friendImgs.clear();
+                            getAllFriends();
+                            FrWishlistCollectionRecycleAdapter.notifyItemInserted(collectionNames.size() - 1);
+                            collectionCount1.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
                         }
-                    });
-                }
+                    }
+                });
             }
         });
     }
 
-    public void getAllFriends(){
+    public void getAllFriends() {
         Cursor cursor = dataBaseHelper.readCollectionTableAllData(TABLE_NAME);
         if (cursor.getCount() != 0) {
             while (cursor.moveToNext()) {
                 //if these collections belong to friends
-                if(cursor.getString(3) != null){
+                if (cursor.getString(3) != null) {
                     ids.add(cursor.getString(0));
                     collectionNames.add(cursor.getString(1));
                     friendNames.add(cursor.getString(2));
                     friendIds.add(cursor.getString(3));
                     friendImgs.add(cursor.getString(4));
                     collectionIDs.add(cursor.getString(5));
-                }
-            }
-        }
-    }
-
-    /**
-     * Get all rows from database for Collection Table
-     */
-    private void getAllCollection() {
-        Cursor cursor = dataBaseHelper.readCollectionTableAllData(TABLE_NAME);
-        if (cursor.getCount() != 0) {
-            while (cursor.moveToNext()) {
-                //if this isn't the friend's wishlist
-                if (cursor.getBlob(3) == null) {
-                    ids.add(cursor.getString(0));
-                    collectionNames.add(cursor.getString(1));
                 }
             }
         }
@@ -260,17 +219,17 @@ public class WishlistFriendCollectionData extends Fragment {
             } else {
                 //get link from input
                 int index_parseDeepLink = insert.indexOf("3D");
-                String deepLink = insert.substring(index_parseDeepLink+2);
+                String deepLink = insert.substring(index_parseDeepLink + 2);
                 System.out.println("Link: " + deepLink);
                 System.out.println("INDEX " + index_parseDeepLink);
                 int index = deepLink.indexOf("%20");
                 String userEmail = deepLink.substring(0, index);
                 int indexAt = userEmail.indexOf('%');
-                String userIDName = userEmail.substring(0,indexAt);
-                String userIDEnd = userEmail.substring(indexAt+3);
+                String userIDName = userEmail.substring(0, indexAt);
+                String userIDEnd = userEmail.substring(indexAt + 3);
                 String userID = userIDName + "@" + userIDEnd;
 
-                String wishlistID = deepLink.substring(index+3);
+                String wishlistID = deepLink.substring(index + 3);
                 System.out.println("substring: " + userID);
                 System.out.println("substring: " + wishlistID);
 

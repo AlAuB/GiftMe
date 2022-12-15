@@ -195,13 +195,11 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
         //clear out local SQLite database---start
         getAllCollection();
-        Log.d("COLLECTIONIDS", String.valueOf(collectionIds));
         for (String id: collectionIds){
             dataBaseHelper.deleteCollectionSQL(id);
         }
         collectionIds.clear();
         dataBaseHelper.deleteAll("COLLECTIONS");
-//        dataBaseHelper.deleteTable("COLLECTIONS");
         //clear out local SQLite database end---
         SessionManager.clearSession(getContext());
         listener.updateData(true);
@@ -271,9 +269,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        Log.d("debugging::", "firebaseAuthWithGoogle:" + account.getId());
         AuthCredential authCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-        Log.d("debugging::", "firebaseAuthWithGoogle: " + authCredential.getProvider());
         firebaseAuth.signInWithCredential(authCredential)
                 .addOnCompleteListener(requireActivity(), task -> {
                     Log.d("debugging::", "onComplete: " + task.isSuccessful());

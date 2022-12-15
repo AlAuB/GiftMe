@@ -36,12 +36,12 @@ import java.util.Map;
 import java.util.Objects;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
-
+    // global variables
     private final Context context;
     private static String userEmail;
     private static String imgURL;
 
-    //other
+    // SQLite columns
     private static final String DATABASE_NAME = "WISHLIST_DB";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "COLLECTIONS";
@@ -58,7 +58,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String COLLECTIONS_USERS = "users";
     private static final String COLLECTIONS_WISHLISTS = "wishlists";
 
-
+    // debug tag
     private static final String TAG = "DataBaseHelper debug::";
 
     //for ITEMS
@@ -71,11 +71,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String ITEM_DATE = "ITEM_DATE";
     private static final String ITEM_IMAGE = "ITEM_IMAGE";
 
+    // initiate database
     public DataBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+
+        // fetch user email if the user is logged in
         userEmail = SessionManager.getUserEmail(context);
 
+        // as long as the user is logged in, update the device messaging token for enabling notifications
         if (!userEmail.equals("")) {
             setDeviceMessagingToken(userEmail);
         }
@@ -119,6 +123,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         database.execSQL(create_table);
     }
 
+    /**
+     * some setters and getters
+     */
     public void setUserEmail(String email) {
         userEmail = email;
     }
@@ -152,7 +159,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * callback interface for checkUserExists
+     * callback interface for checkUserExists()
      */
     public interface UserExists {
         void onCallback(boolean exists);
@@ -182,6 +189,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         });
     }
 
+    /**
+     * set the firebase's device messaging token for the user (needed for notifications)
+     * @param email user's email
+     */
     public void setDeviceMessagingToken(String email) {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (SessionManager.getUserStatus(context)) {
@@ -206,6 +217,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void insertItemIntoCollection(String collection, Item item) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        // insert into SQLite
         String sqlInsert = "insert into " + "'" + collection + "'";
         sqlInsert += " values( null, '" + item.getWebsite()
                 + "', '" + item.getName()
@@ -219,6 +231,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "insertItemIntoCollection: " + sqlInsert);
         db.execSQL(sqlInsert);
 
+        // parse image path
         String fullImgPath = item.getImg();
         String imgPathFS;
         if (fullImgPath != null) {
@@ -228,6 +241,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             imgPathFS = null;
         }
         item.setImg(imgPathFS);
+
         // generate a map object to put into firestore
         Map<String, Object> firestoreItem = convertItemIntoMap(item);
 
@@ -247,6 +261,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
+    /**
+     * send notification to user via firebase
+     * @param friendEmail the email of the friend
+     * @param InputTitle notification title
+     * @param InputBody notification body
+     */
     public void sendNotification(String friendEmail, String InputTitle, String InputBody) {
         DocumentReference reference = fireStore.collection(COLLECTIONS_USERS).document(friendEmail);
         reference.get().addOnCompleteListener(task -> {
@@ -298,6 +318,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
+    /**
+     * get the firestore id of a collection
+     **/
     public String getCollectionFirestoreId(String collectionName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String sqlSelect =
@@ -312,6 +335,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * convert item object into a hashmap (for firestore)
+     **/
     public Map<String, Object> convertItemIntoMap(Item item) {
         Map<String, Object> itemMap = new HashMap<>();
         Map<String, Object> nestedItemMap = new HashMap<>();
@@ -328,6 +354,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return nestedItemMap;
     }
 
+    /**
+     * convert a hashmap into an item object (for SQLite)
+     **/
     public Item convertMapIntoItem(Map<String, Object> map, String itemID) {
         Item item = new Item();
         item.setName(String.valueOf(map.get("name")));
@@ -446,12 +475,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     /**
      * update item in database
      */
-    //add link later
     public void updateById(String collection_name, String url, int id, String name, double price, String description,
                            int hearts, String img, String fireStoreId) {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d(TAG, "updateById: " + collection_name + " " + id + " " + name + " " + price + " " + description + " " + hearts + " " + img + " " + fireStoreId);
 
+        // update SQLite
         String sqlUpdate = "update " + "'" + collection_name + "'"
                 + " set " + ITEM_NAME + " = '" + name + "', "
                 + ITEM_HEARTS + "= '" + hearts + "', "
@@ -468,9 +497,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 "select " + FIRESTORE_ID + " from "
                         + TABLE_NAME + " where "
                         + COLUMN_NAME + " = '" + collection_name + "'";
-
         @SuppressLint("Recycle") Cursor cursor = db.rawQuery(sqlSelect, null);
 
+        // parse image path
         String imgPathFS;
         if (img != null) {
             String[] imgPath = img.split("/");
@@ -479,6 +508,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             imgPathFS = null;
         }
 
+        // update Firestore
         if (cursor.moveToFirst()) {
             DocumentReference userDocIdRef = fireStore.collection(COLLECTIONS_USERS).document(userEmail);
             DocumentReference collectionDocIdRef = userDocIdRef.collection(COLLECTIONS_WISHLISTS).document(cursor.getString(0));
@@ -519,13 +549,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    /**
+     * add a friend inside the user's field in firestore
+     * @param friendId
+     */
     public void addFriend(String friendId) {
         Log.d(TAG, "addFriend: " + userEmail + " " + friendId);
-//        Map<String, Object> friend = new HashMap<>();
         DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         userDocIdRef.update("friends", FieldValue.arrayUnion(friendId));
     }
 
+    /**
+     * get list of friends from the current user from firestore
+     */
     public void getFriends() {
         DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         ArrayList<String> friends = new ArrayList<>();
@@ -548,25 +584,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      *
      * @param userName etc
      */
-
-    // TODO:: create another function for adding new collection to COLLECTIONS database and firestore when it's a friend's wishlist
     public void addNewCollection(String userName, String collectionName, String friendID) {
 
         SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         // add to firestore first to make sure the collection is created
-        // for now, get random unique id from the array above and check if the document's been created in firestore
         Map<String, Object> wishlist = new HashMap<>();
         wishlist.put("Collection Name", collectionName);
         wishlist.put("Friend ID", friendID);
-
         DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document();
         wishlistDocIdRef.set(wishlist)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully written! (ID: " + wishlistDocIdRef.getId() + ", user:" + userEmail + ")"))
                 .addOnFailureListener(e -> Log.w(TAG, "Error writing document", e));
 
+        // insert into SQLite
         values.put(COLUMN_NAME, collectionName);
         values.put(USER_NAME, userName);
         values.put(FIRESTORE_ID, wishlistDocIdRef.getId());
@@ -597,7 +630,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Map<String, Object> wishlist = new HashMap<>();
         wishlist.put("Collection Name", collectionName);
         wishlist.put("Friend ID", friendID);
-        //need to add other fields to firestore OR make firestoreID the same
 
         DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
         DocumentReference wishlistDocIdRef = userDocIdRef.collection("wishlists").document(fsID);
@@ -662,7 +694,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // returns the firestore id of the item in a table using id
     public HashMap<String, Object> getData(String id, String tableName) {
-        // still using rowId to fetch data.. should be changed to either id or firestore_id
         String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + COLUMN_ID + " = " + id;
         HashMap<String, Object> details = new HashMap<>();
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -758,9 +789,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-
+    /**
+     * fetch item from SQLite using item id
+     */
     public String getDataItem(String rowId, String tableName) {
-        // still using rowId to fetch data.. should be changed to either id or firestore_id
         String query = "SELECT * FROM " + "'" + tableName + "'" + " WHERE " + ITEM_ID + " = " + rowId;
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor cursor;
@@ -861,10 +893,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 .update("Collection Name", newName);
     }
 
+    /**
+     * store image in firebase storage
+     * @param bitmap
+     * @param name
+     */
     public void storeImageFirebase(Bitmap bitmap, String name) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
+        // the path goes like this: "images/<user's email>/<name of the image (in jpg)>"
         String path = "images/" + userEmail + "/" + name;
 
         StorageReference storageRef = storage.getReference();
@@ -880,6 +918,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         });
     }
 
+    /**
+     * remove image from firebase storage
+     */
     public void removeImageFirebase(String name) {
         String path = "images/" + userEmail + "/" + name;
 
@@ -898,7 +939,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         });
     }
 
-    //can't get info
+    /**
+     * get download url of the image from firebase storage
+     * @param email
+     * @param name
+     */
     public void getDownloadUrlFirebase(String email, String name) {
         String path = "images/" + email + "/" + name;
         StorageReference storageRef = storage.getReference();
@@ -913,6 +958,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         });
     }
 
+    /**
+     * get the firestore id from the collection name
+     * @param collectionName
+     * @return firestore id of the collection
+     */
     public String getCollectionFireStoreId(String collectionName) {
         String query = "SELECT * FROM COLLECTIONS WHERE COLLECTION_NAME = " + "'" + collectionName + "' AND USER_NAME IS NULL AND FRIEND_ID IS NULL";
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();

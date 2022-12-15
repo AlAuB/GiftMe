@@ -14,22 +14,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/friend_detailed_view_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#03A9F4"
-        android:clickable="true"
-        android:contentDescription="@string/action_button"
-        android:focusable="true"
-        android:tint="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@drawable/ic_add" />
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

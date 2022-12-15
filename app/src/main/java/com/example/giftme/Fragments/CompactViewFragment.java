@@ -125,6 +125,7 @@ public class CompactViewFragment extends Fragment {
         }
     }
 
+    // fetch item details from SQLite, and add them to the ArrayList
     private void getAllItems() {
         Cursor cursor = dataBaseHelper.selectAll(collection_name);
         if (cursor.getCount() != 0) {
