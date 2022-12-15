@@ -193,20 +193,37 @@ public class EditItemActivity extends AppCompatActivity {
                         Log.d("NEWIMG", "TESTING INSIDE IF 2");
                         Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
                     }
+                    else{//link is valid
+                        Log.d("NEWIMG", "TESTING");
+                        Log.d("NEWIMG", fileName);
+                        item.setImg(fileName);
+                        item.setHearts(newRating);
+                        item.setDescription(newDescription);
+                        item.setName(newName);
+                        item.setWebsite(newLink);
+                        item.setPrice(newPrice);
+                        dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
+                                newDescription, newRating, fileName, finalItemFsID);
+                        Log.d("editItem", "firestoreID of item " + finalItemFsID);
+                        Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
+                        getBack(collectionName);
+                    }
                 }
-                Log.d("NEWIMG", "TESTING");
-                Log.d("NEWIMG", fileName);
-                item.setImg(fileName);
-                item.setHearts(newRating);
-                item.setDescription(newDescription);
-                item.setName(newName);
-                item.setWebsite(newLink);
-                item.setPrice(newPrice);
-                dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                        newDescription, newRating, fileName, finalItemFsID);
-                Log.d("editItem", "firestoreID of item " + finalItemFsID);
-                Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
-                getBack(collectionName);
+                else{
+                    Log.d("NEWIMG", "TESTING");
+                    Log.d("NEWIMG", fileName);
+                    item.setImg(fileName);
+                    item.setHearts(newRating);
+                    item.setDescription(newDescription);
+                    item.setName(newName);
+                    item.setWebsite("");
+                    item.setPrice(newPrice);
+                    dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
+                            newDescription, newRating, fileName, finalItemFsID);
+                    Log.d("editItem", "firestoreID of item " + finalItemFsID);
+                    Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
+                    getBack(collectionName);
+                }
             } catch (IOException e) {
                 System.out.println("Cannot get New Image in edit Activity");
             }
