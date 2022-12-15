@@ -66,6 +66,7 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
         String imgUrl = item.getImg();
         if (imgUrl == null) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+            holder.imageView.setImageResource(R.drawable.surprise);
         } else {
             String tempPath = context.getFilesDir() + "/" + imgUrl;
             File file = new File(tempPath);
