@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Activities.FriendCollectionItems;
+import com.example.giftme.Activities.MainActivity;
+import com.example.giftme.Fragments.WishlistFragment;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -87,6 +90,18 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
                     if(! document.exists()) {
                         Log.d("COLLECTION_NOT_EXIST", "COLLECTIONID; " + wishlistName);
                         dataBaseHelper.deleteCollectionFriend(wishlistID);
+
+                        //---UPDATE VIEW WHEN WISHLIST IS DELETED (a little slow) START---
+                        WishlistFragment newWishlistFragment = new WishlistFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("refreshFriend", "refreshFriend");
+                        newWishlistFragment.setArguments(bundle);
+                        ((MainActivity) context).getSupportFragmentManager().beginTransaction().
+                                setCustomAnimations(
+                                        0,  // enter
+                                        R.anim.fade_out). // exit
+                                replace(R.id.frag_view, newWishlistFragment).commit();
+                        //---UPDATE VIEW WHEN WISHLIST IS DELETED (a little slow) END---
                     }
                 }
             }
