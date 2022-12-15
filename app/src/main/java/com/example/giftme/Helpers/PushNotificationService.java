@@ -1,22 +1,16 @@
 package com.example.giftme.Helpers;
 
-import android.app.Activity;
-import android.app.Application;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.giftme.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.List;
 import java.util.Objects;
 
 public class PushNotificationService extends FirebaseMessagingService {

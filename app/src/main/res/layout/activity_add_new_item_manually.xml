@@ -40,7 +40,7 @@
         app:counterMaxLength="30"
         app:endIconMode="clear_text"
         app:helperText="Required"
-        app:helperTextTextColor="#F44336">
+        app:helperTextTextColor="@color/textbox_red">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/item_name_input"

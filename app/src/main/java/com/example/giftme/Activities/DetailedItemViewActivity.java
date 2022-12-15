@@ -55,8 +55,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         if (itemDes.equals("null")) {
             itemDes = "";
         }
-        Log.d("itemDes", "itemDes is null " + itemDes.equals(""));
-        Log.d("itemDesDetailed", itemDes);
 
         String img = intent.getStringExtra("itemImg");
         String itemURL = intent.getStringExtra("itemURL");
@@ -98,6 +96,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         String imgUrl = item.getImg();
         if (imgUrl == null) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+            itemImageView.setImageResource(R.drawable.surprise);
         } else {
             String tempPath = getApplicationContext().getFilesDir() + "/" + imgUrl;
             System.out.println("The path is: " + tempPath);
@@ -115,7 +114,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
                 mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     // Got the download URL for 'users/me/profile.png'
                     imgUri[0] = uri.toString();
-                    Log.d("insideIf", "URI: " + imgUri[0]);
                     Picasso.get().load(imgUri[0]).into(itemImageView);
                 }).addOnFailureListener(exception -> {
                     // Handle any errors
@@ -130,12 +128,12 @@ public class DetailedItemViewActivity extends AppCompatActivity {
                 Toast.makeText(this, "There is no link", Toast.LENGTH_SHORT).show();
             } else {
                 //if there is a link
-                Log.d("itemURL", itemURL);
                 Intent shopIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(itemURL));
                 startActivity(shopIntent);
             }
         });
 
+        //go to the edit item activity
         editButton = findViewById(R.id.button_edit);
         String finalItemFSID = itemFSID;
         editButton.setOnClickListener(view -> {
@@ -153,6 +151,8 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("collectionName", collectionName);
             startActivity(newIntent);
         });
+
+        //delete the item
         deleteButton = findViewById(R.id.button_delete);
         deleteButton.setOnClickListener(view -> {
             Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
