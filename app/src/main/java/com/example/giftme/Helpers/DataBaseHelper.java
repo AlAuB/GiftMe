@@ -458,9 +458,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + ITEM_URL + "= '" + url + "', "
                 + ITEM_PRICE + "= '" + price + "', "
                 + ITEM_DESCRIPTION + "= '" + description + "', "
-                + ITEM_IMAGE + "= '" + img + "', "
-                + FIRESTORE_ID + "= '" + fireStoreId + "' "
-                + "where " + ITEM_ID + "= " + id;
+                + ITEM_IMAGE + "= '" + img + "' "
+                + "where " + FIRESTORE_ID + "= " + "'" + fireStoreId + "'";
+        Log.d(TAG, "updateById: " + sqlUpdate);
 
         db.execSQL(sqlUpdate);
 
@@ -877,6 +877,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
             Log.d(TAG, "storeImageFirebase: SUCCESS\nPath: " + taskSnapshot.getMetadata().getPath() + "\nSize (bytes): " + taskSnapshot.getMetadata().getSizeBytes() + "\nContent Type: " + taskSnapshot.getMetadata().getContentType() + "\nCreation Time (ms): " + taskSnapshot.getMetadata().getCreationTimeMillis() + "\nBucket: " + taskSnapshot.getMetadata().getBucket());
             getDownloadUrlFirebase(userEmail, name);
+        });
+    }
+
+    public void removeImageFirebase(String name) {
+        String path = "images/" + userEmail + "/" + name;
+
+        StorageReference storageRef = storage.getReference();
+        StorageReference mountainsRef = storageRef.child(path);
+        mountainsRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "removeImageFirebase: SUCCESS " + path);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "removeImageFirebase: FAILED " + path);
+            }
         });
     }
 

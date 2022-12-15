@@ -83,14 +83,12 @@ public class EditItemActivity extends AppCompatActivity {
             itemURL = "";
         }
         String itemDate = intent.getStringExtra("itemDate");
-        String itemFsID = intent.getStringExtra("itemFsID");
-        Log.d("editItem", "firestoreID from inten" + itemFsID);
-        if (Objects.equals(itemFsID, "null")) {
-            itemFsID = "";
-        }
+        String itemFSID = intent.getStringExtra("itemFSID");
+        Log.d("editItem", "firestoreID from inten" + itemFSID);
+        if(Objects.equals(itemFSID, "null")){ itemFSID = "";}
 
         String collectionName = intent.getStringExtra("collectionName");
-        Log.d("debug::", "edit item activity: " + collectionName + " " + itemFsID);
+        Log.d("debug::", "edit item activity: " + collectionName + " " + itemFSID + " " + img);
         //(re)create item obj
         item = new Item(itemID, itemURL, itemName, itemHearts, itemPrice,
                 itemDes, itemDate, img);
@@ -156,8 +154,9 @@ public class EditItemActivity extends AppCompatActivity {
                 });
 
         imgView.setOnClickListener(view -> openGallery());
+        //choose image end --------------
 
-        String finalItemFsID = itemFsID;
+        String finalItemFSID = itemFSID;
         saveButton.setOnClickListener(view -> {
             try {
                 String fileName;
@@ -167,6 +166,9 @@ public class EditItemActivity extends AppCompatActivity {
                     FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                     fileOutputStream.close();
+                    // first remove old image from storage
+                    dataBaseHelper.removeImageFirebase(item.getImg());
+                    // then upload it to storage
                     dataBaseHelper.storeImageFirebase(bitmap, fileName);
                 } else {
                     fileName = intent.getStringExtra("itemImg");
@@ -203,8 +205,8 @@ public class EditItemActivity extends AppCompatActivity {
                         item.setWebsite(newLink);
                         item.setPrice(newPrice);
                         dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                                newDescription, newRating, fileName, finalItemFsID);
-                        Log.d("editItem", "firestoreID of item " + finalItemFsID);
+                                newDescription, newRating, fileName, finalItemFSID);
+                        Log.d("editItem", "firestoreID of item " + finalItemFSID);
                         Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
                         getBack(collectionName);
                     }
@@ -219,8 +221,8 @@ public class EditItemActivity extends AppCompatActivity {
                     item.setWebsite("");
                     item.setPrice(newPrice);
                     dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
-                            newDescription, newRating, fileName, finalItemFsID);
-                    Log.d("editItem", "firestoreID of item " + finalItemFsID);
+                            newDescription, newRating, fileName, finalItemFSID);
+                    Log.d("editItem", "firestoreID of item " + finalItemFSID);
                     Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
                     getBack(collectionName);
                 }
@@ -242,7 +244,7 @@ public class EditItemActivity extends AppCompatActivity {
         myCollectionItemsIntent.putExtra("itemDes", item.getDescription());
         myCollectionItemsIntent.putExtra("itemURL", item.getWebsite());
         myCollectionItemsIntent.putExtra("itemDate", item.getDate());
-        myCollectionItemsIntent.putExtra("itemFsID", item.getFireStoreID());
+        myCollectionItemsIntent.putExtra("itemFSID", item.getFireStoreID());
         myCollectionItemsIntent.putExtra("collectionName", collectionName);
         startActivity(myCollectionItemsIntent);
     }
@@ -251,4 +253,5 @@ public class EditItemActivity extends AppCompatActivity {
         Intent imgIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         activityResultLauncher.launch(imgIntent);
     }
+
 }

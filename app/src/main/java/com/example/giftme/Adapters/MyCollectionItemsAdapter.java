@@ -103,7 +103,7 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             intent.putExtra("itemDes", item.getDescription());
             intent.putExtra("itemURL", item.getWebsite());
             intent.putExtra("itemDate", item.getDate());
-            intent.putExtra("itemFsID", item.getFireStoreID());
+            intent.putExtra("itemFSID", item.getFireStoreID());
             intent.putExtra("collectionName", collectionName);
             if (imgUrl == null) {
                 System.out.println("The image path in detailed view is NULL");
