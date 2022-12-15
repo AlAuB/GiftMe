@@ -39,6 +39,7 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
     String collectionName;
 
     public MyCollectionItemsAdapter(Activity activity, Context context, ArrayList<Item> items, String collectionName) {
+        //set the view
         this.activity = activity;
         this.context = context;
         this.items = items;
@@ -83,7 +84,6 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
                 mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     // Got the download URL for 'users/me/profile.png'
                     imgUri[0] = uri.toString();
-                    Log.d("insideIf", "URI: " + imgUri[0]);
                     Picasso.get().load(imgUri[0]).into(holder.imageView);
                 }).addOnFailureListener(exception -> {
                     // Handle any errors
@@ -106,7 +106,6 @@ public class MyCollectionItemsAdapter extends RecyclerView.Adapter<MyCollectionI
             intent.putExtra("itemFSID", item.getFireStoreID());
             intent.putExtra("collectionName", collectionName);
             if (imgUrl == null) {
-                System.out.println("The image path in detailed view is NULL");
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             } else {
                 intent.putExtra("itemImg", imgUrl);

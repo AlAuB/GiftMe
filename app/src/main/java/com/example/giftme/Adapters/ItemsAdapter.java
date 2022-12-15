@@ -68,8 +68,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemFSID", item.getFireStoreID());
             intent.putExtra("itemURL", item.getWebsite());
             intent.putExtra("collectionName", collectionName);
-            Log.d("itemsAdapter", "put in intent" + item.getFireStoreID());
-            Log.d("itemDes", item.getDescription());
             String imgUrl = item.getImg();
             //get image ------------------------------------------------------------
             if (imgUrl == null) {
@@ -112,6 +110,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            //set the view
             itemNameTV = itemView.findViewById(R.id.item_name);
             time = itemView.findViewById(R.id.item_card_time);
             ratingBar = itemView.findViewById(R.id.rating);
