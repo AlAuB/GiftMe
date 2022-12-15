@@ -36,7 +36,6 @@ public class FriendCompactViewFragment extends Fragment {
     FriendItemsAdapter friendItemAdapter;
     ArrayList<Item> items;
     String collection_name;
-    itemNumListener itemNumListener;
     Activity activity;
     String friend_id;
     String collection_id;
@@ -62,13 +61,11 @@ public class FriendCompactViewFragment extends Fragment {
             collection_id = getArguments().getString("collection_id").trim();
             friend_id = getArguments().getString("friend_id").trim();
         }
-        if(SessionManager.getUserStatus(context) == true){
+        if(SessionManager.getUserStatus(context)){
             if(friend_id != null){
                 getAllItemsFirestore();
             }
-
-        }
-        else{
+        } else{
             items.clear();
         }
 
@@ -86,12 +83,10 @@ public class FriendCompactViewFragment extends Fragment {
         Log.d("friendCompactView", "friendId " + friend_id);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);
 
-
         collectionRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot doc = task.getResult();
                 if (doc.exists()) {
-                    //doc.get("field name")
                     Map<String, Object> itemsInWishlist = doc.getData();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         if (itemsInWishlist != null) {
@@ -116,23 +111,5 @@ public class FriendCompactViewFragment extends Fragment {
             }
         });
 
-    }
-
-    public interface itemNumListener {
-        void updateItemNum(String count);
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof itemNumListener) {
-            itemNumListener = (itemNumListener) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        itemNumListener = null;
     }
 }

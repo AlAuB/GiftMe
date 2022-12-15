@@ -86,8 +86,6 @@ public class MyCollectionItems extends AppCompatActivity implements CompactViewF
 
         detailedViewButton.setOnClickListener(view -> {
             setButtonsAlpha(0);
-            compactViewButton.setAlpha(0.5f);
-            detailedViewButton.setAlpha(1.0f);
             detailViewFragment = new DetailViewFragment();
             detailViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().

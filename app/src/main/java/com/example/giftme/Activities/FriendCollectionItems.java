@@ -1,22 +1,21 @@
 package com.example.giftme.Activities;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.giftme.Fragments.CompactViewFragment;
 import com.example.giftme.Fragments.FriendCompactViewFragment;
 import com.example.giftme.Fragments.FriendDetailViewFragment;
 import com.example.giftme.R;
 
-public class FriendCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener {
+public class FriendCollectionItems extends AppCompatActivity {
 
-    TextView itemCount, collectionName;
-    ImageButton shareImgButton, detailedViewButton, compactViewButton;
+    TextView collectionName;
+    ImageButton detailedViewButton;
+    ImageButton compactViewButton;
     String collection_name, collection_id;
     String friend_name, friend_id;
     Bundle bundle;
@@ -26,11 +25,9 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_collection_items);
+        setContentView(R.layout.activity_friend_collection_items);
 
         collectionName = findViewById(R.id.collection_name);
-        shareImgButton = findViewById(R.id.share);
-        itemCount = findViewById(R.id.num_items);
         detailedViewButton = findViewById(R.id.detail_view);
         compactViewButton = findViewById(R.id.compact_view);
 
@@ -48,16 +45,16 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
             bundle.putString("friend_id", friend_id);
         }
 
-        shareImgButton.setVisibility(View.GONE);
-
         //Default view
         if (getIntent().hasExtra("view")) {
+            setButtonsAlpha(0);
             friendDetailViewFragment = new FriendDetailViewFragment();
             friendDetailViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.data_view, friendDetailViewFragment, "detail").
                     setReorderingAllowed(true).commit();
         } else {
+            setButtonsAlpha(1);
             friendCompactViewFragment = new FriendCompactViewFragment();
             friendCompactViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
@@ -66,6 +63,7 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
         }
 
         detailedViewButton.setOnClickListener(view -> {
+            setButtonsAlpha(0);
             friendDetailViewFragment = new FriendDetailViewFragment();
             friendDetailViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
@@ -74,12 +72,23 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
         });
 
         compactViewButton.setOnClickListener(view -> {
+            setButtonsAlpha(1);
             friendCompactViewFragment = new FriendCompactViewFragment();
             friendCompactViewFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().
                     replace(R.id.data_view, friendCompactViewFragment, "Compact").
                     setReorderingAllowed(true).commit();
         });
+    }
+
+    private void setButtonsAlpha(int position) {
+        if (position == 0) {
+            compactViewButton.setAlpha(0.4f);
+            detailedViewButton.setAlpha(1.0f);
+        } else {
+            detailedViewButton.setAlpha(0.4f);
+            compactViewButton.setAlpha(1.0f);
+        }
     }
 
     @Override
@@ -92,10 +101,5 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         collectionName.setText(savedInstanceState.getString("collection_name"));
-    }
-
-    @Override
-    public void compactViewUpdateItemNum(String count) {
-
     }
 }

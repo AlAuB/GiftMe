@@ -45,4 +45,5 @@
     <string name="shop_now">Shop now</string>
     <string name="delete">delete</string>
     <string name="deep_link">Paste Link Here</string>
+    <string name="user_icon">User icon</string>
 </resources>

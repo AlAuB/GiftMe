@@ -4,22 +4,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Activities.ClaimFriendItemActivity;
@@ -30,7 +24,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendItemsDetailViewAdapter.MyViewHolder> {
@@ -72,14 +65,13 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
         holder.date.setText(item.getDate());
         Log.d("detailviewadapter", item.toString());
         Log.d("ITEM_IMAGE", "IMG: " + item.getImg());
-        String imgUrl= item.getImg();
-        Log.d("ITEM_URL", "IMG: " +  imgUrl);
+        String imgUrl = item.getImg();
+        Log.d("ITEM_URL", "IMG: " + imgUrl);
 //        if(!imgUrl.equals("null")) || item.getImg() != null){
-        if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+        if (imgUrl == null || imgUrl.toLowerCase().equals(null)) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             holder.imageView.setImageResource(R.drawable.surprise);
-        }
-        else{
+        } else {
             String[] imgUri = new String[1];
             String path = "images/" + friendID + "/" + imgUrl;
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -98,10 +90,9 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
         }
         holder.ratingBar.setRating(item.getHearts());
         ImageView claimedImgView = holder.claimedPFP;
-        if(item.getClaimed() == true){
+        if (item.getClaimed()) {
             claimedImgView.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             claimedImgView.setVisibility(View.GONE);
         }
 
@@ -115,19 +106,17 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
             intent.putExtra("itemName", item.getName());
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
-            if(item.getDescription() != null){
+            if (item.getDescription() != null) {
                 intent.putExtra("itemDes", item.getDescription());
-            }
-            else{
+            } else {
                 String noDescription = "Your friend has not set a description.";
                 intent.putExtra("itemDes", noDescription);
             }
 
             //get image ------------------------------------------------------------
-            if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
+            if (imgUrl == null || imgUrl.toLowerCase().equals(null)) {
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
-            }
-            else{
+            } else {
                 String[] imgUri = new String[1];
                 String path = "images/" + friendID + "/" + imgUrl;
                 FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -170,7 +159,6 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
         TextView name, price, date;
         public Item currentItem;
         public CardView cardView;
-//        public LinearLayout linearLayout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -179,7 +167,6 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
             price = itemView.findViewById(R.id.friend_detail_view_item_price);
             date = itemView.findViewById(R.id.friend_detail_view_item_date);
             ratingBar = itemView.findViewById(R.id.friend_detail_view_item_rating);
-//            linearLayout = itemView.findViewById(R.id.friend_items_row);
             cardView = itemView.findViewById(R.id.friend_detail_cardView);
             claimedPFP = itemView.findViewById(R.id.friend_claimed_pfp);
         }
