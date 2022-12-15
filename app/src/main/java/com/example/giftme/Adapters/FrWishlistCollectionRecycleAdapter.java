@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.giftme.Activities.FriendCollectionItems;
+import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -66,6 +73,29 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
         String friendName = friendNames.get(index);
         String friendPFP = friendProfileImages.get(index);
 
+        //CHECK IF FRIEND WISHLIST STILL EXISTS START-----------
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+        FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        DocumentReference userRef = fireStore.collection("users").document(friendID);
+        DocumentReference collectionRef = userRef.collection("wishlists").document(wishlistID);
+
+        collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if(! document.exists()) {
+                        Log.d("COLLECTION_NOT_EXIST", "COLLECTIONID; " + wishlistName);
+                        dataBaseHelper.deleteCollectionFriend(wishlistID);
+                    }
+                }
+            }
+        });
+
+        //CHECK IF FRIEND WISHLIST STILL EXISTS END--------------
+
+
+
         String title = friendName + "'s " + wishlistName + " Wishlist";
         holder.wlTitleTV.setText(title);
 //        holder.imgView.setImageURI(Uri.parse(friendPFP));
@@ -73,6 +103,7 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
         Picasso.get().load(friendPFP)
                 .transform(new CropCircleTransformation())
                 .into(holder.imgView);
+
 
         holder.linearLayout.setOnClickListener(view -> {
             int index1 = holder.getAdapterPosition();
