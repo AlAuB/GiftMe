@@ -98,6 +98,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         String imgUrl = item.getImg();
         if (imgUrl == null) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
+            itemImageView.setImageResource(R.drawable.surprise);
         } else {
             String tempPath = getApplicationContext().getFilesDir() + "/" + imgUrl;
             System.out.println("The path is: " + tempPath);
