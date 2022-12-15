@@ -8,7 +8,8 @@ GiftMe! is a wishlist app for personal events and holidays (eg. Birthday Parties
 ## 🎀 Features
 
 **Guest Users**
-Users do not need to sign in to view and claim items from friends' wishlists. However, friends' wishlists will not be saved to an account. Thus, when you do log in, the wishlists you viewed when not logged in will not be saved and must be added. As a guest user, you cannot create a wishlist. 
+
+Users do not need to sign in to view and claim items from friends' wishlists. However, friends' wishlists will not be saved to an account. Thus, when you do log in, the wishlists you viewed as a Guest User will not be saved and must be added again. As a guest user, you cannot create a wishlist. 
 
 **Creating a Wishlist**
 - Log in with Google Account
@@ -36,10 +37,12 @@ Users do not need to sign in to view and claim items from friends' wishlists. Ho
 - Preference Level
 
 **Compact and Detailed Views**
+
 We have added two views to view items in a wishlist. The user is able to toggle between these two as preferred. 
 
 Compact/Simple View:
 - For those who prefer a simpler, quicker way of adding items and do not care about the details of the item
+
 Detailed View:
 - For those who prefer adding details to items and want to view the items in detail.
 
