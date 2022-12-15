@@ -50,4 +50,5 @@
     <string name="date">date</string>
     <string name="name">NAME</string>
     <string name="price">PRICE</string>
+    <string name="item_name">ITEM NAME</string>
 </resources>

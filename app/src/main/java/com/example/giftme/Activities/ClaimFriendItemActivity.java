@@ -47,6 +47,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         System.out.println("The image path in claim is: " + img);
         String date = intent.getStringExtra("itemDate");
         String url = intent.getStringExtra("itemURL");
+        boolean claimed = intent.getBooleanExtra("itemClaimed", false);
 
         String friendID = intent.getStringExtra("friendID");
         String itemFSID = intent.getStringExtra("itemFSID");
@@ -71,6 +72,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         descriptionTV.setText(item.getDescription());
         ratingBar.setRating(item.getHearts());
         dateTV.setText(item.getDate());
+
         if(item.getImg() != null){
             Picasso.get().load(item.getImg()).into(imageView);
         }
@@ -92,7 +94,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         claimButton = findViewById(R.id.button_claim);
         //item is already claimed by someone
         //set anony pfp too
-        claimButton.setClickable(!item.getClaimed());
+        claimButton.setEnabled(!claimed);
         claimButton.setOnClickListener(view -> {
             dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFSID, true);
             dataBaseHelper.sendNotification(friendID, "Claimed!", "Someone claims one of your items in " + collectionName);

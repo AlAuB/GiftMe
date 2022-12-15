@@ -106,6 +106,7 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
             intent.putExtra("itemName", item.getName());
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
+            intent.putExtra("itemClaimed", item.getClaimed());
             if (item.getDescription() != null) {
                 intent.putExtra("itemDes", item.getDescription());
             } else {
@@ -118,16 +119,16 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             } else {
                 intent.putExtra("itemImg", item.getImg());
-                intent.putExtra("itemURL", item.getWebsite());
-                intent.putExtra("itemDate", item.getDate());
-                intent.putExtra("collectionID", collectionID);
-                intent.putExtra("collectionName", collectionName);
-                //friend firestore id: email
-                intent.putExtra("friendID", friendID);
-                intent.putExtra("itemFSID", item.getFireStoreID());
-                this.activity.startActivity(intent);
             }
             //get img end --------------------------------------------------------------------
+            intent.putExtra("itemURL", item.getWebsite());
+            intent.putExtra("itemDate", item.getDate());
+            intent.putExtra("collectionID", collectionID);
+            intent.putExtra("collectionName", collectionName);
+            //friend firestore id: email
+            intent.putExtra("friendID", friendID);
+            intent.putExtra("itemFSID", item.getFireStoreID());
+            this.activity.startActivity(intent);
         });
     }
 
