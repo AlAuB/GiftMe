@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +82,6 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (!document.exists()) {
-                    Log.d("COLLECTION_NOT_EXIST", "COLLECTIONID; " + wishlistName);
                     dataBaseHelper.deleteCollectionFriend(wishlistID);
 
                     //---UPDATE VIEW WHEN WISHLIST IS DELETED (a little slow) START---
@@ -110,6 +108,7 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
                 .transform(new CropCircleTransformation())
                 .into(holder.imgView);
 
+        //go to the friendCollectionItems
         holder.cardView.setOnClickListener(view -> {
             Intent intent = new Intent(context, FriendCollectionItems.class);
             intent.putExtra("collection_name", wishlistName);
@@ -133,6 +132,7 @@ public class FrWishlistCollectionRecycleAdapter extends RecyclerView.Adapter<FrW
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            //set the view
             wlTitleTV = itemView.findViewById(R.id.friend_wishlist_title);
             cardView = itemView.findViewById(R.id.friend_card);
             imgView = itemView.findViewById((R.id.friend_user_avatar));
