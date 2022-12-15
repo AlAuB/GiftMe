@@ -80,14 +80,15 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
             intent.putExtra("itemName", item.getName());
             intent.putExtra("itemHearts", item.getHearts());
             intent.putExtra("itemPrice", item.getPrice());
-            intent.putExtra("itemLink", item.getWebsite());
+            intent.putExtra("itemURL", item.getWebsite());
             intent.putExtra("itemDate", item.getDate());
             intent.putExtra("collectionID", collectionID);
             intent.putExtra("collectionName", collectionName);
 
             //friend firestore id: email
             intent.putExtra("friendID", friendID);
-            intent.putExtra("itemFsID", item.getFireStoreID());
+            Log.d("FRIENDID_ITEMSADAPTER", "friendID: " + friendID);
+            intent.putExtra("itemFSID", item.getFireStoreID());
             //
 
             if(item.getDescription() != null){

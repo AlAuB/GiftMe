@@ -72,8 +72,9 @@ public class EditItemActivity extends AppCompatActivity {
         String itemURL = intent.getStringExtra("itemURL");
         if(Objects.equals(itemURL, "null")){ itemURL = "";}
         String itemDate = intent.getStringExtra("itemDate");
-        if(Objects.equals(itemDate, "null")){ itemDate = "";}
+//        if(Objects.equals(itemDate, "null")){ itemDate = "";}
         String itemFSID = intent.getStringExtra("itemFSID");
+        Log.d("editItem", "firestoreID from inten" + itemFSID);
         if(Objects.equals(itemFSID, "null")){ itemFSID = "";}
 
         String collectionName = intent.getStringExtra("collectionName");
@@ -87,12 +88,18 @@ public class EditItemActivity extends AppCompatActivity {
         descriptionET.setText(item.getDescription());
         Log.d("itemDes", item.getDescription());
         priceET.setText(String.valueOf(item.getPrice()));
-        Log.d("itemImg", "Img is null");
 
-        if(img == null){
-            imgView.setImageResource(R.drawable.click1);
-        } else{
-            if(img.contains("/")){
+        Log.d("itemImg", "Img is null" + (item.getImg()==null));
+
+        Log.d("itemImage", "Img " + img);
+        if(img == null || img.equals("null")){
+//            File file = new File(img);
+//            Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
+//            imgView.setImageBitmap(getBitMap);
+            imgView.setImageResource(R.drawable.black_text);
+        }
+        else{
+            if(!img.contains("/firebasestorage")){
                 //get bitmap
                 File file = new File(img);
                 Bitmap getBitMap = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -144,41 +151,67 @@ public class EditItemActivity extends AppCompatActivity {
                 dataBaseHelper.storeImageFirebase(bitmap, fileName);
 
                 String newName = String.valueOf(nameET.getText());
-                String newDescription = String.valueOf(descriptionET.getText());
-                Log.d("newDes", newDescription);
-                int newPrice = Integer.parseInt(String.valueOf(priceET.getText()));
+                String newDescription = "";
+                if(String.valueOf(descriptionET.getText()).length() > 100){
+                    Toast.makeText(context, "Too much info in description!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    newDescription = String.valueOf(descriptionET.getText());
+                }
+                Log.d("newDes", "NEWDES IN TRY " + newDescription);
+                Log.d("NEWIMG", "TESTING1");
+                double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
+                Log.d("NEWIMG", "TESTING2");
                 int newRating = (int) ratingBar.getRating();
+                Log.d("NEWIMG", "TESTING3");
                 String newLink = String.valueOf(linkET.getText());
-
+                Log.d("NEWIMG", "TESTING4");
+                if(!newLink.isEmpty()){
+                    Log.d("NEWIMG", "TESTING INSIDE IF");
+                    if(!newLink.contains("http")){
+                        Log.d("NEWIMG", "TESTING INSIDE IF 2");
+                        Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                Log.d("NEWIMG", "TESTING");
                 String newImg = context.getApplicationContext().getFilesDir() + "/" + fileName;
                 Log.d("debug::", "edit item activity: new image full path " + newImg);
-
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
                         newDescription, newRating, newImg, finalItemFSID);
+                Log.d("editItem", "firestoreID of item " + finalItemFSID);
                 Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
 
                 Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
                 myCollectionItemsIntent.putExtra("collection_name", collectionName);
-                finish();
                 startActivity(myCollectionItemsIntent);
-
+                finish();
             }catch(Exception e){
-
                 String newName = String.valueOf(nameET.getText());
-                String newDescription = String.valueOf(descriptionET.getText());
+                String newDescription = "";
+                if(String.valueOf(descriptionET.getText()).length() > 100){
+                    Toast.makeText(context, "Too much info in description!", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    newDescription = String.valueOf(descriptionET.getText());
+                }
                 Log.d("newDes", newDescription);
                 double newPrice = Double.parseDouble(String.valueOf(priceET.getText()));
                 int newRating = (int) ratingBar.getRating();
                 String newLink = String.valueOf(linkET.getText());
-
+                if(!newLink.isEmpty()){
+                    if(!newLink.contains("http")){
+                        Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
                         newDescription, newRating, item.getImg(), finalItemFSID);
+                Log.d("editItem", "firestoreID of item " + finalItemFSID);
                 Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
 
                 Intent myCollectionItemsIntent = new Intent(this, MyCollectionItems.class);
                 myCollectionItemsIntent.putExtra("collection_name", collectionName);
-                finish();
                 startActivity(myCollectionItemsIntent);
+                finish();
             }
         });
 

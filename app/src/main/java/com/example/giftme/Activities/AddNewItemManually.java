@@ -23,7 +23,6 @@ import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -106,19 +105,25 @@ public class AddNewItemManually extends AppCompatActivity {
                 } else {
                     Item item = new Item();
                     Log.d("debug::", "onCreate: " + item.getClaimed());
-                    item.setWebsite(Objects.requireNonNull(website.getText()).toString());
-                    item.setDate(date);
-                    item.setName(itemName);
-                    item.setDescription(itemExtraInfo);
-                    item.setHearts((int) ratingBar.getRating());
-                    item.setPrice(Integer.parseInt(itemPrice));
-                    item.setImg(context.getApplicationContext().getFilesDir() + "/" + fileName);
-                    Log.d("debug::", "onCreate: " + item.getImg());
-                    dataBaseHelper.insertItemIntoCollection(collectionName, item);
-                    Intent intent = new Intent(context, MyCollectionItems.class);
-                    intent.putExtra("view", "Detailed");
-                    intent.putExtra("collection_name", collectionName);
-                    startActivity(intent);
+                    if(!website.getText().toString().contains("http")){
+                        Toast.makeText(context, "Link must include https", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        item.setWebsite(Objects.requireNonNull(website.getText()).toString());
+                        item.setDate(date);
+                        item.setName(itemName);
+                        item.setDescription(itemExtraInfo);
+                        item.setHearts((int) ratingBar.getRating());
+                        item.setPrice(Integer.parseInt(itemPrice));
+                        item.setImg(context.getApplicationContext().getFilesDir() + "/" + fileName);
+                        Log.d("debug::", "onCreate: " + item.getImg());
+                        dataBaseHelper.insertItemIntoCollection(collectionName, item);
+                        Intent intent = new Intent(context, MyCollectionItems.class);
+                        intent.putExtra("view", "Detailed");
+                        intent.putExtra("collection_name", collectionName);
+                        startActivity(intent);
+                    }
+
                 }
             } catch (Exception e) {
                 Toast.makeText(AddNewItemManually.this, "Save image NOT success", Toast.LENGTH_SHORT).show();

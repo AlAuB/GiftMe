@@ -4,18 +4,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giftme.Fragments.CompactViewFragment;
-import com.example.giftme.Fragments.DetailViewFragment;
 import com.example.giftme.Fragments.FriendCompactViewFragment;
 import com.example.giftme.Fragments.FriendDetailViewFragment;
 import com.example.giftme.R;
 
-public class FriendCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener{
+public class FriendCollectionItems extends AppCompatActivity implements CompactViewFragment.itemNumListener {
 
     TextView itemCount, collectionName;
     ImageButton shareImgButton, detailedViewButton, compactViewButton;
@@ -50,7 +48,7 @@ public class FriendCollectionItems extends AppCompatActivity implements CompactV
             bundle.putString("friend_id", friend_id);
         }
 
-       shareImgButton.setVisibility(View.GONE);
+        shareImgButton.setVisibility(View.GONE);
 
         //Default view
         if (getIntent().hasExtra("view")) {

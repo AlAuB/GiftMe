@@ -64,9 +64,10 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemPrice", item.getPrice());
             intent.putExtra("itemDes", item.getDescription());
             intent.putExtra("itemDate", item.getDate());
-            intent.putExtra("itemLink", item.getWebsite());
             intent.putExtra("itemDate", item.getDate());
             intent.putExtra("itemFSID", item.getFireStoreID());
+            intent.putExtra("itemURL", item.getWebsite());
+            Log.d("itemsAdapter", "put in intent" + item.getFireStoreID());
             Log.d("itemDes", item.getDescription());
 
             String imgUrl = item.getImg();
@@ -97,8 +98,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             }
             //get img end --------------------------------------------------------------------
             intent.putExtra("collectionName", collectionNameTV.getText().toString());
-            this.activity.finish();
             this.activity.startActivity(intent);
+            this.activity.finish();
         });
     }
 

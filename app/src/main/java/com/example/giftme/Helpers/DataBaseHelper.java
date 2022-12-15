@@ -34,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -223,9 +224,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String imgPathFS;
         if (fullImgPath != null) {
             String[] imgPath = fullImgPath.split("/");
-            imgPathFS = imgPath[imgPath.length-1];
-        }
-        else {
+            imgPathFS = imgPath[imgPath.length - 1];
+        } else {
             imgPathFS = null;
         }
         item.setImg(imgPathFS);
@@ -239,7 +239,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(sqlSelect, null);
         if (cursor.moveToFirst()) {
             Log.d(TAG, "insertItemIntoCollection: " + cursor.getString(0) + " " + userEmail);
-            DocumentReference userDocIdRef = fireStore.collection("users").document(userEmail);
+            DocumentReference userDocIdRef = fireStore.collection(COLLECTIONS_USERS).document(userEmail);
             DocumentReference collectionDocIdRef = userDocIdRef.collection("wishlists").document(cursor.getString(0));
             collectionDocIdRef.set(firestoreItem, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> Log.d(TAG, "DocumentSnapshot successfully updated!"))
@@ -248,6 +248,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
+    public void sendNotification(String friendEmail, String InputTitle, String InputBody) {
+        DocumentReference reference = fireStore.collection(COLLECTIONS_USERS).document(friendEmail);
+        reference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot snapshot = task.getResult();
+                if (snapshot != null) {
+                    String token = Objects.requireNonNull(snapshot.getString("deviceMessagingToken")).trim();
+                    FCMSend.pushNotification(context, token, InputTitle, InputBody);
+                }
+            }
+        }).addOnFailureListener(e -> System.out.println("Cannot get Token from Firestore."));
+    }
 
     /**
      * insert (new) item to [Collection] table from FireStore (image path needs to be treated differently)
@@ -453,13 +465,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Log.d(TAG, "updateById: " + collection_name + " " + id + " " + name + " " + price + " " + description + " " + hearts + " " + img + " " + fireStoreId);
 
-        String fullImgPath = img;
-        String[] imgPath = new String[1];
-        if (fullImgPath != null) {
-            imgPath = fullImgPath.split("/");
-        }
-        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length - 1]);
-//        Log.d("imgURL", "Img :" + imgURL);
+//        getDownloadUrlFirebase(userEmail, imgPath[imgPath.length - 1]);
+////        Log.d("imgURL", "Img :" + imgURL);
 
         String sqlUpdate = "update " + "'" + collection_name + "'"
                 + " set " + ITEM_NAME + " = '" + name + "', "
@@ -468,7 +475,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + ITEM_PRICE + "= '" + price + "', "
                 + ITEM_DESCRIPTION + "= '" + description + "', "
                 + ITEM_IMAGE + "= '" + imgURL + "' "
-//                + FIRESTORE_ID + "= '" + fireStoreId + "' "
                 + "where " + FIRESTORE_ID + "= " + "'" + fireStoreId + "'";
         Log.d(TAG, "updateById: " + sqlUpdate);
 
@@ -479,6 +485,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         + TABLE_NAME + " where "
                         + COLUMN_NAME + " = '" + collection_name + "'";
         Cursor cursor = db.rawQuery(sqlSelect, null);
+
+        String fullImgPath = img;
+        String imgPathFS;
+        if (fullImgPath != null) {
+            String[] imgPath = fullImgPath.split("/");
+            imgPathFS = imgPath[imgPath.length - 1];
+        } else {
+            imgPathFS = null;
+        }
+
         if (cursor.moveToFirst()) {
             DocumentReference userDocIdRef = fireStore.collection(COLLECTIONS_USERS).document(userEmail);
             DocumentReference collectionDocIdRef = userDocIdRef.collection(COLLECTIONS_WISHLISTS).document(cursor.getString(0));
@@ -488,7 +504,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             String descriptionField = fireStoreId + ".description";
             String heartsField = fireStoreId + ".hearts";
             String imgField = fireStoreId + ".img";
-            collectionDocIdRef.update(urlField, url, nameField, name, priceField, price, descriptionField, description, heartsField, hearts, imgField, img).addOnSuccessListener(new OnSuccessListener<Void>() {
+            collectionDocIdRef.update(urlField, url, nameField, name, priceField, price, descriptionField, description, heartsField, hearts, imgField, imgPathFS).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Log.d(TAG, "DocumentSnapshot successfully updated! " + cursor.getString(0) + " " + fireStoreId);
