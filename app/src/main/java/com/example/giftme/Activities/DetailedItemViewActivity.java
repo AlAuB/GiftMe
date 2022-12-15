@@ -12,6 +12,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.giftme.Helpers.DataBaseHelper;
@@ -36,6 +37,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
     Button deleteButton;
     ImageView itemImageView;
     DataBaseHelper dataBaseHelper;
+    String collectionName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         if (Objects.equals(itemDate, "null")) {
             itemDate = "";
         }
-        String collectionName = intent.getStringExtra("collectionName");
+        collectionName = intent.getStringExtra("collectionName");
         String itemFsID = intent.getStringExtra("itemFsID");
         if (Objects.equals(itemFsID, "null")) {
             itemFsID = "";
@@ -161,5 +163,23 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             dataBaseHelper = new DataBaseHelper(this);
             dataBaseHelper.deleteItem(String.valueOf(item.getId()), collectionName);
         });
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(getApplicationContext(), MyCollectionItems.class);
+                intent.putExtra("collection_name", collectionName);
+                startActivity(intent);
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MyCollectionItems.class);
+        intent.putExtra("collection_name", collectionName);
+        startActivity(intent);
+        super.onBackPressed();
     }
 }
