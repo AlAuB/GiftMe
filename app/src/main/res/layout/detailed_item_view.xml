@@ -3,95 +3,117 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
 
-    <ImageView
-        android:id="@+id/image_itemImage"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/image_icon"
-        android:src="@drawable/surprise" />
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="4"
+        android:layout_marginBottom="20dp">
 
-    <TextView
-        android:id="@+id/textView_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text=""
-        android:textSize="15sp" />
+        <ImageView
+            android:id="@+id/image_itemImage"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="25dp"
+            android:contentDescription="@string/image_icon"
+            android:src="@drawable/surprise" />
 
-    <TextView
-        android:id="@+id/itemNameTV"
+        <TextView
+            android:id="@+id/textView_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:text="date"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/itemNameTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="NAME"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/itemPriceTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="PRICE"
+            android:textSize="20sp" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/CustomRatingBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:isIndicator="true"
+            android:progressDrawable="@drawable/custom_rating_bar"
+            android:scaleX=".7"
+            android:scaleY=".7"
+            android:transformPivotX="0dp"
+            android:transformPivotY="50dp" />
+
+        <TextView
+            android:id="@+id/descriptionTV"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#cde7f7"
+            android:padding="15dp"
+            android:text="HELLO I WANT A CUTE CAT"
+            android:textSize="17sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text=""
-        android:textColor="@color/black"
-        android:textSize="25sp" />
+        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/itemPriceTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text=""
-        android:textSize="20sp" />
+        <Button
+            android:id="@+id/button_shop"
+            style="@style/texts"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@color/pink"
+            android:text="@string/shop_now" />
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        style="@style/CustomRatingBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:isIndicator="true"
-        android:progressDrawable="@drawable/custom_rating_bar"
-        android:scaleX=".7"
-        android:scaleY=".7"
-        android:transformPivotX="0dp"
-        android:transformPivotY="50dp" />
+        <Button
+            android:id="@+id/button_edit"
+            style="@style/texts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@android:color/holo_orange_light"
+            android:text="@string/edit" />
 
-    <TextView
-        android:id="@+id/descriptionTV"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:text=""
-        android:textSize="17sp" />
-
-    <Button
-        android:id="@+id/button_shop"
-        style="@style/texts"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:backgroundTint="@color/pink"
-        android:text="@string/shop_now" />
-
-    <Button
-        android:id="@+id/button_edit"
-        style="@style/texts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:backgroundTint="@android:color/holo_orange_light"
-        android:text="@string/edit" />
-
-    <Button
-        android:id="@+id/button_delete"
-        style="@style/texts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:text="@string/delete" />
+        <Button
+            android:id="@+id/button_delete"
+            style="@style/texts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:text="@string/delete" />
+    </LinearLayout>
 
 </LinearLayout>
