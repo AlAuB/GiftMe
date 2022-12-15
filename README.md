@@ -1,4 +1,4 @@
-# `GiftMe!`
+# GiftMe!
 Android App built for CS501 E1 FALL 2022 at Boston University
 
 ## 🎁 GiftMe! Description:
@@ -54,6 +54,7 @@ Detailed View:
 **APIs:**
 - [FireStore Database](https://firebase.google.com/docs/firestore) as data storage
 - [Firebase Dynamic Links](https://firebase.google.com/docs/dynamic-links) to generate links to firestore collections
+- [Firebase Messaging Service](https://firebase.google.com/docs/reference/android/com/google/firebase/messaging/FirebaseMessagingService) for notifications
 - [Google Authentication](https://developers.google.com/identity/sign-in/android/start-integrating) to log in
 
 **Software:**
