@@ -57,6 +57,7 @@ public class FriendCompactViewFragment extends Fragment {
         dataBaseHelper = new DataBaseHelper(context);
         items = new ArrayList<>();
 
+        //if a bundle was sent
         if (getArguments() != null) {
             collection_name = getArguments().getString("collection_name").trim();
             collection_id = getArguments().getString("collection_id").trim();
@@ -66,26 +67,20 @@ public class FriendCompactViewFragment extends Fragment {
             if(friend_id != null){
                 getAllItemsFirestore();
             }
-
         }
         else{
             items.clear();
         }
-
-        Log.d("FIRESTORE AFTER ", items.toString());
-
         return view;
     }
 
     //get all items from firestore with collectionID
     private void getAllItemsFirestore() {
-        //TEST FIRE STORE START
         //get fire store collection wishlist items
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
+        //get document references
         DocumentReference userRef = fireStore.collection("users").document(friend_id);
-        Log.d("friendCompactView", "friendId " + friend_id);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);
-
 
         collectionRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -97,8 +92,8 @@ public class FriendCompactViewFragment extends Fragment {
                         if (itemsInWishlist != null) {
                             itemsInWishlist.forEach((key, value) -> {
                                         if (value instanceof HashMap) {
+                                            //if it is a map = item, then convert the map into item and add to items
                                             Item currentItem = dataBaseHelper.convertMapIntoItem((Map<String, Object>) value, key);
-                                            Log.d("FIRESTORE", currentItem.toString());
                                             items.add(currentItem);
                                         }
                                     }

@@ -57,7 +57,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         holder.currentItem = myItems.get(index);
         holder.cardView.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, DetailedItemViewActivity.class);
-            //put in name, price description, hearts, and link etc
+            //put info in intent
             intent.putExtra("itemID", item.getId());
             intent.putExtra("itemName", item.getName());
             intent.putExtra("itemHearts", item.getHearts());
@@ -68,10 +68,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemFSID", item.getFireStoreID());
             intent.putExtra("itemURL", item.getWebsite());
             intent.putExtra("collectionName", collectionName);
-            Log.d("itemsAdapter", "put in intent" + item.getFireStoreID());
-            Log.d("itemDes", item.getDescription());
-            String imgUrl = item.getImg();
+
             //get image ------------------------------------------------------------
+            String imgUrl = item.getImg();
             if (imgUrl == null) {
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             } else {

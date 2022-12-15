@@ -57,14 +57,9 @@ public class WishlistFriendCollectionData extends Fragment {
     ArrayList<String> friendIds;
     ArrayList<String> friendNames;
     ArrayList<String> friendImgs;
-
     DataBaseHelper dataBaseHelper;
 
-//    ImageView emptyImage;
-//    TextView emptyText;
-
     private static final String TABLE_NAME = "COLLECTIONS";
-
 
     public WishlistFriendCollectionData() {
         // Required empty public constructor
@@ -78,7 +73,6 @@ public class WishlistFriendCollectionData extends Fragment {
         context1 = this.getContext();
         collectionCount1 = view1.findViewById(R.id.collectionCount1);
         recyclerView1 = view1.findViewById(R.id.recycleView1);
-
         dataBaseHelper = new DataBaseHelper(context1);
         ids = new ArrayList<>();
         collectionNames = new ArrayList<>();
@@ -86,18 +80,14 @@ public class WishlistFriendCollectionData extends Fragment {
         friendIds = new ArrayList<>();
         friendNames = new ArrayList<>();
         friendImgs = new ArrayList<>();
-
-//        emptyText = view1.findViewById(R.id.empty_text);
-//        emptyImage = view1.findViewById(R.id.empty_icon);
-
         extendedFloatingActionButton = view1.findViewById(R.id.action1);
 
+        //if bundle was sent
         final Bundle args = getArguments();
         if(args !=null){
             try {
                 String userID = args.getString("user_id");
                 String wishlistID = args.getString("collection_id");
-
                 addFriendCollection(userID, wishlistID);
             }catch(Exception e){
                 System.out.println("Error");
@@ -108,56 +98,20 @@ public class WishlistFriendCollectionData extends Fragment {
             getAllFriends();
         }
         collectionCount1.setText(String.valueOf(collectionNames.size()));
-        Log.d("friendCollectionCount", "num collections " + collectionNames.size());
         
-        //TESTING START
+        //floating action button to add friend's wishlist via shared link manually
         extendedFloatingActionButton.setOnClickListener(view -> {
             confirmDialog();
         });
-        //TESTING END
         recyclerView1.setLayoutManager(new LinearLayoutManager(context1));
         recyclerView1.setHasFixedSize(true);
         FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collectionNames, collectionIDs, friendIds, friendNames, friendImgs);
         recyclerView1.setAdapter(FrWishlistCollectionRecycleAdapter);
 
-        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView1);
-
         return view1;
     }
 
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            int position = viewHolder.getBindingAdapterPosition();
-            dataBaseHelper.deleteCollection(ids.get(position));
-            TextView textView = getActivity().findViewById(R.id.collectionCount1);
-            ids.clear();
-            collectionNames.clear();
-            //getAllCollection();
-            textView.setText(String.valueOf(FrWishlistCollectionRecycleAdapter.getItemCount()));
-            FrWishlistCollectionRecycleAdapter.notifyItemRemoved(position);
-            //checkEmptyUI();
-        }
-
-        @Override
-        public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-            new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-                    .addBackgroundColor(ContextCompat.getColor(context1, android.R.color.holo_red_light))
-                    .addSwipeLeftActionIcon(R.drawable.ic_baseline_delete_24)
-                    .addSwipeLeftLabel("Delete")
-                    .setSwipeLeftLabelColor(ContextCompat.getColor(context1, R.color.white))
-                    .create().decorate();
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        }
-    };
-
     //getting the collection Name and inserting the collection into the COLLECTIONS table in SQLite
-    //MAYBE RENAME TO ADD COLLECTION?
     public void addFriendCollection(String userID, String collectionID){
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         DocumentReference userRef = fireStore.collection("users").document(userID);
@@ -167,7 +121,7 @@ public class WishlistFriendCollectionData extends Fragment {
         String displayName = "displayName";
         String photoURL = "photoUrl";
         final String[] friend = new String[2];
-        //friend[0] = name; friend[1] = pfp
+        //note: friend[0] = name; friend[1] = profile picture
         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -175,9 +129,6 @@ public class WishlistFriendCollectionData extends Fragment {
                     DocumentSnapshot user = task.getResult();
                     friend[0] = user.getString(displayName);
                     friend[1] = user.getString(photoURL);
-
-                    Log.d("friend", "Name: " + friend[0]);
-
                     final String[] collectionName= new String[1];
 
                     collectionRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -187,12 +138,11 @@ public class WishlistFriendCollectionData extends Fragment {
                                 DocumentSnapshot document = task.getResult();
                                 if(document.exists()) {
                                     //collection exists
+                                    //add collection to our sqlite table 'COLLECTIONS'
                                     DocumentSnapshot collection = task.getResult();
                                     collectionName[0] = collection.getString(collection_name);
-                                    Log.d("friendCollectionName", "Name: " + collectionName[0]);
-                                    Log.d("friendName2", "Name: " + friend[0]);
                                     dataBaseHelper.addNewFriendCollection(friend[0], collectionName[0], userID, collectionID, friend[1]);
-                                    //Update collection count
+                                    //refresh everything
                                     ids.clear();
                                     collectionNames.clear();
                                     collectionIDs.clear();
@@ -229,22 +179,6 @@ public class WishlistFriendCollectionData extends Fragment {
     }
 
     /**
-     * Get all rows from database for Collection Table
-     */
-    private void getAllCollection() {
-        Cursor cursor = dataBaseHelper.readCollectionTableAllData(TABLE_NAME);
-        if (cursor.getCount() != 0) {
-            while (cursor.moveToNext()) {
-                //if this isn't the friend's wishlist
-                if (cursor.getBlob(3) == null) {
-                    ids.add(cursor.getString(0));
-                    collectionNames.add(cursor.getString(1));
-                }
-            }
-        }
-    }
-
-    /**
      * Private function that pop up confirm dialog that wait user input
      */
     private void confirmDialog() {
@@ -261,19 +195,17 @@ public class WishlistFriendCollectionData extends Fragment {
                 //get link from input
                 int index_parseDeepLink = insert.indexOf("3D");
                 String deepLink = insert.substring(index_parseDeepLink+2);
-                System.out.println("Link: " + deepLink);
-                System.out.println("INDEX " + index_parseDeepLink);
+                //need to parse the userID and collectionID
                 int index = deepLink.indexOf("%20");
                 String userEmail = deepLink.substring(0, index);
                 int indexAt = userEmail.indexOf('%');
+                //ex: test123@gmail.com becomes test123%20gmail.com so we need to break apart and
+                //remake the email
                 String userIDName = userEmail.substring(0,indexAt);
                 String userIDEnd = userEmail.substring(indexAt+3);
                 String userID = userIDName + "@" + userIDEnd;
 
                 String wishlistID = deepLink.substring(index+3);
-                System.out.println("substring: " + userID);
-                System.out.println("substring: " + wishlistID);
-
                 addFriendCollection(userID, wishlistID);
 
             }

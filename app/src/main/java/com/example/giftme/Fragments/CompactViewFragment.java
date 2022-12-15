@@ -67,20 +67,29 @@ public class CompactViewFragment extends Fragment {
         emptyImage = view.findViewById(R.id.compact_view_empty_icon);
         emptyText = view.findViewById(R.id.compact_view_empty_text);
         context = getContext();
+        activity = getActivity();
         dataBaseHelper = new DataBaseHelper(context);
         items = new ArrayList<>();
+
+        //if bundle was sent to fragment
         if (getArguments() != null) {
             collection_name = getArguments().getString("collection_name");
         }
+
+        //when plus button to add new item is clicked
         actionButton.setOnClickListener(view -> confirmDialog());
+
+        //then get all Items
         getAllItems();
+
+        //initialize adapter and set recyclerView
         itemAdapter = new ItemsAdapter(getActivity(), context, items, collection_name);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(itemAdapter);
         itemNumListener.compactViewUpdateItemNum(String.valueOf(itemAdapter.getItemCount()));
+
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
-        activity = getActivity();
         checkEmptyUI();
         return view;
     }
@@ -95,7 +104,9 @@ public class CompactViewFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getBindingAdapterPosition();
             dataBaseHelper = new DataBaseHelper(context);
+            //when swiped from right to left, delete item
             dataBaseHelper.deleteItem(String.valueOf(items.get(position).getId()), collection_name);
+            //refresh
             items.clear();
             getAllItems();
             itemAdapter.notifyItemRemoved(position);
@@ -149,11 +160,13 @@ public class CompactViewFragment extends Fragment {
 
     private void confirmDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Add New Item");
+        String addNewItem = "Add New Item";
+        builder.setTitle(addNewItem);
         View view = getLayoutInflater().inflate(R.layout.add_collection_alert_dialog, null);
         TextInputEditText input = view.findViewById(R.id.input);
         builder.setView(view);
         builder.setPositiveButton("OK", (dialogInterface, i) -> {
+            //when OK is clicked, create a new Item
             String itemName = Objects.requireNonNull(input.getText()).toString().trim();
             if (itemName.length() == 0 || itemName.length() > 30) {
                 Toast.makeText(context, "Invalid collection name", Toast.LENGTH_LONG).show();

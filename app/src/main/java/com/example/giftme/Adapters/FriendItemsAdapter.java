@@ -75,7 +75,7 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
         holder.currentItem = friendItems.get(index);
         holder.cardView.setOnClickListener(view -> {
             Intent intent = new Intent(this.activity, ClaimFriendItemActivity.class);
-            //put in name, price description, hearts, and link etc
+            //put info into intent
             intent.putExtra("itemID", item.getId());
             intent.putExtra("itemName", item.getName());
             intent.putExtra("itemHearts", item.getHearts());
@@ -87,9 +87,7 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
 
             //friend firestore id: email
             intent.putExtra("friendID", friendID);
-            Log.d("FRIENDID_ITEMSADAPTER", "friendID: " + friendID);
             intent.putExtra("itemFSID", item.getFireStoreID());
-            //
 
             if(item.getDescription() != null){
                 intent.putExtra("itemDes", item.getDescription());
@@ -98,7 +96,6 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
                 String noDescription = "Your friend has not set a description.";
                 intent.putExtra("itemDes", noDescription);
             }
-
             //get image ------------------------------------------------------------
             String imgUrl= item.getImg();
             if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
@@ -114,7 +111,7 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
                     // Got the download URL for 'users/me/profile.png'
                     imgUri[0] = uri.toString();
                     intent.putExtra("itemImg", imgUri[0]);
-//            this.activity.finish();
+
                 }).addOnFailureListener(exception -> {
                     // Handle any errors
                     Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
@@ -132,7 +129,6 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         public TextView itemNameTV;
         public RatingBar ratingBar;
         public ImageView claimedPFP;

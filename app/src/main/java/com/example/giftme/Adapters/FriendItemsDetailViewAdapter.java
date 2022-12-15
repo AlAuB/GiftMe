@@ -66,15 +66,12 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         int index = holder.getBindingAdapterPosition();
         Item item = items.get(index);
-        Log.d("ITEMS_ALL", items.toString());
         holder.name.setText(item.getName());
         holder.price.setText("$" + item.getPrice());
         holder.date.setText(item.getDate());
-        Log.d("detailviewadapter", item.toString());
-        Log.d("ITEM_IMAGE", "IMG: " + item.getImg());
         String imgUrl= item.getImg();
-        Log.d("ITEM_URL", "IMG: " +  imgUrl);
-//        if(!imgUrl.equals("null")) || item.getImg() != null){
+
+        //if there is no img, then set the image to default img
         if( imgUrl == null || imgUrl.toLowerCase().equals(null)) {
             Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             holder.imageView.setImageResource(R.drawable.surprise);
@@ -88,7 +85,6 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
             mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
                 // Got the download URL for 'users/me/profile.png'
                 imgUri[0] = uri.toString();
-                Log.d("insideIf", "URI: " + imgUri[0]);
                 Picasso.get().load(imgUri[0]).into(holder.imageView);
 
             }).addOnFailureListener(exception -> {
