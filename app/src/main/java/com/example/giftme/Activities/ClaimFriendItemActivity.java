@@ -52,7 +52,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
 
         String friendID = intent.getStringExtra("friendID");
         Log.d("FRIENDID_CLAIM", "friendID: " + friendID);
-        String itemFsID = intent.getStringExtra("itemFsID");
+        String itemFSID = intent.getStringExtra("itemFSID");
         String friendCollectionID = intent.getStringExtra("collectionID");
         collectionName = intent.getStringExtra("collectionName");
 
@@ -101,8 +101,8 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         //set anony pfp too
         claimButton.setClickable(!item.getClaimed());
         claimButton.setOnClickListener(view -> {
-            Log.d("friendClaim", friendID + " " + friendCollectionID + " " + itemFsID);
-            dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFsID, true);
+            Log.d("friendClaim", friendID + " " + friendCollectionID + " " + itemFSID);
+            dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFSID, true);
             dataBaseHelper.sendNotification(friendID, "Claimed!", "Someone claims one of your items in " + collectionName);
 
             finish();
