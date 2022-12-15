@@ -61,6 +61,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     ImageView pfpIV;
     DataBaseHelper dataBaseHelper;
     SignStatusListener listener;
+    changeMenuPosition darkModeListener;
     ArrayList<String> collectionIds;
 
     public SettingFragment() {
@@ -83,7 +84,6 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             if (isChecked){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 mode.setText("Dark Mode");
-
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                 mode.setText("Light Mode");
@@ -331,16 +331,23 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         void updateData(boolean status);
     }
 
+    public interface changeMenuPosition {
+        void changePosition();
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof SignStatusListener)
             listener = (SignStatusListener) context;
+        if (context instanceof changeMenuPosition)
+            darkModeListener = (changeMenuPosition) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         listener = null;
+        darkModeListener = null;
     }
 }

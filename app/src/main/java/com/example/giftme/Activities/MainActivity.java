@@ -23,7 +23,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener {
+public class MainActivity extends AppCompatActivity implements SettingFragment.SignStatusListener, SettingFragment.changeMenuPosition {
 
     BottomNavigationView bottomNavigationView;
 
@@ -111,5 +111,9 @@ public class MainActivity extends AppCompatActivity implements SettingFragment.S
             }
         }
     }
+
+    @Override
+    public void changePosition() {
+        bottomNavigationView.getMenu().getItem(0).setChecked(true);
+    }
 }
-//bottomNavigationView.getMenu().getItem(0).setChecked(true);
