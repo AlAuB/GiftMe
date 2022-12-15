@@ -11,12 +11,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.example.giftme.Fragments.FriendCompactViewFragment;
 import com.example.giftme.Helpers.DataBaseHelper;
 import com.example.giftme.Helpers.Item;
 import com.example.giftme.R;
@@ -34,6 +30,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
     Button shopButton;
     ImageButton backButton;
     DataBaseHelper dataBaseHelper;
+    String collectionName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +54,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         Log.d("FRIENDID_CLAIM", "friendID: " + friendID);
         String itemFsID = intent.getStringExtra("itemFsID");
         String friendCollectionID = intent.getStringExtra("collectionID");
-        String collectionName = intent.getStringExtra("collectionName");
-        //
+        collectionName = intent.getStringExtra("collectionName");
 
         //(re)create item obj
         Item item = new Item(itemID, url, itemName, itemHearts, itemPrice,
@@ -83,20 +79,16 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
             Picasso.get().load(item.getImg()).into(imageView);
         }
         backButton = findViewById(R.id.imageButton_backToPrevious);
-        backButton.setOnClickListener((view -> {
-            finish();
-
-        }));
+        backButton.setOnClickListener((view -> finish()));
 
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view -> {
             //if there is no link
             Log.d("claimLink", "URL is :" + url);
-            if ((url.equals(null)) || (url.equals("null")) || (url.equals("")) || (url.isEmpty())){
+            if ((url == null) || (url.equals("null")) || (url.isEmpty())){
                 Toast.makeText(this, "There is no link", Toast.LENGTH_SHORT).show();
-            }
-            //if there is a link
-            else{
+            } else{
+                //if there is a link
                 Intent shopIntent = new Intent(Intent.ACTION_VIEW);
                 shopIntent.setData(Uri.parse(url));
                 shopIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -105,23 +97,17 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         });
 
         claimButton = findViewById(R.id.button_claim);
-        if(item.getClaimed() == true){
-            //item is already claimed by someone
-            claimButton.setClickable(false);
-            //set anony pfp too
-        }
-        else{
-            claimButton.setClickable(true);
-        }
+        //item is already claimed by someone
+        //set anony pfp too
+        claimButton.setClickable(!item.getClaimed());
         claimButton.setOnClickListener(view -> {
             Log.d("friendClaim", friendID + " " + friendCollectionID + " " + itemFsID);
             dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFsID, true);
+            dataBaseHelper.sendNotification(friendID, "Claimed!", "Someone claims one of your items in " + collectionName);
+
             finish();
         });
         cancelButton = findViewById(R.id.button_cancel);
-        cancelButton.setOnClickListener(view->{
-            finish();
-        });
-
+        cancelButton.setOnClickListener(view-> finish());
     }
 }
