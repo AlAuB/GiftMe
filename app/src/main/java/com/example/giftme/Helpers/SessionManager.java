@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
+// store user info via shared prefereces
 public class SessionManager {
 
     static final String USER_EMAIL = "userEmail";

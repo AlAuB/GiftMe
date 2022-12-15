@@ -63,7 +63,6 @@ public class FriendDetailViewFragment extends Fragment {
 
     //get all items from firestore with collectionID
     private void getAllItemsFirestore() {
-
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         DocumentReference userRef = fireStore.collection("users").document(friend_id);
         DocumentReference collectionRef = userRef.collection("wishlists").document(collection_id);

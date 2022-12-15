@@ -84,7 +84,6 @@ public class FriendItemsAdapter extends RecyclerView.Adapter<FriendItemsAdapter.
             intent.putExtra("friendID", friendID);
             Log.d("FRIENDID_ITEMSADAPTER", "friendID: " + friendID);
             intent.putExtra("itemFSID", item.getFireStoreID());
-            //
 
             if (item.getDescription() != null) {
                 intent.putExtra("itemDes", item.getDescription());
