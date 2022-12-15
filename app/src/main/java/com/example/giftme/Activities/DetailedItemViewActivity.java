@@ -68,9 +68,9 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             itemDate = "";
         }
         collectionName = intent.getStringExtra("collectionName");
-        String itemFsID = intent.getStringExtra("itemFsID");
-        if (Objects.equals(itemFsID, "null")) {
-            itemFsID = "";
+        String itemFSID = intent.getStringExtra("itemFSID");
+        if (Objects.equals(itemFSID, "null")) {
+            itemFSID = "";
         }
 
         //(re)create item obj
@@ -123,7 +123,6 @@ public class DetailedItemViewActivity extends AppCompatActivity {
                 });
             }
         }
-
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view -> {
             //if there is no link
@@ -138,7 +137,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
         });
 
         editButton = findViewById(R.id.button_edit);
-        String finalItemFsID = itemFsID;
+        String finalItemFSID = itemFSID;
         editButton.setOnClickListener(view -> {
             Intent newIntent = new Intent(this, EditItemActivity.class);
             //put in name, price description, hearts, and link etc
@@ -149,7 +148,7 @@ public class DetailedItemViewActivity extends AppCompatActivity {
             newIntent.putExtra("itemURL", item.getWebsite());
             newIntent.putExtra("itemDes", item.getDescription());
             newIntent.putExtra("itemImg", item.getImg());
-            newIntent.putExtra("itemFsID", finalItemFsID);
+            newIntent.putExtra("itemFSID", finalItemFSID);
             newIntent.putExtra("itemDate", item.getDate());
             newIntent.putExtra("collectionName", collectionName);
             startActivity(newIntent);

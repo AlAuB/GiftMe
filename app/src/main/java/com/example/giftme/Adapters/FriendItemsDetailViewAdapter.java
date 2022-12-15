@@ -145,7 +145,7 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
 
                     //friend firestore id: email
                     intent.putExtra("friendID", friendID);
-                    intent.putExtra("itemFsID", item.getFireStoreID());
+                    intent.putExtra("itemFSID", item.getFireStoreID());
 
                     this.activity.startActivity(intent);
                 }).addOnFailureListener(exception -> {

@@ -64,8 +64,9 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemPrice", item.getPrice());
             intent.putExtra("itemDes", item.getDescription());
             intent.putExtra("itemDate", item.getDate());
+            intent.putExtra("itemDate", item.getDate());
+            intent.putExtra("itemFSID", item.getFireStoreID());
             intent.putExtra("itemURL", item.getWebsite());
-            intent.putExtra("itemFsID", item.getFireStoreID());
             intent.putExtra("collectionName", collectionName);
             Log.d("itemsAdapter", "put in intent" + item.getFireStoreID());
             Log.d("itemDes", item.getDescription());
