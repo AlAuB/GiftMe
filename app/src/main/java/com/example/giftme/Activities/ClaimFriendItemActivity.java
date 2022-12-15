@@ -98,7 +98,10 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         claimButton.setOnClickListener(view -> {
             dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFSID, true);
             dataBaseHelper.sendNotification(friendID, "Claimed!", "Someone claims one of your items in " + collectionName);
-            finish();
+            claimButton.setEnabled(false);
+            Intent temp = new Intent(getApplicationContext(), FriendCollectionItems.class);
+            temp.putExtra("claim", item.getFireStoreID());
+            startActivity(temp);
         });
         cancelButton = findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(view-> finish());
