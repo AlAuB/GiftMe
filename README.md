@@ -65,9 +65,9 @@ Detailed View:
 
 ## 🎀 Developers:
 
-Jinpeng Lyu @AlAuB, 
-Alex Wang @AlxWang9966,
-Lesley Chen @lchen456, 
-Tiffany Chen @txcchen,
-Nick (Sangjoon) Lee @sj0726,
-Zizhuang Guo (Tim) @Guo-Zizhuang,
+Jinpeng Lyu [@AlAuB](https://github.com/AlAuB), 
+Alex Wang [@AlxWang9966](https://github.com/AlxWang9966),
+Lesley Chen [@lchen456](https://github.com/lchen456), 
+Tiffany Chen [@txcchen](https://github.com/txcchen),
+Nick (Sangjoon) Lee [@sj0726](https://github.com/sj0726),
+Zizhuang (Tim) Guo [@Guo-Zizhuang](https://github.com/Guo-Zizhuang),
