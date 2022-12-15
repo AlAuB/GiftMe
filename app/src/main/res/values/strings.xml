@@ -47,4 +47,7 @@
     <string name="deep_link">Paste Link Here</string>
     <string name="user_icon">User icon</string>
     <string name="claim">claim</string>
+    <string name="date">date</string>
+    <string name="name">NAME</string>
+    <string name="price">PRICE</string>
 </resources>

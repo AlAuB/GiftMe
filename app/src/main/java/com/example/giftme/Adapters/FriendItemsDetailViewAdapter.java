@@ -80,6 +80,7 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
                 // Got the download URL for 'users/me/profile.png'
                 imgUri[0] = uri.toString();
                 Log.d("insideIf", "URI: " + imgUri[0]);
+                item.setImg(imgUri[0]);
                 Picasso.get().load(imgUri[0]).into(holder.imageView);
             }).addOnFailureListener(exception -> {
                 // Handle any errors
@@ -116,29 +117,17 @@ public class FriendItemsDetailViewAdapter extends RecyclerView.Adapter<FriendIte
             if (imgUrl == null || imgUrl.equals("null")) {
                 Log.d("CATCH_EXCEPTION", "IMG: " + item.getImg());
             } else {
-                String[] imgUri = new String[1];
-                String path = "images/" + friendID + "/" + imgUrl;
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference();
-                StorageReference mountainsRef = storageRef.child(path);
-                mountainsRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    // Got the download URL for 'users/me/profile.png'
-                    imgUri[0] = uri.toString();
-                    intent.putExtra("itemImg", imgUri[0]);
-                }).addOnFailureListener(exception -> {
-                    // Handle any errors
-                    Log.d("Friend_DEBUG", "getDownloadUrlFirebase: FAILED (" + path + ") " + exception.getMessage());
-                });
+                intent.putExtra("itemImg", item.getImg());
+                intent.putExtra("itemURL", item.getWebsite());
+                intent.putExtra("itemDate", item.getDate());
+                intent.putExtra("collectionID", collectionID);
+                intent.putExtra("collectionName", collectionName);
+                //friend firestore id: email
+                intent.putExtra("friendID", friendID);
+                intent.putExtra("itemFSID", item.getFireStoreID());
+                this.activity.startActivity(intent);
             }
             //get img end --------------------------------------------------------------------
-            intent.putExtra("itemURL", item.getWebsite());
-            intent.putExtra("itemDate", item.getDate());
-            intent.putExtra("collectionID", collectionID);
-            intent.putExtra("collectionName", collectionName);
-            //friend firestore id: email
-            intent.putExtra("friendID", friendID);
-            intent.putExtra("itemFSID", item.getFireStoreID());
-            this.activity.startActivity(intent);
         });
     }
 

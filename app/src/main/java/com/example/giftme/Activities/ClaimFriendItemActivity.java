@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -27,7 +26,6 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
     Button claimButton;
     Button cancelButton;
     Button shopButton;
-    ImageButton backButton;
     DataBaseHelper dataBaseHelper;
     String collectionName = "";
 
@@ -46,6 +44,7 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         double itemPrice = intent.getDoubleExtra("itemPrice", 0);
         String itemDes = intent.getStringExtra("itemDes");
         String img = intent.getStringExtra("itemImg");
+        System.out.println("The image path in claim is: " + img);
         String date = intent.getStringExtra("itemDate");
         String url = intent.getStringExtra("itemURL");
 
@@ -97,7 +96,6 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         claimButton.setOnClickListener(view -> {
             dataBaseHelper.editClaimed(friendID, friendCollectionID, itemFSID, true);
             dataBaseHelper.sendNotification(friendID, "Claimed!", "Someone claims one of your items in " + collectionName);
-
             finish();
         });
         cancelButton = findViewById(R.id.button_cancel);
