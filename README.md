@@ -1,11 +1,11 @@
 # `GiftMe!`
 Android App built for CS501 E1 FALL 2022 at Boston University
 
-## GiftMe! Description:
+## 🎁 GiftMe! Description:
 
 GiftMe! is a wishlist app for personal events and holidays (eg. Birthday Parties, Christmas Presents, Secret Santas, Thanksgiving, etc.). It allows users to create a wishlist of items they want to receive for specific occasions. Users can send out an invitation link to their friends and family to let them see the possible gifting options. Friends and family will also be able to see which gifts are already taken by others and which ones are available to prevent duplicate gifts. This saves a lot of time and headache from choosing the right gift for many people since oftentimes it is hard to know what gift is the right gift given the person, the occasion, and who else decided on the same gift. For people who aren’t so close to each other, this is a great way to choose the right gift and build a closer relationship.
 
-## Features
+## 🎀 Features
 **Creating a Wishlist**
 - Log in with Google Account
 - Create wishlist
@@ -31,9 +31,9 @@ GiftMe! is a wishlist app for personal events and holidays (eg. Birthday Parties
 - Image
 - Preference Level
 
-## Technologies ##
+## 🎀 Technologies ##
 
-Language used: 
+Languages used: 
 - Java, XML, SQLite
 
 APIs
@@ -41,19 +41,19 @@ APIs
 - [Google Authentication](https://developers.google.com/identity/sign-in/android/start-integrating) to log in
 
 Software
-- Android Studio 
+- [Android Studio](https://developer.android.com/) 
 - Compile SDK Version: 33
 - Minimum SDK Version: 22
 
-## Installation ##
+## 🎀 Installation ##
 - Download code to run in Android Studio emulator
 - We will need to add your SHA-1 verification code for your device to access firestore database since this project is still in development
 
-## Developers:
+## 🎀 Developers:
 
-Jinpeng Lyu,
-Alex Wang,
-Lesley Chen,
-Tiffany Chen,
-Nick (Sangjoon) Lee,
-Zizhuang Guo (Tim),
+Jinpeng Lyu @AlAuB, 
+Alex Wang @AlxWang9966,
+Lesley Chen @lchen456, 
+Tiffany Chen @txcchen,
+Nick (Sangjoon) Lee @sj0726,
+Zizhuang Guo (Tim) @Guo-Zizhuang,
