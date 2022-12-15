@@ -46,4 +46,5 @@
     <string name="delete">delete</string>
     <string name="deep_link">Paste Link Here</string>
     <string name="user_icon">User icon</string>
+    <string name="claim">claim</string>
 </resources>

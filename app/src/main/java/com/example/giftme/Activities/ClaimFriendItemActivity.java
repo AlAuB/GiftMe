@@ -78,8 +78,6 @@ public class ClaimFriendItemActivity extends AppCompatActivity {
         if(item.getImg() != null){
             Picasso.get().load(item.getImg()).into(imageView);
         }
-        backButton = findViewById(R.id.imageButton_backToPrevious);
-        backButton.setOnClickListener((view -> finish()));
 
         shopButton = findViewById(R.id.button_shop);
         shopButton.setOnClickListener(view -> {
