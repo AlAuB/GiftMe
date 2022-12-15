@@ -105,7 +105,7 @@ public class EditItemActivity extends AppCompatActivity {
 
         Log.d("itemImage", "Img " + img);
         if (img == null || img.equals("null")) {
-            imgView.setImageResource(R.drawable.black_text);
+            imgView.setImageResource(R.drawable.click_img);
         } else {
             String tempPath = getApplicationContext().getFilesDir() + "/" + img;
             File file = new File(tempPath);
