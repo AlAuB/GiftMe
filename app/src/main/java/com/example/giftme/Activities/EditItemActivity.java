@@ -77,7 +77,7 @@ public class EditItemActivity extends AppCompatActivity {
         if(Objects.equals(itemFSID, "null")){ itemFSID = "";}
 
         String collectionName = intent.getStringExtra("collectionName");
-        Log.d("debug::", "edit item activity: " + collectionName + " " + itemFSID);
+        Log.d("debug::", "edit item activity: " + collectionName + " " + itemFSID + " " + img);
         //(re)create item obj
         Item item = new Item(itemID, itemURL, itemName, itemHearts, itemPrice,
                 itemDes, itemDate, img);
@@ -136,6 +136,7 @@ public class EditItemActivity extends AppCompatActivity {
             try{
                 Date dateObj = new Date();
                 String fileName = dateObj.getTime() + ".jpg";
+                Log.d("debug::", "edit item activity: new image " + fileName);
 
                 FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
@@ -150,6 +151,7 @@ public class EditItemActivity extends AppCompatActivity {
                 String newLink = String.valueOf(linkET.getText());
 
                 String newImg = context.getApplicationContext().getFilesDir() + "/" + fileName;
+                Log.d("debug::", "edit item activity: new image full path " + newImg);
 
                 dataBaseHelper.updateById(collectionName, newLink, item.getId(), newName, newPrice,
                         newDescription, newRating, newImg, finalItemFSID);

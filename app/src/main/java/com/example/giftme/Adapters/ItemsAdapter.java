@@ -66,7 +66,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             intent.putExtra("itemDate", item.getDate());
             intent.putExtra("itemLink", item.getWebsite());
             intent.putExtra("itemDate", item.getDate());
-            intent.putExtra("itemFsID", item.getFireStoreID());
+            intent.putExtra("itemFSID", item.getFireStoreID());
             Log.d("itemDes", item.getDescription());
 
             String imgUrl = item.getImg();

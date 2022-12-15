@@ -467,11 +467,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 + ITEM_URL + "= '" + url + "', "
                 + ITEM_PRICE + "= '" + price + "', "
                 + ITEM_DESCRIPTION + "= '" + description + "', "
-                + ITEM_IMAGE + "= '" + imgURL + "', "
-                + FIRESTORE_ID + "= '" + fireStoreId + "' "
-                + "where " + ITEM_ID + "= " + id;
+                + ITEM_IMAGE + "= '" + imgURL + "' "
+//                + FIRESTORE_ID + "= '" + fireStoreId + "' "
+                + "where " + FIRESTORE_ID + "= " + "'" + fireStoreId + "'";
+        Log.d(TAG, "updateById: " + sqlUpdate);
 
-        db.execSQL(sqlUpdate);
+//        db.execSQL(sqlUpdate);
 
         String sqlSelect =
                 "select " + FIRESTORE_ID + " from "
@@ -839,6 +840,25 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void storeImageFirebase(Bitmap bitmap, String name) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        String path = "images/" + userEmail + "/" + name;
+
+        StorageReference storageRef = storage.getReference();
+        StorageReference mountainsRef = storageRef.child(path);
+        UploadTask uploadTask = mountainsRef.putBytes(data);
+        uploadTask.addOnFailureListener(exception -> {
+            Log.d(TAG, "storeImageFirebase: FAILED (" + path + ") " + exception.getMessage());
+            // Handle unsuccessful uploads
+        }).addOnSuccessListener(taskSnapshot -> {
+            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+            Log.d(TAG, "storeImageFirebase: SUCCESS\nPath: " + taskSnapshot.getMetadata().getPath() + "\nSize (bytes): " + taskSnapshot.getMetadata().getSizeBytes() + "\nContent Type: " + taskSnapshot.getMetadata().getContentType() + "\nCreation Time (ms): " + taskSnapshot.getMetadata().getCreationTimeMillis() + "\nBucket: " + taskSnapshot.getMetadata().getBucket());
+            getDownloadUrlFirebase(userEmail, name);
+        });
+    }
+
+    public void updateImageFirebase(Bitmap bitmap, String name) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
