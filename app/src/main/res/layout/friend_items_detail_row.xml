@@ -84,7 +84,7 @@
                     android:layout_marginBottom="10dp"
                     android:layout_weight="2"
                     android:gravity="center_vertical"
-                    android:text="@string/price"
+                    android:text="@string/item_price"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

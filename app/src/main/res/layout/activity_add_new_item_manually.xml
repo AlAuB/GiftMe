@@ -39,7 +39,7 @@
         app:counterEnabled="true"
         app:counterMaxLength="30"
         app:endIconMode="clear_text"
-        app:helperText="Required"
+        app:helperText="@string/required"
         app:helperTextTextColor="@color/textbox_red">
 
         <com.google.android.material.textfield.TextInputEditText

@@ -37,10 +37,11 @@
             style="@style/texts"
             android:id="@+id/friend_itemNameTV"
             android:layout_width="match_parent"
+            android:hint="@string/input_name"
+            android:textColor="@color/black"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:text="@string/name"
             android:textSize="25sp" />
 
         <TextView
@@ -93,7 +94,7 @@
             android:layout_marginRight="10dp"
             android:backgroundTint="@color/pink"
             android:text="@string/shop_now" />
-
+      
         <Button
             android:id="@+id/button_claim"
             style="@style/texts"

@@ -8,6 +8,7 @@
     <string name="friend">FRIEND</string>
     <string name="my_collection">My Collection</string>
     <string name="fr_collection">Friends\' Collection</string>
+
     <string name="_0_collection">0 collection</string>
     <string name="action_button">Action Button</string>
     <string name="enter_the_name">Enter the name</string>
@@ -15,29 +16,31 @@
     <string name="collections">collections</string>
     <string name="items">Items</string>
     <string name="share">share</string>
+
     <string name="current_item_s_image">Current item\'s image</string>
     <string name="picture">Picture:</string>
     <string name="image_for_current_item">Image for current item</string>
     <string name="cancel">Cancel</string>
     <string name="save">save</string>
-    <string name="notif_messg">New Messages</string>
-    <string name="guest_notif_messg">You must sign in to see notifications!</string>
+
     <string name="detailed_view">Detailed view</string>
     <string name="compacted_view">Compacted view</string>
     <string name="edit">Edit</string>
     <string name="website_link">Website Link:</string>
+
     <string name="enter_the_website_link">Enter the website link</string>
     <string name="enter_website_link">Website link</string>
     <string name="enter_name">Name</string>
     <string name="enter_price">Price</string>
     <string name="extra_info">Extra info</string>
+
     <string name="guest">GUEST</string>
     <string name="empty_icon">empty icon</string>
     <string name="no_collection">No Collection</string>
     <string name="add_new">Add New</string>
     <string name="_0">0</string>
     <string name="no_item">No Item</string>
-    <string name="no_notification">No Notification</string>
+
     <string name="settings">Settings</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="logout">Logout</string>
@@ -45,10 +48,30 @@
     <string name="shop_now">Shop now</string>
     <string name="delete">delete</string>
     <string name="deep_link">Paste Link Here</string>
+    <string name="required">Required</string>
+
+    <string name="item_price">PRICE</string>
+    <string name="item_des">DESCRIPTION</string>
+
+    <string name="customize">Customization</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="about">About</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="about_us">About us</string>
+    <string name="support">Support</string>
+    <string name="faq">FAQs</string>
+    <string name="help_support">Help and Support</string>
+
+    <string name="input_name">Item Name Here</string>
+    <string name="input_price">Input Price</string>
+    <string name="claim">claim</string>
+    <string name="date">date</string>
+
     <string name="user_icon">User icon</string>
     <string name="claim">claim</string>
     <string name="date">date</string>
     <string name="name">NAME</string>
     <string name="price">PRICE</string>
     <string name="item_name">ITEM NAME</string>
+
 </resources>
