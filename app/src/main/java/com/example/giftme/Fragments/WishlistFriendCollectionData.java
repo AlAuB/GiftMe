@@ -94,11 +94,9 @@ public class WishlistFriendCollectionData extends Fragment {
             getAllFriends();
         }
         collectionCount1.setText(String.valueOf(collectionNames.size()));
-        Log.d("friendCollectionCount", "num collections " + collectionNames.size());
 
-        //TESTING START
+        //clicking on the floating action button to add friend wishlist manually
         extendedFloatingActionButton.setOnClickListener(view -> confirmDialog());
-        //TESTING END
         recyclerView1.setLayoutManager(new LinearLayoutManager(context1));
         recyclerView1.setHasFixedSize(true);
         FrWishlistCollectionRecycleAdapter = new FrWishlistCollectionRecycleAdapter(this.getActivity(), context1, ids, collectionNames, collectionIDs, friendIds, friendNames, friendImgs);
@@ -139,7 +137,6 @@ public class WishlistFriendCollectionData extends Fragment {
     };
 
     //getting the collection Name and inserting the collection into the COLLECTIONS table in SQLite
-    //MAYBE RENAME TO ADD COLLECTION?
     public void addFriendCollection(String userID, String collectionID) {
         FirebaseFirestore fireStore = FirebaseFirestore.getInstance();
         DocumentReference userRef = fireStore.collection("users").document(userID);
@@ -166,8 +163,6 @@ public class WishlistFriendCollectionData extends Fragment {
                             //collection exists
                             DocumentSnapshot collection = task1.getResult();
                             collectionName[0] = collection.getString(collection_name);
-                            Log.d("friendCollectionName", "Name: " + collectionName[0]);
-                            Log.d("friendName2", "Name: " + friend[0]);
                             dataBaseHelper.addNewFriendCollection(friend[0], collectionName[0], userID, collectionID, friend[1]);
                             //Update collection count
                             ids.clear();
@@ -220,19 +215,15 @@ public class WishlistFriendCollectionData extends Fragment {
                 //get link from input
                 int index_parseDeepLink = insert.indexOf("3D");
                 String deepLink = insert.substring(index_parseDeepLink + 2);
-                System.out.println("Link: " + deepLink);
-                System.out.println("INDEX " + index_parseDeepLink);
+                //need to parse link to get email and collectionID
+                //email@gmail.com -> email%20gmail.com so we need to split it apart and put it back together
                 int index = deepLink.indexOf("%20");
                 String userEmail = deepLink.substring(0, index);
                 int indexAt = userEmail.indexOf('%');
                 String userIDName = userEmail.substring(0, indexAt);
                 String userIDEnd = userEmail.substring(indexAt + 3);
                 String userID = userIDName + "@" + userIDEnd;
-
                 String wishlistID = deepLink.substring(index + 3);
-                System.out.println("substring: " + userID);
-                System.out.println("substring: " + wishlistID);
-
                 addFriendCollection(userID, wishlistID);
 
             }
